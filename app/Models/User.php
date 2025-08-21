@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Enums\Role;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,9 +19,15 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+       'fullname',
         'email',
         'password',
+        'role',
+        'course',
+        'year_level',
+        'college',
+        'gender',
+        'submission_count',
     ];
 
     /**
@@ -43,6 +50,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => Role::class
         ];
     }
 }

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('supportingdocuments', function (Blueprint $table) {
-            $table->id('document_id');
+            $table->bigIncrements('document_id');
             $table->unsignedBigInteger('pn_id');
             $table->foreign('pn_id')->references('pn_id')->on('promissorynotes')->onDelete('cascade');
             $table->string('file_name');

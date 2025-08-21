@@ -12,10 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('promissorynotes', function (Blueprint $table) {
-           $table->id('pn_id');
-           $table->unsignedBigInteger('user_id');
-           $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
-            $table->string('due_date');
+            $table->bigIncrements('pn_id');
+            $table->unsignedBigInteger('id');
+            $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
             $table->text('reason');
             $table->boolean('partial_payment');
             $table->string('partial_payment_status');
