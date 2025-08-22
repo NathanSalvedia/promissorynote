@@ -1,6 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
+
  <div class="flex items-center justify-center min-h-screen bg-gray-100">
    <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md text-center">
 
@@ -27,17 +28,6 @@
         Sign In
       </button>
         </form>
-
-        <div class="border-t border-gray-500 my-6"></div>
-
-        <p class="text-sm text-left">
-            No account yet?
-            <a href="{{ route('register')}}" class="text-black hover:underline hover:text-green-700">Sign Up here.</a>
-        </p>
-        <p class="text-sm mt-2 text-left">
-            Forgot Password? Email
-            <a href="mailto:spcportal@spc.edu.ph" class="text-black hover:underline hover:text-green-700">spcportal@spc.edu.ph</a>
-        </p>
    </div>
  </div>
 
@@ -45,5 +35,6 @@
     <a href="#" class="text-green-700 hover:underline">My.SPC</a> ·
     <a href="#" class="text-green-700 hover:underline">St. Peter’s College, Inc.</a>
 </footer>
+
 
 @endsection
