@@ -13,5 +13,8 @@
 
 <body class="bg-gray-100 font-sans">
     @yield('content')
+
+
+   <script src="/resources/js/reason.js"></script>
 </body>
 </html>

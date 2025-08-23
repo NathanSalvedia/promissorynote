@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('course');
+            $table->integer('student_id')->unique();
             $table->string('year_level');
             $table->string('college');
             $table->string('gender');

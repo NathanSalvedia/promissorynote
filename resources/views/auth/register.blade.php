@@ -15,15 +15,17 @@
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
-            <div class="mb-4">
+
+            <div class=" mb-4">
                 <label for="email" class="block text-md font-medium text-black">Email</label>
                 <input type="email" id="email"  name="email" value="{{ old('email') }}" class="@error('email') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
                 @error('email')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
+
             </div>
 
-            <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="grid grid-cols-3 gap-4 mb-4">
                 <div>
                     <label for="course" class="block text-md font-medium text-black">Course</label>
                     <input type="text" id="course"  name="course" value="{{ old('course') }}" class="@error('course') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
@@ -31,6 +33,15 @@
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
                 </div>
+
+                <div>
+                <label for="student_id" class="block text-md font-medium text-black">Student ID</label>
+                <input type="text" id="student_id" name="student_id" value="{{ old('student_id') }}"  class="@error('student_id') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
+                    @error('student_id')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                   @enderror
+                </div>
+
                 <div>
                     <label for="year" class="block text-md font-medium text-black">Year</label>
                     <select id="year" name="year" value="{{ old('year') }}" class="@error('year') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">

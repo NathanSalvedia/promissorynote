@@ -19,7 +19,14 @@ class Kernel extends HttpKernel
         ],
     ];
 
-    protected $routeMiddleware = [
+    /**
+     * The middleware aliases for the application.
+     *
+     * In recent Laravel versions this property is named $middlewareAliases
+     * instead of the older $routeMiddleware. Register aliases here so the
+     * router can resolve middleware by short name.
+     */
+    protected $middlewareAliases = [
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         // ...other route middleware...
     ];

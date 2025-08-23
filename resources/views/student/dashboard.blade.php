@@ -90,7 +90,7 @@
         </div>
 
         <div class="mb-6">
-            <a href=""
+            <a href="{{ route('student.promissorynote') }}"
             class="bg-[#660809]  hover:bg-[#000000]  text-white px-5 py-2 rounded-lg shadow flex items-center gap-2">
                 <iconify-icon icon="mdi:plus-circle-outline" class="text-lg"></iconify-icon>
                 New Promissory Note
