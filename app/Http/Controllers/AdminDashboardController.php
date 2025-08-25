@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\PromissoryNote;
+
 
 class AdminDashboardController extends Controller
 {
@@ -11,7 +13,11 @@ class AdminDashboardController extends Controller
      */
     public function index()
     {
-        return view('admin.admindashboard');
+        $totalNotes = PromissoryNote::count();
+        $pendingNotes = PromissoryNote::where('status', 'pending')->count();
+        $approvedNotes = PromissoryNote::where('status', 'approved')->count();
+        $rejectedNotes = PromissoryNote::where('status', 'rejected')->count();
+        return view('admin.admindashboard', compact('totalNotes', 'pendingNotes', 'approvedNotes', 'rejectedNotes'));
     }
 
     /**

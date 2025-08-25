@@ -44,20 +44,25 @@ class PromissoryNoteController extends Controller
             'due_date' => 'nullable|date',
             'notes' => 'nullable|string',
             'attachments' => 'nullable',
+            'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $validated['user_id'] = Auth::check() ? Auth::user()->id : null;
 
         $attachmentPaths = [];
         if ($request->hasFile('attachments')) {
-            foreach ($request->file('attachments') as $file) {
-                $path = $file->store('attachments', 'public');
-                $attachmentPaths[] = $path;
+            $files = $request->file('attachments');
+            foreach ((array)$files as $file) {
+                if ($file) {
+                    $path = $file->store('attachments', 'public');
+                    $attachmentPaths[] = $path;
+                }
             }
         }
         $validated['attachments'] = !empty($attachmentPaths) ? json_encode($attachmentPaths) : null;
 
-        PromissoryNote::create($validated);
+    $validated['status'] = 'pending';
+    PromissoryNote::create($validated);
 
         return redirect()->route('student.dashboard')->with('success', 'Promissory Note submitted successfully.');
     }
@@ -69,6 +74,15 @@ class PromissoryNoteController extends Controller
     {
         //
     }
+
+        /**
+         * Display a specific promissory note for viewing.
+         */
+        public function view($id)
+        {
+            $note = PromissoryNote::findOrFail($id);
+            return view('student.promissorynote_view', compact('note'));
+        }
 
     /**
      * Show the form for editing the specified resource.

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->bigIncrements('notification_id');
             $table->unsignedBigInteger('pn_id');
-            $table->foreign('pn_id')->references('pn_id')->on('promissorynotes')->onDelete('cascade');
+            $table->foreign('pn_id')->references('pn_id')->on('promissory_notes')->onDelete('cascade');
             $table->text('content');
             $table->timestamp('sent_at');
             $table->timestamps();

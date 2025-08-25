@@ -44,8 +44,8 @@
                         <iconify-icon icon="mdi:file-document-outline" class="text-2xl"></iconify-icon>
                     </span>
                     <div>
-                        <p class="text-sm/5 opacity-90">Total Notes</p>
-                        <p class="text-3xl font-bold">3</p>
+                            <p class="text-sm/5 opacity-90">Total Notes</p>
+                            <p class="text-3xl font-bold">{{ $promissoryNotes->count() }}</p>
                     </div>
                 </div>
             </div>
@@ -56,8 +56,8 @@
                         <iconify-icon icon="mdi:clock-outline" class="text-2xl"></iconify-icon>
                     </span>
                     <div>
-                        <p class="text-sm/5 opacity-90">Pending</p>
-                        <p class="text-3xl font-bold">2</p>
+                            <p class="text-sm/5 opacity-90">Pending</p>
+                            <p class="text-3xl font-bold">{{ $promissoryNotes->where('status', 'pending')->count() }}</p>
                     </div>
                 </div>
             </div>
@@ -69,8 +69,8 @@
                         <iconify-icon icon="mdi:check-circle-outline" class="text-2xl"></iconify-icon>
                     </span>
                     <div>
-                        <p class="text-sm/5 opacity-90">Approved</p>
-                        <p class="text-3xl font-bold">1</p>
+                            <p class="text-sm/5 opacity-90">Approved</p>
+                            <p class="text-3xl font-bold">{{ $promissoryNotes->where('status', 'approved')->count() }}</p>
                     </div>
                 </div>
             </div>
@@ -82,20 +82,27 @@
                         <iconify-icon icon="mdi:currency-php" class="text-2xl"></iconify-icon>
                     </span>
                     <div>
-                        <p class="text-sm/5 opacity-90">Total Amount</p>
-                        <p class="text-2xl font-bold">₱15,500</p>
+                            <p class="text-sm/5 opacity-90">Total Amount</p>
+                            <p class="text-2xl font-bold">₱{{ number_format($promissoryNotes->sum('amount'), 2) }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="mb-6">
-            <a href="{{ route('student.promissorynote') }}"
-            class="bg-[#660809]  hover:bg-[#000000]  text-white px-5 py-2 rounded-lg shadow flex items-center gap-2">
-                <iconify-icon icon="mdi:plus-circle-outline" class="text-lg"></iconify-icon>
-                New Promissory Note
-            </a>
-        </div>
+
+            <div class="mb-6 grid grid-cols-2 gap-4">
+                <a href="{{ route('student.promissorynote') }}"
+                class="bg-[#660809] hover:bg-[#000000] text-white px-5 py-2 rounded-lg shadow flex items-center gap-2 justify-center">
+                    <iconify-icon icon="mdi:plus-circle-outline" class="text-lg"></iconify-icon>
+                    New Promissory Note
+                </a>
+                <a href="{{ route('student.subledger')}}"
+                class="bg-[#660809] hover:bg-[#000000] text-white px-5 py-2 rounded-lg shadow flex items-center gap-2 justify-center">
+                    <iconify-icon icon="mdi:clipboard-list-outline" class="text-lg"></iconify-icon>
+                    Account Subledger
+                </a>
+            </div>
+
 
         <div class="bg-white shadow rounded-lg p-6">
             <h3 class="text-lg font-semibold mb-4">My Promissory Notes</h3>
@@ -111,36 +118,24 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse($promissoryNotes as $note)
                     <tr>
-                        <td class="py-2 px-4 border">PN-2024-001</td>
-                        <td class="py-2 px-4 border">₱5,000</td>
-                        <td class="py-2 px-4 border">Tuition Fee</td>
-                        <td class="py-2 px-4 border text-[#660809] font-semibold">Approved</td>
-                        <td class="py-2 px-4 border">2024-01-15</td>
+                        <td class="py-2 px-4 border">{{ $note->pn_id }}</td>
+                        <td class="py-2 px-4 border">₱{{ number_format($note->amount, 2) }}</td>
+                        <td class="py-2 px-4 border">{{ $note->reason }}</td>
+                        <td class="py-2 px-4 border text-[#660809] font-semibold">{{ ucfirst($note->status) }}</td>
+                        <td class="py-2 px-4 border">{{ $note->created_at->format('Y-m-d') }}</td>
                         <td class="py-2 px-4 border text-[#660809]  cursor-pointer flex items-center gap-1">
-                            <iconify-icon icon="mdi:eye-outline"></iconify-icon> View
+                            <a href="{{ route('student.promissorynote.view', $note->pn_id) }}" class="flex items-center gap-1">
+                                <iconify-icon icon="mdi:eye-outline"></iconify-icon> View
+                            </a>
                         </td>
                     </tr>
+                    @empty
                     <tr>
-                        <td class="py-2 px-4 border">PN-2024-002</td>
-                        <td class="py-2 px-4 border">₱3,000</td>
-                        <td class="py-2 px-4 border">Laboratory Fee</td>
-                        <td class="py-2 px-4 border text-[#000000]  font-semibold">Pending</td>
-                        <td class="py-2 px-4 border">2024-01-20</td>
-                        <td class="py-2 px-4 border text-[#660809]  cursor-pointer flex items-center gap-1">
-                            <iconify-icon icon="mdi:eye-outline"></iconify-icon> View
-                        </td>
+                        <td colspan="6" class="py-2 px-4 border text-center text-gray-500">No promissory notes found.</td>
                     </tr>
-                    <tr>
-                        <td class="py-2 px-4 border">PN-2024-003</td>
-                        <td class="py-2 px-4 border">₱7,500</td>
-                        <td class="py-2 px-4 border">Tuition Fee</td>
-                        <td class="py-2 px-4 border text-[#000000]  font-semibold">Pending</td>
-                        <td class="py-2 px-4 border">2024-01-22</td>
-                        <td class="py-2 px-4 border text-[#660809]  cursor-pointer flex items-center gap-1">
-                            <iconify-icon icon="mdi:eye-outline"></iconify-icon> View
-                        </td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

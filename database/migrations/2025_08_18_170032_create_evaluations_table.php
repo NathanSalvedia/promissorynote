@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('evaluations', function (Blueprint $table) {
             $table->bigIncrements('evaluation_id');
             $table->unsignedBigInteger('pn_id');
-            $table->foreign('pn_id')->references('pn_id')->on('promissorynotes')->onDelete('cascade');
+            $table->foreign('pn_id')->references('pn_id')->on('promissory_notes')->onDelete('cascade');
             $table->string('evaluation_status');
             $table->timestamp('evaluated_date');
             $table->timestamps();

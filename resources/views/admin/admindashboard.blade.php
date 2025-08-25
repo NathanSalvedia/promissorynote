@@ -17,6 +17,14 @@
                 <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full">3</span>
             </button>
 
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="text-[#660809] hover:text-[#000000] flex items-center gap-1" title="Logout">
+                        <iconify-icon icon="mdi:logout" class="text-xl"></iconify-icon>
+                        Logout
+                    </button>
+                </form>
+
             <div class="flex items-center gap-2">
                 <iconify-icon icon="mdi:account-circle" class="text-2xl text-gray-700"></iconify-icon>
                 <span class="font-medium">
@@ -45,6 +53,14 @@
             <h2 class="text-2xl font-bold">Admin Dashboard</h2>
 
             <div class="flex gap-3 mt-4 sm:mt-0">
+
+               <a href="{{ route('admin.manage-record') }}"
+                       class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+                       title="Manage promissory note records">
+                        <iconify-icon icon="mdi:file-document-edit-outline"></iconify-icon>
+                        Manage Records
+                    </a>
+
                 <a href="#"
                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
                    title="View analytics and reports">
@@ -58,6 +74,7 @@
                     <iconify-icon icon="mdi:account-multiple-outline"></iconify-icon>
                     Manage Users
                 </a>
+
             </div>
         </div>
 
@@ -70,7 +87,7 @@
                     </span>
                     <div>
                         <p class="text-sm/5 opacity-90">Total Notes</p>
-                        <p class="text-3xl font-bold">5</p>
+                        <p class="text-3xl font-bold">{{ $totalNotes }}</p>
                     </div>
                 </div>
             </div>
@@ -82,7 +99,7 @@
                     </span>
                     <div>
                         <p class="text-sm/5 opacity-90">Pending Review</p>
-                        <p class="text-3xl font-bold">1</p>
+                        <p class="text-3xl font-bold">{{ $pendingNotes }}</p>
                     </div>
                 </div>
             </div>
@@ -94,7 +111,7 @@
                     </span>
                     <div>
                         <p class="text-sm/5 opacity-90">Approved</p>
-                        <p class="text-3xl font-bold">3</p>
+                        <p class="text-3xl font-bold">{{ $approvedNotes }}</p>
                     </div>
                 </div>
             </div>
@@ -106,7 +123,7 @@
                     </span>
                     <div>
                         <p class="text-sm/5 opacity-90">Rejected</p>
-                        <p class="text-3xl font-bold">1</p>
+                        <p class="text-3xl font-bold">{{ $rejectedNotes }}</p>
                     </div>
                 </div>
             </div>
