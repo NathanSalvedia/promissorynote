@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\PromissoryNote;
 
 
+
 class AdminDashboardController extends Controller
 {
     /**
@@ -13,11 +14,12 @@ class AdminDashboardController extends Controller
      */
     public function index()
     {
-        $totalNotes = PromissoryNote::count();
-        $pendingNotes = PromissoryNote::where('status', 'pending')->count();
-        $approvedNotes = PromissoryNote::where('status', 'approved')->count();
-        $rejectedNotes = PromissoryNote::where('status', 'rejected')->count();
-        return view('admin.admindashboard', compact('totalNotes', 'pendingNotes', 'approvedNotes', 'rejectedNotes'));
+    $notes = PromissoryNote::with('user')->orderBy('created_at', 'desc')->get();
+    $totalNotes = $notes->count();
+    $pendingNotes = $notes->where('status', 'pending')->count();
+    $approvedNotes = $notes->where('status', 'approved')->count();
+    $rejectedNotes = $notes->where('status', 'rejected')->count();
+    return view('admin.admindashboard', compact('notes', 'totalNotes', 'pendingNotes', 'approvedNotes', 'rejectedNotes'));
     }
 
     /**
@@ -41,7 +43,8 @@ class AdminDashboardController extends Controller
      */
     public function show(string $id)
     {
-        //
+       $note = PromissoryNote::findOrFail($id);
+        return view('admin.promissorynote-detail', compact('note'));
     }
 
     /**
@@ -61,10 +64,25 @@ class AdminDashboardController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Approve a promissory note.
      */
-    public function destroy(string $id)
+    public function approve($pn_id)
     {
-        //
+        $note = PromissoryNote::findOrFail($pn_id);
+        $note->status = 'approved';
+        $note->save();
+        return redirect()->back()->with('success', 'Promissory note approved successfully.');
     }
+
+    /**
+     * Reject a promissory note.
+     */
+    public function reject($pn_id)
+    {
+        $note = PromissoryNote::findOrFail($pn_id);
+        $note->status = 'rejected';
+        $note->save();
+        return redirect()->back()->with('success', 'Promissory note rejected successfully.');
+    }
+
 }

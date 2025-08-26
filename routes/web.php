@@ -40,9 +40,19 @@ Route::get('/admin/login', [AdminLoginController::class, 'index'])->name('admin.
 Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login');
 
 
-Route::get('/admin/admindashboard', [AdminDashboardController::class, 'index'])->middleware(['web'])->name('admin.dashboard');
-Route::get('/admin/manage-record', [ManageRecordsController::class, 'index'])->middleware(['web'])->name('admin.manage-record');
-Route::get('/admin/manage-record/{pn_id}', [ManageRecordsController::class, 'show'])->middleware(['web'])->name('admin.manage-record.show');
+
+Route::middleware(['web'])->group(function () {
+    Route::get('/admin/admindashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    // List/manage all promissory notes (admin)
+    Route::get('/admin/manage-record', [ManageRecordsController::class, 'index'])->name('admin.manage-record');
+    Route::get('/admin/promissorynote-detail/{pn_id}', [AdminDashboardController::class, 'show'])->name('admin.promissorynote-detail');
+    Route::post('/admin/promissory/approve/{pn_id}', [AdminDashboardController::class, 'approve'])->name('admin.promissory.approve');
+    Route::post('/admin/promissory/reject/{pn_id}', [AdminDashboardController::class, 'reject'])->name('admin.promissory.reject');
+   Route::get('/admin/manage-records', [ManageRecordsController::class, 'manageRecords'])->name('admin.manage-records');
+
+});
+
+
 
 
 

@@ -1,26 +1,86 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="max-w-2xl mx-auto bg-white rounded-xl shadow p-8 mt-8">
-    <h2 class="text-2xl font-bold mb-6 text-[#660809]">Promissory Note Details</h2>
-    <div class="space-y-4">
-        <div><span class="font-semibold">Note ID:</span> {{ $note->pn_id }}</div>
-        <div><span class="font-semibold">Full Name:</span> {{ $note->fullname }}</div>
-        <div><span class="font-semibold">Student ID:</span> {{ $note->student_id }}</div>
-        <div><span class="font-semibold">Department:</span> {{ $note->department }}</div>
-        <div><span class="font-semibold">Amount:</span> ₱{{ number_format($note->amount, 2) }}</div>
-        <div><span class="font-semibold">Reason:</span> {{ $note->reason }}</div>
-        <div><span class="font-semibold">Date Submitted:</span> {{ $note->created_at->format('M d, Y h:i A') }}</div>
-        <div><span class="font-semibold">Status:</span> <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $note->status == 'pending' ? 'bg-yellow-100 text-yellow-800' : ($note->status == 'approved' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') }}">{{ ucfirst($note->status) }}</span></div>
-        @if($note->notes)
-            <div><span class="font-semibold">Additional Notes:</span> {{ $note->notes }}</div>
-        @endif
-        @if($note->attachments)
-            <div><span class="font-semibold">Attachments:</span> <a href="{{ asset('storage/' . $note->attachments) }}" target="_blank" class="text-blue-600 underline">View Attachment</a></div>
-        @endif
-    </div>
-    <div class="mt-8">
-        <a href="{{ route('admin.manage-record') }}" class="inline-block bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg">Back to List</a>
-    </div>
+<div class="min-h-screen bg-gray-100 flex flex-col">
+    <header class="bg-white shadow px-6 py-4 flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-[#660809] ">MY.SPC</h1>
+            <p class="text-sm text-[#000000] ">Promissory Note Management System</p>
+        </div>
+        <div class="flex items-center gap-6">
+            <a href="{{ route('admin.dashboard') }}" class="text-[#660809] hover:text-[#000000]">Back to Dashboard</a>
+        </div>
+    </header>
+    <main class="p-6 max-w-3xl mx-auto w-full">
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold mb-6">Promissory Note Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Full Name</label>
+                    <div class="font-semibold">{{ $note->fullname }}</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Student ID</label>
+                    <div class="font-semibold">{{ $note->student_id }}</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Gender</label>
+                    <div class="font-semibold">{{ $note->gender }}</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Department</label>
+                    <div class="font-semibold">{{ $note->department }}</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Phone</label>
+                    <div class="font-semibold">{{ $note->phone }}</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Year Level</label>
+                    <div class="font-semibold">{{ $note->year_level }}</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Amount</label>
+                    <div class="font-semibold">₱{{ number_format($note->amount, 2) }}</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Reason</label>
+                    <div class="font-semibold">{{ $note->reason }}</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Term</label>
+                    <div class="font-semibold">{{ $note->term }}</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Academic Year</label>
+                    <div class="font-semibold">{{ $note->academic_year }}</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Down Payment</label>
+                    <div class="font-semibold">₱{{ number_format($note->down_payment, 2) }}</div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Due Date</label>
+                    <div class="font-semibold">{{ $note->due_date }}</div>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium mb-1">Additional Notes</label>
+                    <div class="font-semibold">{{ $note->notes }}</div>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium mb-1">Attachments</label>
+                    <div>
+                        @if($note->attachments)
+                            @foreach(json_decode($note->attachments, true) as $file)
+                                <a href="{{ asset('storage/' . $file) }}" target="_blank" class="text-blue-600 underline">View Attachment</a><br>
+                            @endforeach
+                        @else
+                            <span class="text-gray-500">No attachments</span>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>
 @endsection

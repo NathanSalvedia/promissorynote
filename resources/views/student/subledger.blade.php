@@ -83,6 +83,30 @@
 						<td class="px-4 py-2">19893.10</td>
 						<td class="px-4 py-2">205.83</td>
 					</tr>
+
+                    <tr class="bg-green-200 font-bold">
+						<td colspan="7" class="px-4 py-2">SY: 2025-2026 SEM: 1</td>
+					</tr>
+
+                    <tr class="bg-white">
+						<td class="px-4 py-2">2025-2026</td>
+						<td class="px-4 py-2">1</td>
+						<td class="px-4 py-2">2025-08-18</td>
+						<td class="px-4 py-2">Billing</td>
+						<td class="px-4 py-2">22744.07</td>
+						<td class="px-4 py-2">0.00</td>
+						<td class="px-4 py-2">30659.12</td>
+					</tr>
+
+                     <tr class="bg-white">
+						<td class="px-4 py-2">2025-2026</td>
+						<td class="px-4 py-2">1</td>
+						<td class="px-4 py-2">2025-08-18</td>
+						<td class="px-4 py-2">818556</td>
+						<td class="px-4 py-2">0.00</td>
+						<td class="px-4 py-2">1000</td>
+						<td class="px-4 py-2">29659.12</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>

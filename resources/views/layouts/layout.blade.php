@@ -15,7 +15,7 @@
 <body class="bg-gray-100 font-sans">
     @yield('content')
 
-
+ <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
 
 </body>
 </html>
