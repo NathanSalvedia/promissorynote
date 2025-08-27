@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PromissoryNote;
-
+use App\Models\Evaluation;
 
 
 class AdminDashboardController extends Controller
@@ -43,7 +43,7 @@ class AdminDashboardController extends Controller
      */
     public function show(string $id)
     {
-       $note = PromissoryNote::findOrFail($id);
+        $note = PromissoryNote::findOrFail($id);
         return view('admin.promissorynote-detail', compact('note'));
     }
 
@@ -84,5 +84,8 @@ class AdminDashboardController extends Controller
         $note->save();
         return redirect()->back()->with('success', 'Promissory note rejected successfully.');
     }
+
+
+
 
 }

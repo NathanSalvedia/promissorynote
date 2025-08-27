@@ -12,6 +12,9 @@ use App\Http\Controllers\SubledgerController;
 use App\Http\Controllers\StatusTrackingController;
 use App\Http\Controllers\PaymentHistoryController;
 use App\Http\Controllers\ManageRecordsController;
+use App\Http\Controllers\ManageUserController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,6 +52,7 @@ Route::middleware(['web'])->group(function () {
     Route::post('/admin/promissory/approve/{pn_id}', [AdminDashboardController::class, 'approve'])->name('admin.promissory.approve');
     Route::post('/admin/promissory/reject/{pn_id}', [AdminDashboardController::class, 'reject'])->name('admin.promissory.reject');
    Route::get('/admin/manage-records', [ManageRecordsController::class, 'manageRecords'])->name('admin.manage-records');
+   Route::get('/admin/manage-users', [ManageUserController::class, 'index'])->name('admin.manage-users');
 
 });
 

@@ -17,14 +17,6 @@
                 <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full">3</span>
             </button>
 
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="text-[#660809] hover:text-[#000000] flex items-center gap-1" title="Logout">
-                        <iconify-icon icon="mdi:logout" class="text-xl"></iconify-icon>
-                        Logout
-                    </button>
-                </form>
-
             <div class="flex items-center gap-2">
                 <iconify-icon icon="mdi:account-circle" class="text-2xl text-gray-700"></iconify-icon>
                 <span class="font-medium">
@@ -55,28 +47,39 @@
             <div class="flex gap-3 mt-4 sm:mt-0">
 
                <a href="{{ route('admin.manage-record') }}"
-                       class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
-                       title="Manage promissory note records">
-                        <iconify-icon icon="mdi:file-document-edit-outline"></iconify-icon>
-                        Manage Records
-                    </a>
-
-                <a href="#"
                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
-                   title="View analytics and reports">
-                    <iconify-icon icon="mdi:chart-line"></iconify-icon>
-                    Analytics
+                   title="Manage promissory note records">
+                <iconify-icon icon="mdi:file-document-edit-outline"></iconify-icon>
+                Manage Records
                 </a>
 
-                <a href="#"
-                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
-                   title="Manage user accounts">
-                    <iconify-icon icon="mdi:account-multiple-outline"></iconify-icon>
-                    Manage Users
-                </a>
+            <a href="#"
+               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+               title="View analytics and reports">
+                <iconify-icon icon="mdi:chart-line"></iconify-icon>
+                Analytics
+            </a>
+
+            <a href="{{ route('admin.manage-users') }}"
+               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+               title="Manage user accounts">
+                <iconify-icon icon="mdi:account-multiple-outline"></iconify-icon>
+                Manage Users
+            </a>
+
+            <a href=""
+               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+               title="Track payments">
+                <iconify-icon icon="mdi:cash-multiple"></iconify-icon>
+                Payment Tracking
+            </a>
 
             </div>
         </div>
+
+
+
+
 
 
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
@@ -130,8 +133,16 @@
         </div>
 
         <div class="g-white rounded-2xl shadow border overflow-hidden">
-            <div class="px-6 py-4 bg-gray-100 border-b">
-                <h3 class="text-xl font-bold text-gray-800">Pending Requests</h3>
+            <div class="px-6 py-4 bg-gray-100 border-b flex justify-between items-center">
+                <h3 class="text-xl font-bold text-[#000000]">Pending Requests</h3>
+
+                <div class="flex flex-col">
+                    <label for="search" class="text-lg font-medium text-gray-700 mb-2">Search by Name/ID</label>
+                    <div class="relative">
+                        <input type="text" id="search" name="search" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2" placeholder="Enter student name or ID">
+                        <iconify-icon icon="mdi:magnify" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></iconify-icon>
+                    </div>
+                </div>
             </div>
 
             <div class="overflow-x-auto">
@@ -180,16 +191,18 @@
                                             {{ ucfirst($note->status) }}
                                         </span>
                                     </td>
+
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-2">
 
-                                            @if($note->status == 'pending')
+                                           @if($note->status == 'pending')
                                                 <form method="POST" action="{{ route('admin.promissory.approve', $note->pn_id) }}" style="display:inline-block;">
                                                     @csrf
                                                     <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-green-600 hover:bg-green-700 text-white" title="Approve">
                                                         <iconify-icon icon="mdi:check"></iconify-icon>
                                                     </button>
                                                 </form>
+
                                                 <form method="POST" action="{{ route('admin.promissory.reject', $note->pn_id) }}" style="display:inline-block;">
                                                     @csrf
                                                     <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-600 hover:bg-red-700 text-white" title="Reject">

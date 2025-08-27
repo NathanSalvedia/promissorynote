@@ -20,4 +20,9 @@ class PromissoryNote extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function evaluations()
+    {
+        return $this->hasMany(Evaluation::class, 'pn_id');
+    }
+
 }
