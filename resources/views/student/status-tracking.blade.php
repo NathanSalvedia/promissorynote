@@ -33,7 +33,8 @@
             <h2 class="text-lg font-semibold">Application Status</h2>
 
             <ol class="relative border-l border-gray-300 ml-4">
-                {{-- Step 1: Submitted --}}
+
+
                 <li class="mb-10 ml-6">
                     <span class="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-green-500 ring-8 ring-white">
                         <svg class="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -45,7 +46,6 @@
                     <time class="text-xs text-gray-400">Aug 17, 2025, 10:15 AM</time>
                 </li>
 
-                {{-- Step 2: Under Review --}}
                 <li class="mb-10 ml-6">
                     <span class="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-yellow-500 ring-8 ring-white">
                         <svg class="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -57,7 +57,6 @@
                     <time class="text-xs text-gray-400">Aug 17, 2025, 11:00 AM</time>
                 </li>
 
-                {{-- Step 3: Decision --}}
                 <li class="ml-6">
                     <span class="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-gray-400 ring-8 ring-white">
                         <svg class="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">

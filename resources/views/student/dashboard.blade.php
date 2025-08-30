@@ -91,11 +91,18 @@
 
 
             <div class="mb-6 grid grid-cols-2 gap-4">
-                <a href="{{ route('student.promissorynote') }}"
+
+
+
+
+
+                <a href="{{ route('student.promissorynote') }}" id="newPromissoryNote"
                 class="bg-[#660809] hover:bg-[#000000] text-white px-5 py-2 rounded-lg shadow flex items-center gap-2 justify-center">
                     <iconify-icon icon="mdi:plus-circle-outline" class="text-lg"></iconify-icon>
                     New Promissory Note
                 </a>
+
+
                 <a href="{{ route('student.subledger')}}"
                 class="bg-[#660809] hover:bg-[#000000] text-white px-5 py-2 rounded-lg shadow flex items-center gap-2 justify-center">
                     <iconify-icon icon="mdi:clipboard-list-outline" class="text-lg"></iconify-icon>
@@ -141,6 +148,7 @@
         </div>
     </main>
 </div>
+
 
 
 

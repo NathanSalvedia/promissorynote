@@ -41,8 +41,8 @@
         <div class="bg-white p-6 rounded-lg shadow">
             <h2 class="text-xl font-bold mb-6">Submit New Promissory Note</h2>
 
-         <form id="promissoryForm" action="{{ route('promissorynotes.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-                @csrf
+         <form  id="promissoryForm" action="{{ route('promissorynotes.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+              @csrf
 
              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -179,17 +179,10 @@
                     </button>
                 </div>
               </div>
-
-
             </form>
         </div>
     </main>
 </div>
-@endsection
-
-
-
-
 
 
 <!-- Review Modal -->
@@ -202,6 +195,10 @@
         </div>
     </div>
 </div>
+@endsection
+
+
+
 
 
 <script>
@@ -280,4 +277,29 @@ function closeReviewModal() {
 function submitForm() {
     document.getElementById('promissoryForm').submit();
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var form = document.getElementById('promissoryForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            fetch('{{ route("promissorynote.checkStatus") }}')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.hasUnsettled) {
+                        alert('Settle your previous promissory note.');
+                    } else {
+                        form.submit();
+                    }
+                })
+                .catch(() => {
+
+                    form.submit();
+                });
+        });
+    }
+});
+
 </script>

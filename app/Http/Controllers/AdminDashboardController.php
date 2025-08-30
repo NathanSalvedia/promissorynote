@@ -4,17 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PromissoryNote;
-use App\Models\Evaluation;
-
 
 class AdminDashboardController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the dashboard with stats.
      */
     public function index()
     {
-    $notes = PromissoryNote::with('user')->orderBy('created_at', 'desc')->get();
+        $notes = PromissoryNote::with('user')->orderBy('created_at', 'desc')->get();
     $totalNotes = $notes->count();
     $pendingNotes = $notes->where('status', 'pending')->count();
     $approvedNotes = $notes->where('status', 'approved')->count();
@@ -23,23 +21,7 @@ class AdminDashboardController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * Show specific promissory note.
      */
     public function show(string $id)
     {
@@ -48,26 +30,11 @@ class AdminDashboardController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Approve a promissory note.
+     * Approve a promissory note → also mark as settled.
      */
     public function approve($pn_id)
     {
+
         $note = PromissoryNote::findOrFail($pn_id);
         $note->status = 'approved';
         $note->save();
@@ -75,7 +42,7 @@ class AdminDashboardController extends Controller
     }
 
     /**
-     * Reject a promissory note.
+     * Reject a promissory note → keep as unsettled.
      */
     public function reject($pn_id)
     {
@@ -86,6 +53,4 @@ class AdminDashboardController extends Controller
     }
 
 
-
-
-}
+    }
