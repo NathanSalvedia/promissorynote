@@ -29,6 +29,18 @@ class PromissoryNoteController extends Controller
      */
     public function store(Request $request)
     {
+
+         $user = Auth::user();
+         $restricted = PromissoryNote::where('user_id', $user->id)
+        ->where('status', 'approved')
+        ->where('due_date', '<', now())
+        ->where('is_settled', false)
+        ->exists();
+
+       if ($restricted) {
+        return redirect()->route('student.dashboard')->with('error', 'Settle your previous promissory note before submitting a new application.');
+      }
+
         $validated = $request->validate([
             'fullname' => 'required|string|max:255',
             'student_id' => 'required|string|max:50',
@@ -107,4 +119,18 @@ class PromissoryNoteController extends Controller
     {
         //
     }
+
+
+    public function checkStatus()
+    {
+        $user = Auth::user();
+        $note = PromissoryNote::where('user_id', $user->id)
+            ->where('status', 'approved')
+            ->where('is_settled', false)
+            ->where('due_date', '<', now())
+            ->first();
+
+        return response()->json(['hasUnsettled' => $note ? true : false]);
+    }
+
 }

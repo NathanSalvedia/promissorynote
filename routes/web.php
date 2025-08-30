@@ -12,6 +12,9 @@ use App\Http\Controllers\SubledgerController;
 use App\Http\Controllers\StatusTrackingController;
 use App\Http\Controllers\PaymentHistoryController;
 use App\Http\Controllers\ManageRecordsController;
+use App\Http\Controllers\ManageUserController;
+
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,6 +30,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/student/promissorynote', [PromissoryNoteController::class, 'index'])->name('student.promissorynote');
     Route::post('/student/promissorynote', [PromissoryNoteController::class, 'store'])->name('promissorynotes.store');
     Route::get('/promissorynotes', [PromissoryNoteController::class, 'index'])->name('promissorynotes.index');
+    Route::get('/student/promissorynote/check-status', [PromissoryNoteController::class, 'checkStatus'])->name('promissorynote.checkStatus');
+
     //Route::get('/student/promissorynote/images', [ImageController::class, 'create'])->name('promissorynotes.images.create');
     //Route::post('/student/promissorynote/images', [ImageController::class, 'store'])->name('promissorynotes.images.store');
     Route::get('/student/subledger', [SubledgerController::class, 'index'])->name('student.subledger');
@@ -40,9 +45,20 @@ Route::get('/admin/login', [AdminLoginController::class, 'index'])->name('admin.
 Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login');
 
 
-Route::get('/admin/admindashboard', [AdminDashboardController::class, 'index'])->middleware(['web'])->name('admin.dashboard');
-Route::get('/admin/manage-record', [ManageRecordsController::class, 'index'])->middleware(['web'])->name('admin.manage-record');
-Route::get('/admin/manage-record/{pn_id}', [ManageRecordsController::class, 'show'])->middleware(['web'])->name('admin.manage-record.show');
+
+Route::middleware(['web'])->group(function () {
+    Route::get('/admin/admindashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    // List/manage all promissory notes (admin)
+    Route::get('/admin/manage-record', [ManageRecordsController::class, 'index'])->name('admin.manage-record');
+    Route::get('/admin/promissorynote-detail/{pn_id}', [AdminDashboardController::class, 'show'])->name('admin.promissorynote-detail');
+    Route::post('/admin/promissory/approve/{pn_id}', [AdminDashboardController::class, 'approve'])->name('admin.promissory.approve');
+    Route::post('/admin/promissory/reject/{pn_id}', [AdminDashboardController::class, 'reject'])->name('admin.promissory.reject');
+    Route::get('/admin/manage-records', [ManageRecordsController::class, 'manageRecords'])->name('admin.manage-records');
+   Route::get('/admin/manage-users', [ManageUserController::class, 'index'])->name('admin.manage-users');
+
+});
+
+
 
 
 
@@ -51,5 +67,4 @@ Route::get('/admin/manage-record/{pn_id}', [ManageRecordsController::class, 'sho
 //Route::get('/admin/admindashboard', function () {
     //return view('admin.admindashboard');
 //})->middleware(['web'])->name('admin.admindashboard');
-
 

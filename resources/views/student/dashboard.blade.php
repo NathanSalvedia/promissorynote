@@ -2,23 +2,59 @@
 
 @section('content')
 
+{{-- ===== styles (marquee + icon animation) ===== --}}
+<style>
+  /* marquee for header strip */
+  .marquee { white-space:nowrap; overflow:hidden; box-sizing:border-box }
+  .marquee>span { display:inline-block; padding-left:100%; animation:marquee 16s linear infinite }
+  .marquee:hover>span { animation-play-state:paused }
+  @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-100%)} }
 
+  /* icon animation (bounce + pulse) */
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+  .icon-anim {
+    animation: bounce 1.5s infinite, pulse 3s infinite;
+  }
+</style>
 
-  <div class="min-h-screen bg-gray-100 flex flex-col">
+<div class="min-h-screen bg-gray-100 flex flex-col">
 
-    <header class="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-[#660809] ">MY.SPC</h1>
-            <p class="text-sm text-[#000000] ">Promissory Note Management System</p>
+    {{-- ================= HEADER ================= --}}
+    <header class="w-full">
+      {{-- Top black strip with scrolling text --}}
+      <div class="bg-black text-white text-[11px] md:text-xs py-0.5">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="marquee">
+            <span>Enroll Now  |  Experience a Modern SPC  |  Welcome to My.SPC Promissorynote Management System</span>
+          </div>
         </div>
+      </div>
 
-        <div class="flex items-center gap-6">
+      {{-- Maroon strip --}}
+      <div class="bg-[#660809] text-white">
+        <div class="max-w-7xl mx-auto px-4 py-1 text-[11px] md:text-xs flex justify-end gap-6">
+        </div>
+      </div>
+
+      {{-- White navbar --}}
+      <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+          <div class="flex items-center gap-3">
+            <img src="/img/spc-wordmark.png" alt="SPC" class="h-10 md:h-12 object-contain">
+          </div>
+            <div class="flex items-center gap-6">
             <button class="relative text-[#660809] hover:text-[#000000] ">
                 <iconify-icon icon="mdi:bell-outline" class="text-2xl"></iconify-icon>
                 <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full">3</span>
             </button>
-
-            <div class="flex items-center gap-2">
+           <div class="flex items-center gap-2">
                 <iconify-icon icon="mdi:account-circle" class="text-2xl text-gray-700"></iconify-icon>
                 <span class="font-medium">{{ auth()->user()->fullname }}</span>
             </div>
@@ -91,11 +127,18 @@
 
 
             <div class="mb-6 grid grid-cols-2 gap-4">
-                <a href="{{ route('student.promissorynote') }}"
+
+
+
+
+
+                <a href="{{ route('student.promissorynote') }}" id="newPromissoryNote"
                 class="bg-[#660809] hover:bg-[#000000] text-white px-5 py-2 rounded-lg shadow flex items-center gap-2 justify-center">
                     <iconify-icon icon="mdi:plus-circle-outline" class="text-lg"></iconify-icon>
                     New Promissory Note
                 </a>
+
+
                 <a href="{{ route('student.subledger')}}"
                 class="bg-[#660809] hover:bg-[#000000] text-white px-5 py-2 rounded-lg shadow flex items-center gap-2 justify-center">
                     <iconify-icon icon="mdi:clipboard-list-outline" class="text-lg"></iconify-icon>
@@ -136,13 +179,10 @@
                         <td colspan="6" class="py-2 px-4 border text-center text-gray-500">No promissory notes found.</td>
                     </tr>
                     @endforelse
-                </tbody>
-            </table>
-        </div>
+          </tbody>
+        </table>
+      </div>
     </main>
 </div>
-
-
-
 
 @endsection

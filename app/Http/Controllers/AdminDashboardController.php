@@ -5,66 +5,52 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PromissoryNote;
 
-
 class AdminDashboardController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the dashboard with stats.
      */
     public function index()
     {
-        $totalNotes = PromissoryNote::count();
-        $pendingNotes = PromissoryNote::where('status', 'pending')->count();
-        $approvedNotes = PromissoryNote::where('status', 'approved')->count();
-        $rejectedNotes = PromissoryNote::where('status', 'rejected')->count();
-        return view('admin.admindashboard', compact('totalNotes', 'pendingNotes', 'approvedNotes', 'rejectedNotes'));
+        $notes = PromissoryNote::with('user')->orderBy('created_at', 'desc')->get();
+    $totalNotes = $notes->count();
+    $pendingNotes = $notes->where('status', 'pending')->count();
+    $approvedNotes = $notes->where('status', 'approved')->count();
+    $rejectedNotes = $notes->where('status', 'rejected')->count();
+    return view('admin.admindashboard', compact('notes', 'totalNotes', 'pendingNotes', 'approvedNotes', 'rejectedNotes'));
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * Show specific promissory note.
      */
     public function show(string $id)
     {
-        //
+        $note = PromissoryNote::findOrFail($id);
+        return view('admin.promissorynote-detail', compact('note'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Approve a promissory note → also mark as settled.
      */
-    public function edit(string $id)
+    public function approve($pn_id)
     {
-        //
+
+        $note = PromissoryNote::findOrFail($pn_id);
+        $note->status = 'approved';
+        $note->save();
+        return redirect()->back()->with('success', 'Promissory note approved successfully.');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Reject a promissory note → keep as unsettled.
      */
-    public function update(Request $request, string $id)
+    public function reject($pn_id)
     {
-        //
+        $note = PromissoryNote::findOrFail($pn_id);
+        $note->status = 'rejected';
+        $note->save();
+        return redirect()->back()->with('success', 'Promissory note rejected successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+
     }
-}

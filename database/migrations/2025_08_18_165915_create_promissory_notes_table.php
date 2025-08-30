@@ -29,6 +29,7 @@ return new class extends Migration
             $table->date('due_date')->nullable();
             $table->text('notes')->nullable();
             $table->string('attachments')->nullable();
+            $table->boolean('is_settled')->default(false);
             $table->timestamps();
         });
     }
