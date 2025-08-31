@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use  \Illuminate\Support\Facades\Auth;
 use App\Models\PromissoryNote;
 
+
+
+
 class PromissoryNoteController extends Controller
 {
     /**
@@ -57,35 +60,38 @@ class PromissoryNoteController extends Controller
             'notes' => 'nullable|string',
             'attachments' => 'nullable',
             'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+         ]);
 
-        $validated['user_id'] = Auth::check() ? Auth::user()->id : null;
+            $validated['user_id'] = Auth::check() ? Auth::user()->id : null;
 
-        $attachmentPaths = [];
-        if ($request->hasFile('attachments')) {
+            $attachmentPaths = [];
+            if ($request->hasFile('attachments')) {
             $files = $request->file('attachments');
             foreach ((array)$files as $file) {
                 if ($file) {
                     $path = $file->store('attachments', 'public');
                     $attachmentPaths[] = $path;
                 }
-            }
-        }
-        $validated['attachments'] = !empty($attachmentPaths) ? json_encode($attachmentPaths) : null;
+             }
+          }
+             $validated['attachments'] = !empty($attachmentPaths) ? json_encode($attachmentPaths) : null;
+             $validated['status'] = 'pending';
+             PromissoryNote::create($validated);
+             return redirect()->route('student.dashboard')->with('success', 'Promissory Note submitted successfully.');
+           }
 
-    $validated['status'] = 'pending';
-    PromissoryNote::create($validated);
+         /**
+          * Display the specified resource.
+          */
+              public function show(string $id)
+          {
 
-        return redirect()->route('student.dashboard')->with('success', 'Promissory Note submitted successfully.');
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+             //
+          }
+
+
+
 
         /**
          * Display a specific promissory note for viewing.
@@ -96,33 +102,33 @@ class PromissoryNoteController extends Controller
             return view('student.promissorynote_view', compact('note'));
         }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
+       /**
+        * Show the form for editing the specified resource.
+        */
+        public function edit(string $id)
+       {
+         //
+       }
+
+       /**
+       * Update the specified resource in storage.
+       */
+       public function update(Request $request, string $id)
+       {
         //
-    }
+       }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
+       /**
+       * Remove the specified resource from storage.
+       */
+       public function destroy(string $id)
+      {
         //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+      }
 
 
-    public function checkStatus()
-    {
+       public function checkStatus()
+      {
         $user = Auth::user();
         $note = PromissoryNote::where('user_id', $user->id)
             ->where('status', 'approved')
@@ -131,6 +137,7 @@ class PromissoryNoteController extends Controller
             ->first();
 
         return response()->json(['hasUnsettled' => $note ? true : false]);
-    }
+      }
+
 
 }

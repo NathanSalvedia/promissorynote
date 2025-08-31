@@ -4,38 +4,7 @@
 <div class="min-h-screen bg-gray-100 flex flex-col">
 
 
-    <header class="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-[#660809]">MY.SPC</h1>
-            <p class="text-sm text-[#000000]">Promissory Note Management System</p>
-        </div>
-
-        <div class="flex items-center gap-6">
-
-            <button class="relative text-[#660809] hover:text-[#000000]" title="Notifications">
-                <iconify-icon icon="mdi:bell-outline" class="text-2xl"></iconify-icon>
-                <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full">3</span>
-            </button>
-
-            <div class="flex items-center gap-2">
-                <iconify-icon icon="mdi:account-circle" class="text-2xl text-gray-700"></iconify-icon>
-                <span class="font-medium">
-                    @auth
-                        {{ auth()->user()->fullname }}
-                    @else
-                        Guest
-                    @endauth
-                </span>
-            </div>
-
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="text-[#660809] hover:text-[#000000] flex items-center gap-1">
-                    <iconify-icon icon="mdi:logout" class="text-xl"></iconify-icon>
-                    Logout
-                </button>
-            </form>
-    </header>
+    @include('includes.header')
 
 
     <main class="p-6 max-w-7xl mx-auto w-full">
@@ -67,7 +36,7 @@
                 Manage Users
             </a>
 
-            <a href=""
+            <a href="{{ route('admin.payment-tracking') }}"
                class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
                title="Track payments">
                 <iconify-icon icon="mdi:cash-multiple"></iconify-icon>

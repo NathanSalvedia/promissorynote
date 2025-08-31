@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreign('pn_id')->references('pn_id')->on('promissory_notes')->onDelete('cascade');
             $table->string('evaluation_status');
             $table->timestamp('evaluated_date');
+            $table->boolean('approved_by_admin')->default(false);
+            $table->timestamp('approved_at')->nullable();
             $table->timestamps();
         });
     }

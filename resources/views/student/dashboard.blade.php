@@ -2,38 +2,31 @@
 
 @section('content')
 
+{{-- ===== styles (marquee + icon animation) ===== --}}
+<style>
+  /* marquee for header strip */
+  .marquee { white-space:nowrap; overflow:hidden; box-sizing:border-box }
+  .marquee>span { display:inline-block; padding-left:100%; animation:marquee 16s linear infinite }
+  .marquee:hover>span { animation-play-state:paused }
+  @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-100%)} }
 
+  /* icon animation (bounce + pulse) */
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+  .icon-anim {
+    animation: bounce 1.5s infinite, pulse 3s infinite;
+  }
+</style>
 
-  <div class="min-h-screen bg-gray-100 flex flex-col">
+<div class="min-h-screen bg-gray-100 flex flex-col">
 
-    <header class="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-[#660809] ">MY.SPC</h1>
-            <p class="text-sm text-[#000000] ">Promissory Note Management System</p>
-        </div>
-
-        <div class="flex items-center gap-6">
-            <button class="relative text-[#660809] hover:text-[#000000] ">
-                <iconify-icon icon="mdi:bell-outline" class="text-2xl"></iconify-icon>
-                <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full">3</span>
-            </button>
-
-            <div class="flex items-center gap-2">
-                <iconify-icon icon="mdi:account-circle" class="text-2xl text-gray-700"></iconify-icon>
-                <span class="font-medium">{{ auth()->user()->fullname }}</span>
-            </div>
-
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="text-[#660809] hover:text-[#000000] flex items-center gap-1">
-                    <iconify-icon icon="mdi:logout" class="text-xl"></iconify-icon>
-                    Logout
-                </button>
-            </form>
-        </div>
-    </header>
-
-
+    @include('includes.header')
     <main class="p-6 max-w-6xl mx-auto w-full">
 
         <h2 class="text-xl font-bold mb-4">Student Portal</h2>
@@ -143,14 +136,10 @@
                         <td colspan="6" class="py-2 px-4 border text-center text-gray-500">No promissory notes found.</td>
                     </tr>
                     @endforelse
-                </tbody>
-            </table>
-        </div>
+          </tbody>
+        </table>
+      </div>
     </main>
 </div>
-
-
-
-
 
 @endsection

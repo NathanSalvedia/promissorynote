@@ -3,31 +3,7 @@
 @section('content')
 <div class="min-h-screen bg-gray-100 flex flex-col">
 
-    <header class="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-[#660809] ">MY.SPC</h1>
-            <p class="text-sm text-[#000000] ">Promissory Note Management System</p>
-        </div>
-
-        <div class="flex items-center gap-6">
-            <button class="relative text-[#660809]  hover:text-[#000000] ">
-                <iconify-icon icon="mdi:bell-outline" class="text-2xl"></iconify-icon>
-            </button>
-            <div class="flex items-center gap-2">
-                <iconify-icon icon="mdi:account-circle" class="text-2xl text-gray-700"></iconify-icon>
-                <span class="font-medium">{{ auth()->user()->fullname }}</span>
-            </div>
-
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="text-[#660809] hover:text-[#000000] flex items-center gap-1">
-                    <iconify-icon icon="mdi:logout" class="text-xl"></iconify-icon>
-                    Logout
-                </button>
-            </form>
-        </div>
-      </header>
-
+       @include('includes.header')
       <main class="p-6 max-w-5xl mx-auto w-full">
 
         <div class="mb-4">
@@ -278,7 +254,6 @@ function submitForm() {
     document.getElementById('promissoryForm').submit();
 }
 
-
 document.addEventListener('DOMContentLoaded', function() {
     var form = document.getElementById('promissoryForm');
     if (form) {
@@ -287,15 +262,31 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch('{{ route("promissorynote.checkStatus") }}')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     if (data.hasUnsettled) {
-                        alert('Settle your previous promissory note.');
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Unsettled Promissory Note',
+                            text: 'Settle your previous promissory note before submitting a new one.',
+                            confirmButtonText: 'Ok',
+                            confirmButtonColor: '#660809',
+                            background: '#fff',
+                            color: '#660809',
+                            customClass: {
+                                popup: 'rounded-xl',
+                                confirmButton: 'px-6 py-2 text-white font-semibold rounded-lg'
+                            },
+                            showClass: {
+                                popup: 'animate__animated animate__fadeInDown'
+                            },
+                            hideClass: {
+                                popup: 'animate__animated animate__fadeOutUp'
+                            }
+                        });
                     } else {
                         form.submit();
                     }
                 })
                 .catch(() => {
-
                     form.submit();
                 });
         });

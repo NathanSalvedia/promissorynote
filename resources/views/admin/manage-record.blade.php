@@ -2,7 +2,9 @@
 
 
 @section('content')
+ @include('includes.header')
 <div class="min-h-screen bg-gray-50 py-8 px-4">
+
   <div class="max-w-6xl mx-auto">
     <h2 class="text-2xl font-bold mb-6 text-gray-800">Centralized Record Management</h2>
     <div class="flex flex-wrap gap-6 mb-8">
@@ -85,12 +87,15 @@
               <td class="py-3 px-4">{{ $note->created_at ? $note->created_at->format('Y-m-d') : '' }}</td>
               <td class="py-3 px-4">{{ $note->updated_at ? $note->updated_at->format('Y-m-d') : '' }}</td>
               <td class="py-3 px-4 flex gap-2">
+
                 <button class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg" title="View">
                   <span class="iconify" data-icon="mdi:eye" data-width="20" data-height="20"></span>
                 </button>
-                <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-lg" title="Delete">
-                  <span class="iconify" data-icon="mdi:delete" data-width="20" data-height="20"></span>
+
+                <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-lg" title="Archive">
+                  <span class="iconify" data-icon="mdi:archive" data-width="20" data-height="20"></span>
                 </button>
+
                 <button class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg" title="Download">
                   <span class="iconify" data-icon="mdi:download" data-width="20" data-height="20"></span>
                 </button>

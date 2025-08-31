@@ -22,7 +22,13 @@ class PromissoryNote extends Model
 
     public function evaluations()
     {
-        return $this->hasMany(Evaluation::class, 'pn_id');
+        return $this->hasOne(Evaluation::class, 'pn_id');
     }
 
+
+    public function approval()
+  {
+
+    return $this->hasOne(Approve::class, 'pn_id', );
+  }
 }
