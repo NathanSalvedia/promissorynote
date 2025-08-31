@@ -77,8 +77,13 @@ class PromissoryNoteController extends Controller
              $validated['attachments'] = !empty($attachmentPaths) ? json_encode($attachmentPaths) : null;
              $validated['status'] = 'pending';
              PromissoryNote::create($validated);
+
              return redirect()->route('student.dashboard')->with('success', 'Promissory Note submitted successfully.');
+
+
            }
+
+
 
          /**
           * Display the specified resource.
