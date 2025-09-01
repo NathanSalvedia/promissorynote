@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('period', function (Blueprint $table) {
             $table->bigIncrements('period_id');
             $table->unsignedBigInteger('pn_id');
-            $table->foreign('pn_id')->references('pn_id')->on('promissorynotes')->onDelete('cascade');
+            $table->foreign('pn_id')->references('pn_id')->on('promissory_notes')->onDelete('cascade');
             $table->string('term');
             $table->string('semester');
             $table->string('school_year');

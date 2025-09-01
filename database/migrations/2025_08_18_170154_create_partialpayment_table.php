@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('partialpayment', function (Blueprint $table) {
             $table->bigIncrements('payment_id');
             $table->unsignedBigInteger('pn_id');
-            $table->foreign('pn_id')->references('pn_id')->on('promissorynotes')->onDelete('cascade');
+            $table->foreign('pn_id')->references('pn_id')->on('promissory_notes')->onDelete('cascade');
             $table->decimal('payment_amount', 8, 2);
             $table->timestamps();
         });
