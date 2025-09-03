@@ -7,6 +7,9 @@ use App\Models\PromissoryNote;
 use App\Models\Evaluation;
 use Carbon\Carbon;
 use App\Models\Approve;
+use App\Models\Notification;
+use App\Models\User;
+use App\Models\AccountSubledger;
 
 class AdminDashboardController extends Controller
 {
@@ -77,5 +80,18 @@ class AdminDashboardController extends Controller
         return redirect()->back()->with('success', 'Promissorynote rejected successfully.');
     }
 
+    /**
+     * Display the subledger for a specific student.
+     */
+    public function StudentSubledger($student_id)
+    {
+        $user = User::where('student_id', $student_id)->firstOrFail();
+        $entries = AccountSubledger::where('user_id', $user->id)
+            ->orderBy('school_year')
+            ->orderBy('semester')
+            ->orderBy('date')
+            ->get();
 
+        return view('admin.student-subledger', compact('user', 'entries'));
     }
+}

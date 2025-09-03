@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('pn_id')->references('pn_id')->on('promissory_notes')->onDelete('cascade');
             $table->text('content');
             $table->timestamp('sent_at');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });
     }

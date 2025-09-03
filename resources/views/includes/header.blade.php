@@ -21,11 +21,13 @@
           <div class="flex items-center gap-3">
             <img src="/img/spc-wordmark.png" alt="SPC" class="h-10 md:h-12 object-contain">
           </div>
+
             <div class="flex items-center gap-6">
             <button class="relative text-[#660809] hover:text-[#000000] ">
                 <iconify-icon icon="mdi:bell-outline" class="text-2xl"></iconify-icon>
                 <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full">3</span>
             </button>
+
            <div class="flex items-center gap-2">
                 <iconify-icon icon="mdi:account-circle" class="text-2xl text-gray-700"></iconify-icon>
                 <span class="font-medium">{{ auth()->user()->fullname }}</span>

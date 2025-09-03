@@ -183,6 +183,10 @@
                                             <a href="{{ route('admin.promissorynote-detail', $note->pn_id) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white" title="View">
                                                 <iconify-icon icon="mdi:eye-outline"></iconify-icon>
                                             </a>
+
+                                            <a href="{{ route('admin.subledger', $note->user->student_id) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-purple-600 hover:bg-purple-700 text-white" title="View Subledger">
+                                                <iconify-icon icon="mdi:book-account-outline"></iconify-icon>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
