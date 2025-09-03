@@ -51,6 +51,7 @@ class PromissoryNoteController extends Controller
             'student_id' => 'required|string|max:50',
             'gender' => 'required|string|max:10',
             'department' => 'required|string|max:100',
+            'course' => 'required|string|max:250',
             'phone' => 'required|string|max:20',
             'year_level' => 'required|string|max:20',
             'amount' => 'required|numeric',
