@@ -40,39 +40,41 @@
                     @error('student_id')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                    @enderror
-                </div>
+                 </div>
 
-                <div>
+                 <div>
                     <label for="year" class="block text-md font-medium text-black">Year</label>
-                    <select id="year" name="year" value="{{ old('year') }}" class="@error('year') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
-                            @error('year')
-                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                        @enderror
-                        <option value="" disabled selected>Select your year</option>
-                        <option value="1">1st Year</option>
-                        <option value="2">2nd Year</option>
-                        <option value="3">3rd Year</option>
-                        <option value="4">4th Year</option>
+                    <select id="year" name="year" class="@error('year') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
+                        <option value="" disabled {{ old('year') ? '' : 'selected' }}>Select your year</option>
+                        <option value="1" {{ old('year') == '1' ? 'selected' : '' }}>1st Year</option>
+                        <option value="2" {{ old('year') == '2' ? 'selected' : '' }}>2nd Year</option>
+                        <option value="3" {{ old('year') == '3' ? 'selected' : '' }}>3rd Year</option>
+                        <option value="4" {{ old('year') == '4' ? 'selected' : '' }}>4th Year</option>
                     </select>
+                    @error('year')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-4">
-         <div>
+         <div class="grid grid-cols-2 gap-4 mb-4">
+
+            <div>
              <label for="college" class="block text-md font-medium text-black">College</label>
-             <select id="college" name="college" value="{{ old('college') }}" class="@error('college') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
-                 @error('college')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                 @enderror
-                 <option value="" disabled selected>Select your college</option>
-                 <option value="college of Arts and Sciences">College of Arts and Sciences</option>
-                 <option value="college of Engineering">College of Engineering</option>
-                 <option value="college of Business Administration">College of Business Administration</option>
-                 <option value="college of Education">College of Education</option>
-                 <option value="college of Computer Studies">College of Computer Studies</option>
-                 <option value="college of Criminology">College of Criminology</option>
-             </select>
-         </div>
+             <select id="college" name="college" class="@error('college') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
+                <option value="" disabled {{ old('college') ? '' : 'selected' }}>Select your college</option>
+                <option value="college of Arts and Sciences" {{ old('college') == 'college of Arts and Sciences' ? 'selected' : '' }}>College of Arts and Sciences</option>
+                <option value="college of Engineering" {{ old('college') == 'college of Engineering' ? 'selected' : '' }}>College of Engineering</option>
+                <option value="college of Business Administration" {{ old('college') == 'college of Business Administration' ? 'selected' : '' }}>College of Business Administration</option>
+                <option value="college of Education" {{ old('college') == 'college of Education' ? 'selected' : '' }}>College of Education</option>
+                <option value="college of Computer Studies" {{ old('college') == 'college of Computer Studies' ? 'selected' : '' }}>College of Computer Studies</option>
+                <option value="college of Criminology" {{ old('college') == 'college of Criminology' ? 'selected' : '' }}>College of Criminology</option>
+              </select>
+               @error('college')
+                <span class="text-red-500 text-sm">{{ $message }}</span>
+               @enderror
+            </div>
+
          <div>
              <label for="gender" class="block text-md font-medium text-black">Gender</label>
              <input type="text" id="gender" name="gender" class="@error('gender') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
@@ -81,8 +83,7 @@
                  @enderror
          </div>
 
-            </div>
-
+         </div>
             <div class="mb-4">
                 <label for="password" class="block text-md font-medium text-black">Password</label>
                 <input type="password" id="password" name="password" class="@error('password') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">

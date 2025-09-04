@@ -11,7 +11,7 @@
         <span class="text-black hover:underline hover:text-green-700">My.SPC</span> <span class="text-black">» Sign In</span>
      </h2>
 
-     <form action="{{ route('login')}}"  class="mt-6 text-left" method="POST">
+  <form action="{{ route('admin.login') }}" class="mt-6 text-left" method="POST">
         @csrf
        <input type="email" id="email"  name="email" value="{{ old('email') }}" placeholder="Email" class="@error('email') is-invalid @enderror block w-full px-3 py-2 mb-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
         @error('email')

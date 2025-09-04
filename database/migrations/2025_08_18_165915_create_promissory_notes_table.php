@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('fullname');
             $table->string('student_id');
             $table->string('gender');
+            $table->string('course')->nullable();
             $table->string('department');
             $table->string('phone');
             $table->string('year_level');
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->date('due_date')->nullable();
             $table->text('notes')->nullable();
             $table->string('attachments')->nullable();
+            $table->boolean('is_settled')->default(false);
             $table->timestamps();
         });
     }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('approve', function (Blueprint $table) {
             $table->bigIncrements('approve_id');
             $table->unsignedBigInteger('pn_id')->unsigned();
-            $table->foreign('pn_id')->references('pn_id')->on('promissorynotes')->onDelete('cascade');
+            $table->foreign('pn_id')->references('pn_id')->on('promissory_notes')->onDelete('cascade');
             $table->timestamp('approval_date');
             $table->timestamps();
         });

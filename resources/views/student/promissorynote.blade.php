@@ -1,35 +1,9 @@
 @extends('layouts.layout')
 
-
 @section('content')
-
 <div class="min-h-screen bg-gray-100 flex flex-col">
 
-    <header class="bg-white shadow px-6 py-4 flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-[#660809] ">MY.SPC</h1>
-            <p class="text-sm text-[#000000] ">Promissory Note Management System</p>
-        </div>
-
-        <div class="flex items-center gap-6">
-            <button class="relative text-[#660809]  hover:text-[#000000] ">
-                <iconify-icon icon="mdi:bell-outline" class="text-2xl"></iconify-icon>
-            </button>
-            <div class="flex items-center gap-2">
-                <iconify-icon icon="mdi:account-circle" class="text-2xl text-gray-700"></iconify-icon>
-                <span class="font-medium">{{ auth()->user()->fullname }}</span>
-            </div>
-
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="text-[#660809] hover:text-[#000000] flex items-center gap-1">
-                    <iconify-icon icon="mdi:logout" class="text-xl"></iconify-icon>
-                    Logout
-                </button>
-            </form>
-        </div>
-      </header>
-
+       @include('includes.header')
       <main class="p-6 max-w-5xl mx-auto w-full">
 
         <div class="mb-4">
@@ -43,8 +17,8 @@
         <div class="bg-white p-6 rounded-lg shadow">
             <h2 class="text-xl font-bold mb-6">Submit New Promissory Note</h2>
 
-         <form id="promissoryForm" action="{{ route('promissorynotes.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-                @csrf
+         <form  id="promissoryForm" action="{{ route('promissorynotes.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6" data-check-status-url="{{ route('promissorynote.checkStatus') }}">
+              @csrf
 
              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -70,6 +44,11 @@
               </select>
              </div>
 
+                          <div>
+                <label for="course" class="block text-md font-medium text-black">Course</label>
+                <input type="text" id="course" name="course"
+                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
+            </div>
 
               <div>
                <label class="block text-sm font-medium mb-1">Department</label>
@@ -160,40 +139,48 @@
 
               <div>
                <label class="block text-sm font-medium mb-1">Upload Supporting Documents</label>
-               <input type="file" name="attachments[]" multiple
+               <input type="file" name="attachments[]" multiple accept="image/*"
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
                 <p class="text-xs text-gray-500 mt-1">Attach ID, proof of hardship, etc.</p>
               </div>
 
+              <div class="grid grid-cols-2 gap-4 mb-4">
+
                 <div class="pt-4">
+                    <button type="button" onclick="reviewApplication()"
+                            class="bg-[#660809] hover:bg-[#000000] text-white px-6 py-2 rounded-lg shadow ">
+                        Review Application
+                    </button>
+                </div>
+
+               <div class="pt-4 text-right">
                     <button type="submit"
-                        class="bg-[#660809]  hover:bg-[#000000]  text-white px-6 py-2 rounded-lg shadow">
+                        class="bg-[#660809]  hover:bg-[#000000]  text-white px-6 py-2 rounded-lg shadow ml-4">
                         Submit Application
                     </button>
                 </div>
+              </div>
             </form>
         </div>
     </main>
 </div>
 
 
+<!-- Review Modal -->
+<div id="reviewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
+        <h3 class="text-lg font-bold mb-4 text-center">Review Your Application</h3>
+        <div id="reviewContent"></div>
+        <div class="mt-4 flex justify-end gap-2">
+            <button onclick="closeReviewModal()" class="bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded">Close</button>
+        </div>
+    </div>
+</div>
+@endsection
 
-
+@section('scripts')
 
 @endsection
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var reasonSelect = document.querySelector('select[name="reason"]');
-    var otherReasonBox = document.getElementById('otherReasonBox');
-    if (reasonSelect && otherReasonBox) {
-        reasonSelect.addEventListener('change', function() {
-            if (this.value === 'Other') {
-                otherReasonBox.style.display = 'block';
-            } else {
-                otherReasonBox.style.display = 'none';
-            }
-        });
-    }
-});
-</script>
+
+
