@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('fullname');
             $table->string('student_id');
             $table->string('gender');
+            $table->string('course')->nullable();
             $table->string('department');
             $table->string('phone');
             $table->string('year_level');

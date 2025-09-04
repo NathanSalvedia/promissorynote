@@ -14,7 +14,8 @@ use App\Http\Controllers\PaymentHistoryController;
 use App\Http\Controllers\ManageRecordsController;
 use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\PaymentTrackingController;
-
+use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\AnalyticsController;
 
 
 Route::get('/', function () {
@@ -38,6 +39,8 @@ Route::get('/auth/login', function () {
     Route::get('/student/status-tracking', [StatusTrackingController::class, 'index'])->name('student.status-tracking');
     Route::get('/student/payment-history', [PaymentHistoryController::class, 'index'])->name('student.payment-history');
     Route::get('/student/promissorynote/view/{id}', [PromissoryNoteController::class, 'view'])->name('student.promissorynote.view');
+    //Route::post('/notifications/read', [PromissoryNoteController::class, 'markNotificationAsRead'])->name('notifications.read');
+     //Route::get('/notifications', [PromissoryNoteController::class, 'getNotifications'])->name('notifications');
 
  });
 
@@ -56,8 +59,10 @@ Route::get('/auth/login', function () {
     Route::get('/admin/manage-records', [ManageRecordsController::class, 'manageRecords'])->name('admin.manage-records');
     Route::get('/admin/manage-users', [ManageUserController::class, 'index'])->name('admin.manage-users');
     Route::get('/admin/payment-tracking', [PaymentTrackingController::class, 'index'])->name('admin.payment-tracking');
+    Route::post('/evaluation/{id}/approve-by-admin', [EvaluationController::class, 'approvedByAdmin'])->name('evaluation.approve-by-admin');
+    Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics');
+    Route::get('/admin/student-subledger/{student_id}', [AdminDashboardController::class, 'StudentSubledger'])->name('admin.subledger');
 });
-
 
 
 

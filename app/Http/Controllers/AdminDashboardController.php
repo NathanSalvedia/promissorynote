@@ -7,6 +7,9 @@ use App\Models\PromissoryNote;
 use App\Models\Evaluation;
 use Carbon\Carbon;
 use App\Models\Approve;
+use App\Models\Notification;
+use App\Models\User;
+use App\Models\AccountSubledger;
 
 class AdminDashboardController extends Controller
 {
@@ -35,47 +38,101 @@ class AdminDashboardController extends Controller
     /**
      * Approve a promissory note → also mark as settled.
      */
-    public function approve($pn_id)
-      {
 
+    public function approve($pn_id)
+    {
         $note = PromissoryNote::findOrFail($pn_id);
         if (Approve::where('pn_id', $note->pn_id)->exists()) {
-        return redirect()->back()->with('error', 'This promissorynote is already approved.');
-     }
+            return redirect()->back()->with('error', 'This promissorynote is already approved.');
+        }
 
         $note->status = 'approved';
         $note->save();
 
         Evaluation::create([
-        'pn_id' => $note->pn_id,
-        'evaluation_status' => 'approved',
-        'evaluated_date' => Carbon::now(),
-        'approved_by_admin' => true,
-        'approved_at' => Carbon::now(),
-      ]);
+            'pn_id' => $note->pn_id,
+            'evaluation_status' => 'approved',
+            'evaluated_date' => Carbon::now(),
+            'approved_by_admin' => true,
+            'approved_at' => Carbon::now(),
+        ]);
+
+        Approve::create([
+            'pn_id' => $note->pn_id,
+            'approval_date' => Carbon::now(),
+        ]);
 
 
-         Approve::create([
-        'pn_id' => $note->pn_id,
-        'approval_date' => Carbon::now(),
-      ]);
+        Notification::create([
+            'user_id' => $note->user_id,
+            'pn_id' => $note->pn_id,
+            'content' => "Your promissory note #{$note->pn_id} has been approved.",
+            'sent_at' => now(),
+            'is_read' => false,
+        ]);
 
-      return redirect()->back()->with('success', 'Promissorynote approved and evaluation recorded.');
-
-      }
-
-
+        return redirect()->back()->with('success', 'Promissorynote approved and evaluation recorded.');
+    }
 
     /**
      * Reject a promissory note → keep as unsettled.
      */
+
     public function reject($pn_id)
     {
         $note = PromissoryNote::findOrFail($pn_id);
         $note->status = 'rejected';
         $note->save();
+
+
+        Notification::create([
+            'user_id' => $note->user_id,
+            'pn_id' => $note->pn_id,
+            'content' => "Your promissory note #{$note->pn_id} has been rejected.",
+            'sent_at' => now(),
+            'is_read' => false,
+        ]);
+
         return redirect()->back()->with('success', 'Promissorynote rejected successfully.');
     }
+    /**
+     * Display the subledger for a specific student.
+     */
+    public function StudentSubledger($student_id)
+    {
+        $user = User::where('student_id', $student_id)->firstOrFail();
+        $entries = AccountSubledger::where('user_id', $user->id)
+            ->orderBy('school_year')
+            ->orderBy('semester')
+            ->orderBy('date')
+            ->get();
 
-
+        return view('admin.student-subledger', compact('user', 'entries'));
     }
+
+
+
+
+
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:approved,rejected,pending'
+        ]);
+        $note = PromissoryNote::findOrFail($id);
+        $note->status = $request->status;
+        $note->save();
+
+        Notification::create([
+            'user_id' => $note->user_id,
+            'pn_id' => $note->pn_id,
+            'content' => "Your promissory note #{$note->pn_id} has been {$note->status}.",
+            'sent_at' => now(),
+            'is_read' => false,
+        ]);
+
+        return redirect()->back()->with('success', 'Status updated and notification sent.');
+    }
+    }
+
