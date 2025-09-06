@@ -3,10 +3,9 @@
 
 @section('content')
 
-
-
 <header class="w-full">
 
+  {{-- Top black strip with scrolling text --}}
   <div class="bg-black text-white text-[11px] md:text-xs py-0.5">
     <div class="max-w-7xl mx-auto px-4">
       <div class="marquee">
@@ -15,13 +14,13 @@
     </div>
   </div>
 
+  {{-- Maroon strip --}}
   <div class="bg-[#660809] text-white">
     <div class="max-w-7xl mx-auto flex justify-end items-center px-4 py-1 text-[11px] md:text-xs gap-4 md:gap-6">
-
     </div>
   </div>
 
-
+  {{-- White navbar --}}
   <div class="bg-white shadow">
     <div class="max-w-10xl mx-auto grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 px-5 py-1.5">
 
@@ -38,15 +37,16 @@
       </a>
     </div>
   </div>
-  </header>
+</header>
 
+{{-- Hero Section with background image --}}
+<div class="relative min-h-[calc(100vh-120px)]">
+  {{-- background image --}}
+  <img src="{{ asset('img/background.jpg') }}" 
+       alt="Background" 
+       class="absolute inset-0 w-full h-full object-cover">
 
- <div class="relative min-h-[calc(100vh-120px)]">
-  {{-- background video --}}
-  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
-    <source src="{{ asset('videos/background.mp4') }}" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  {{-- dark overlay --}}
   <div class="absolute inset-0 bg-black/50"></div>
 
   <div class="relative z-10 h-full">
@@ -67,7 +67,7 @@
             </div>
           </a>
 
-           <!-- Admin Dashboard -->
+          <!-- Admin Dashboard -->
           <a href="#{{-- route('admin.dashboard') --}}"
              class="ribbon-clip bg-[#660809]/90 hover:bg-black text-white tracking-wide
                     flex items-center gap-3 pl-6 pr-5 py-3 shadow-md rounded-l-md

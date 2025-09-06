@@ -3,72 +3,79 @@
 @section('content')
 <div class="min-h-screen bg-gray-100 flex flex-col">
 
-   @include('includes.header')
+    <!-- Fixed Header -->
+    <header class="fixed top-0 left-0 w-full z-50 shadow bg-white">
+        @include('includes.header')
+    </header>
 
-    <main class="p-6 max-w-3xl mx-auto w-full">
-
-          <div class="mb-4">
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 text-[#660809]  hover:text-[#000000] ">
+    <!-- Main content -->
+    <main class="p-6 max-w-4xl mx-auto w-full mt-24">
+        <div class="mb-6">
+            <a href="{{ route('admin.dashboard') }}" 
+               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white px-4 py-2 rounded-lg shadow transition">
                 <iconify-icon icon="mdi:arrow-left"></iconify-icon>
                 Back to Dashboard
             </a>
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-bold mb-6">Promissory Note Details</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Card -->
+        <div class="bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-2xl font-bold mb-8 text-[#660809]">Promissory Note Details</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <label class="block text-sm font-medium mb-1">Full Name</label>
-                    <div class="font-semibold">{{ $note->fullname }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Full Name</label>
+                    <div class="text-lg">{{ $note->fullname }}</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Student ID</label>
-                    <div class="font-semibold">{{ $note->student_id }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Student ID</label>
+                    <div class="text-lg">{{ $note->student_id }}</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Gender</label>
-                    <div class="font-semibold">{{ $note->gender }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Gender</label>
+                    <div class="text-lg">{{ $note->gender }}</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Department</label>
-                    <div class="font-semibold">{{ $note->department }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Department</label>
+                    <div class="text-lg">{{ $note->department }}</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Phone</label>
-                    <div class="font-semibold">{{ $note->phone }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Phone</label>
+                    <div class="text-lg">{{ $note->phone }}</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Year Level</label>
-                    <div class="font-semibold">{{ $note->year_level }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Year Level</label>
+                    <div class="text-lg">{{ $note->year_level }}</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Amount</label>
-                    <div class="font-semibold">₱{{ number_format($note->amount, 2) }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Amount</label>
+                    <div class="text-lg">₱{{ number_format($note->amount, 2) }}</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Reason</label>
-                    <div class="font-semibold">{{ $note->reason }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Reason</label>
+                    <div class="text-lg">{{ $note->reason }}</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Term</label>
-                    <div class="font-semibold">{{ $note->term }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Term</label>
+                    <div class="text-lg">{{ $note->term }}</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Academic Year</label>
-                    <div class="font-semibold">{{ $note->academic_year }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Academic Year</label>
+                    <div class="text-lg">{{ $note->academic_year }}</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Down Payment</label>
-                    <div class="font-semibold">₱{{ number_format($note->down_payment, 2) }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Down Payment</label>
+                    <div class="text-lg">₱{{ number_format($note->down_payment, 2) }}</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1">Due Date</label>
-                    <div class="font-semibold">{{ $note->due_date }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Due Date</label>
+                    <div class="text-lg">{{ $note->due_date }}</div>
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium mb-1">Additional Notes</label>
-                    <div class="font-semibold">{{ $note->notes }}</div>
+                    <label class="block text-sm font-medium text-gray-600">Additional Notes</label>
+                    <div class="text-lg">{{ $note->notes }}</div>
                 </div>
+<<<<<<< HEAD
 
                    <div class="md:col-span-2">
                    <label class="block text-sm font-medium mb-1">Attachments</label>
@@ -95,6 +102,21 @@
                             <img src="{{ asset('storage/' . $doc->file_path) }}" alt="Attachment" class="w-full h-auto rounded border hover:scale-105 transition-transform duration-200" />
                         </a>
                     @endforeach
+=======
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-600">Attachments</label>
+                    <div>
+                        @if($note->attachments)
+                            @foreach(json_decode($note->attachments, true) as $file)
+                                <a href="{{ asset('storage/' . $file) }}" 
+                                   target="_blank" 
+                                   class="text-blue-600 underline">View Attachment</a><br>
+                            @endforeach
+                        @else
+                            <span class="text-gray-500">No attachments</span>
+                        @endif
+                    </div>
+>>>>>>> cf160a76ff86df909a80c93f3a3b08dfd401936a
                 </div>
              @endif
 
