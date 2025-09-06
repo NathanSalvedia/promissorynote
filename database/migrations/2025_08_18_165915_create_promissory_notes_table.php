@@ -29,7 +29,6 @@ return new class extends Migration
             $table->decimal('down_payment', 10, 2)->nullable();
             $table->date('due_date')->nullable();
             $table->text('notes')->nullable();
-            $table->string('attachments')->nullable();
             $table->boolean('is_settled')->default(false);
             $table->timestamps();
         });

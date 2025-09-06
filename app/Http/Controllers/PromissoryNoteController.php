@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use  \Illuminate\Support\Facades\Auth;
 use App\Models\PromissoryNote;
 use App\Models\Notification;
+use App\Models\SupportingDocument;
 use Carbon\Carbon;
+use App\Enums\Role;
 
 
 
@@ -34,17 +36,16 @@ class PromissoryNoteController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+        $restricted = PromissoryNote::where('user_id', $user->id)
+            ->where('status', 'approved')
+            ->where('due_date', '<', now())
+            ->where('is_settled', false)
+            ->exists();
 
-         $user = Auth::user();
-         $restricted = PromissoryNote::where('user_id', $user->id)
-        ->where('status', 'approved')
-        ->where('due_date', '<', now())
-        ->where('is_settled', false)
-        ->exists();
-
-       if ($restricted) {
-        return redirect()->route('student.dashboard')->with('error', 'Settle your previous promissory note before submitting a new application.');
-      }
+        if ($restricted) {
+            return redirect()->route('student.dashboard')->with('error', 'Settle your previous promissory note before submitting a new application.');
+        }
 
         $validated = $request->validate([
             'fullname' => 'required|string|max:255',
@@ -63,28 +64,46 @@ class PromissoryNoteController extends Controller
             'notes' => 'nullable|string',
             'attachments' => 'nullable',
             'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-         ]);
+        ]);
 
-            $validated['user_id'] = Auth::check() ? Auth::user()->id : null;
+        $validated['user_id'] = $user->id;
+        $validated['status'] = 'pending';
 
-            $attachmentPaths = [];
-            if ($request->hasFile('attachments')) {
-            $files = $request->file('attachments');
-            foreach ((array)$files as $file) {
+        unset($validated['attachments']);
+
+        $promissoryNote = PromissoryNote::create($validated);
+
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
                 if ($file) {
-                    $path = $file->store('attachments', 'public');
-                    $attachmentPaths[] = $path;
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $filePath = $file->storeAs('supporting_documents', $fileName, 'public');
+
+                    SupportingDocument::create([
+                        'pn_id'         => $promissoryNote->pn_id,
+                        'file_name'     => $fileName,
+                        'file_path'     => $filePath,
+                        'document_type' => $file->getClientOriginalExtension(),
+                        'upload_date'   => now(),
+                    ]);
                 }
-             }
-          }
-             $validated['attachments'] = !empty($attachmentPaths) ? json_encode($attachmentPaths) : null;
-             $validated['status'] = 'pending';
-             PromissoryNote::create($validated);
+            }
+        }
 
-             return redirect()->route('student.dashboard')->with('success', 'Promissory Note submitted successfully.');
+        $admins = User::where('role', Role::ADMIN->value)->get();
+        foreach ($admins as $admin) {
+            Notification::create([
+                'user_id'   => $admin->id,
+                'pn_id'     => $promissoryNote->pn_id,
+                'content'   => $promissoryNote->fullname . ' submitted a new promissory note.',
+                'sent_at'   => now(),
+                'is_read'   => false,
+            ]);
+        }
 
 
-           }
+        return redirect()->route('student.dashboard')->with('success', 'Promissory Note submitted successfully.');
+    }
 
 
 
@@ -106,7 +125,8 @@ class PromissoryNoteController extends Controller
          */
         public function view($id)
         {
-            $note = PromissoryNote::findOrFail($id);
+
+            $note = PromissoryNote::with('supportingDocuments')->findOrFail($id);
             return view('student.promissorynote_view', compact('note'));
         }
 
@@ -146,40 +166,10 @@ class PromissoryNoteController extends Controller
     return response()->json(['hasUnsettled' => $note ? true : false]);
       }
 
-      //public function getNotifications()
-     // {
-          //$user = Auth::user();
-          //$notes = PromissoryNote::where('user_id', $user->id)->pluck('pn_id');
-          //$notifications = Notification::whereIn('pn_id', $notes)
-              //->whereNull('read_at')
-              //->orderBy('sent_at', 'desc')
-             // ->get();
 
-         // return response()->json([
-             // 'count' => $notifications->count(),
-             // 'notifications' => $notifications,
-         // ]);
       }
 
 
-      //public function markNotificationAsRead(Request $request)
-      //{
-        //  $user = Auth::user();
-         // $notificationId = $request->input('notification_id');
 
-
-         // $notes = PromissoryNote::where('user_id', $user->id)->pluck('pn_id');
-          //$notification = Notification::where('notification_id', $notificationId)
-              //->whereIn('pn_id', $notes)
-              //->first();
-
-         // if ($notification && $notification->read_at === null) {
-             // $notification->read_at = Carbon::now();
-             // $notification->save();
-             // return response()->json(['success' => true]);
-         // }
-
-          //return response()->json(['success' => false], 404);
-     // }
 
 
