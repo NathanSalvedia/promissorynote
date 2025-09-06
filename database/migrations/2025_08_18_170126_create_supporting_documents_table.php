@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supportingdocuments', function (Blueprint $table) {
+        Schema::create('supporting_documents', function (Blueprint $table) {
             $table->bigIncrements('document_id');
             $table->unsignedBigInteger('pn_id');
             $table->foreign('pn_id')->references('pn_id')->on('promissory_notes')->onDelete('cascade');

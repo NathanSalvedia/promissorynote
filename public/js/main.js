@@ -119,4 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-
+function toggleOtherReasonBox(select) {
+    var box = document.getElementById('otherReasonBox');
+    box.style.display = select.value === 'Other' ? 'block' : 'none';
+}

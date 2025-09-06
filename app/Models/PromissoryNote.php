@@ -3,6 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\SupportingDocument;
 
 class PromissoryNote extends Model
 {
@@ -30,6 +31,11 @@ class PromissoryNote extends Model
   {
 
     return $this->hasOne(Approve::class, 'pn_id', );
+  }
+
+  public function supportingDocuments()
+  {
+      return $this->hasMany(SupportingDocument::class, 'pn_id', 'pn_id');
   }
 
 

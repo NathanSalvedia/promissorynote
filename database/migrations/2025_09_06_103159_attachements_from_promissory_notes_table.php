@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,9 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('promissory_notes', function (Blueprint $table) {
-            $table->string('status')->default('pending');
-        });
+        if (Schema::hasColumn('promissory_notes', 'attachments')) {
+            Schema::table('promissory_notes', function (Blueprint $table) {
+                $table->dropColumn('attachments');
+            });
+        }
     }
 
     /**
@@ -22,7 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('promissory_notes', function (Blueprint $table) {
-            $table->dropColumn('status');
+            $table->string('attachments')->nullable();
         });
     }
 };
