@@ -3,12 +3,13 @@
 @section('content')
 <div class="min-h-screen bg-gray-100 flex flex-col">
 
+    <!-- Fixed Header -->
+    <header class="fixed top-0 left-0 w-full z-50 shadow bg-white">
+        @include('includes.header')
+    </header>
 
-    @include('includes.header')
-
-
-    <main class="p-6 max-w-7xl mx-auto w-full">
-
+    <!-- Main content (offset with margin-top) -->
+    <main class="p-6 max-w-7xl mx-auto w-full mt-24">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
             <h2 class="text-2xl font-bold">Admin Dashboard</h2>
@@ -22,35 +23,31 @@
                 Manage Records
                 </a>
 
-            <a href="#"
-               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
-               title="View analytics and reports">
-                <iconify-icon icon="mdi:chart-line"></iconify-icon>
-                Analytics
-            </a>
+                <a href="#"
+                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+                   title="View analytics and reports">
+                    <iconify-icon icon="mdi:chart-line"></iconify-icon>
+                    Analytics
+                </a>
 
-            <a href="{{ route('admin.manage-users') }}"
-               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
-               title="Manage user accounts">
-                <iconify-icon icon="mdi:account-multiple-outline"></iconify-icon>
-                Manage Users
-            </a>
+                <a href="{{ route('admin.manage-users') }}"
+                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+                   title="Manage user accounts">
+                    <iconify-icon icon="mdi:account-multiple-outline"></iconify-icon>
+                    Manage Users
+                </a>
 
-            <a href="{{ route('admin.payment-tracking') }}"
-               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
-               title="Track payments">
-                <iconify-icon icon="mdi:cash-multiple"></iconify-icon>
-                Payment Tracking
-            </a>
+                <a href="{{ route('admin.payment-tracking') }}"
+                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+                   title="Track payments">
+                    <iconify-icon icon="mdi:cash-multiple"></iconify-icon>
+                    Payment Tracking
+                </a>
 
             </div>
         </div>
 
-
-
-
-
-
+        <!-- Cards Section -->
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
             <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -59,7 +56,7 @@
                     </span>
                     <div>
                         <p class="text-sm/5 opacity-90">Total Notes</p>
-                        <p class="text-3xl font-bold">{{ $totalNotes }}</p>
+                        <p class="text-3xl">{{ $totalNotes }}</p>
                     </div>
                 </div>
             </div>
@@ -71,7 +68,7 @@
                     </span>
                     <div>
                         <p class="text-sm/5 opacity-90">Pending Review</p>
-                        <p class="text-3xl font-bold">{{ $pendingNotes }}</p>
+                        <p class="text-3xl">{{ $pendingNotes }}</p>
                     </div>
                 </div>
             </div>
@@ -83,7 +80,7 @@
                     </span>
                     <div>
                         <p class="text-sm/5 opacity-90">Approved</p>
-                        <p class="text-3xl font-bold">{{ $approvedNotes }}</p>
+                        <p class="text-3xl">{{ $approvedNotes }}</p>
                     </div>
                 </div>
             </div>
@@ -95,21 +92,25 @@
                     </span>
                     <div>
                         <p class="text-sm/5 opacity-90">Rejected</p>
-                        <p class="text-3xl font-bold">{{ $rejectedNotes }}</p>
+                        <p class="text-3xl">{{ $rejectedNotes }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="g-white rounded-2xl shadow border overflow-hidden">
+        <!-- Table Section -->
+        <div class="bg-white rounded-2xl shadow border overflow-hidden">
             <div class="px-6 py-4 bg-gray-100 border-b flex justify-between items-center">
                 <h3 class="text-xl font-bold text-[#000000]">Pending Requests</h3>
 
                 <div class="flex flex-col">
                     <label for="search" class="text-lg font-medium text-gray-700 mb-2">Search by Name/ID</label>
                     <div class="relative">
-                        <input type="text" id="search" name="search" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2" placeholder="Enter student name or ID">
-                        <iconify-icon icon="mdi:magnify" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></iconify-icon>
+                        <input type="text" id="search" name="search"
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2"
+                            placeholder="Enter student name or ID">
+                        <iconify-icon icon="mdi:magnify"
+                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></iconify-icon>
                     </div>
                 </div>
             </div>
@@ -129,81 +130,74 @@
                         </tr>
                     </thead>
 
-                        <tbody>
-                            @php
-                                $statusColors = [
-                                    'pending' => 'bg-yellow-100 text-yellow-800',
-                                    'approved' => 'bg-green-100 text-green-800',
-                                    'rejected' => 'bg-red-100 text-red-800',
-                                ];
-                            @endphp
-                            @forelse($notes as $note)
-                                <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-6 py-4 font-medium">{{ $note->pn_id }}</td>
-                                    <td class="px-6 py-4">
-                                        <div class="font-semibold">{{ $note->user->fullname ?? 'N/A' }}</div>
-                                            <div class="text-gray-500 text-xs">Student ID: {{ $note->user->student_id ?? 'N/A' }}</div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span class="inline-block bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full">
-                                            {{ $note->department }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 font-semibold">₱{{ number_format($note->amount, 2) }}</td>
-                                    <td class="px-6 py-4">{{ $note->reason }}</td>
-                                    <td class="px-6 py-4">
-                                        <div>{{ $note->created_at->format('Y-m-d') }}</div>
-                                        <div class="text-gray-500 text-xs">{{ $note->created_at->diffForHumans() }}</div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold {{ $statusColors[$note->status] ?? 'bg-gray-100 text-gray-800' }}">
-                                            {{ ucfirst($note->status) }}
-                                        </span>
-                                    </td>
+                    <tbody>
+                        @php
+                            $statusColors = [
+                                'pending' => 'bg-yellow-100 text-yellow-800',
+                                'approved' => 'bg-green-100 text-green-800',
+                                'rejected' => 'bg-red-100 text-red-800',
+                            ];
+                        @endphp
+                        @forelse($notes as $note)
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium">{{ $note->pn_id }}</td>
+                                <td class="px-6 py-4">
+                                    <div class="font-semibold">{{ $note->user->fullname ?? 'N/A' }}</div>
+                                    <div class="text-gray-500 text-xs">Student ID: {{ $note->user->student_id ?? 'N/A' }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-block bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full">
+                                        {{ $note->department }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 font-semibold">₱{{ number_format($note->amount, 2) }}</td>
+                                <td class="px-6 py-4">{{ $note->reason }}</td>
+                                <td class="px-6 py-4">
+                                    <div>{{ $note->created_at->format('Y-m-d') }}</div>
+                                    <div class="text-gray-500 text-xs">{{ $note->created_at->diffForHumans() }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold {{ $statusColors[$note->status] ?? 'bg-gray-100 text-gray-800' }}">
+                                        {{ ucfirst($note->status) }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        @if($note->status == 'pending')
+                                            <form method="POST" action="{{ route('admin.promissory.approve', $note->pn_id) }}" style="display:inline-block;">
+                                                @csrf
+                                                <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-green-600 hover:bg-green-700 text-white" title="Approve">
+                                                    <iconify-icon icon="mdi:check"></iconify-icon>
+                                                </button>
+                                            </form>
 
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-2">
+                                            <form method="POST" action="{{ route('admin.promissory.reject', $note->pn_id) }}" style="display:inline-block;">
+                                                @csrf
+                                                <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-600 hover:bg-red-700 text-white" title="Reject">
+                                                    <iconify-icon icon="mdi:close"></iconify-icon>
+                                                </button>
+                                            </form>
+                                        @endif
 
-                                           @if($note->status == 'pending')
-                                                <form method="POST" action="{{ route('admin.promissory.approve', $note->pn_id) }}" style="display:inline-block;">
-                                                    @csrf
-                                                    <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-green-600 hover:bg-green-700 text-white" title="Approve">
-                                                        <iconify-icon icon="mdi:check"></iconify-icon>
-                                                    </button>
-                                                </form>
+                                        <a href="{{ route('admin.promissorynote-detail', $note->pn_id) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white" title="View">
+                                            <iconify-icon icon="mdi:eye-outline"></iconify-icon>
+                                        </a>
 
-                                                <form method="POST" action="{{ route('admin.promissory.reject', $note->pn_id) }}" style="display:inline-block;">
-                                                    @csrf
-                                                    <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-600 hover:bg-red-700 text-white" title="Reject">
-                                                        <iconify-icon icon="mdi:close"></iconify-icon>
-                                                    </button>
-                                                </form>
-                                            @endif
-
-                                            <a href="{{ route('admin.promissorynote-detail', $note->pn_id) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white" title="View">
-                                                <iconify-icon icon="mdi:eye-outline"></iconify-icon>
-                                            </a>
-
-                                            <a href="{{ route('admin.subledger', $note->user->student_id) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-purple-600 hover:bg-purple-700 text-white" title="View Subledger">
-                                                <iconify-icon icon="mdi:book-account-outline"></iconify-icon>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="8" class="px-6 py-8 text-center text-gray-500">No pending requests.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-
-
+                                        <a href="{{ route('admin.subledger', $note->user->student_id) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-purple-600 hover:bg-purple-700 text-white" title="View Subledger">
+                                            <iconify-icon icon="mdi:book-account-outline"></iconify-icon>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" class="px-6 py-8 text-center text-gray-500">No pending requests.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
-
         </div>
     </main>
 </div>
-
 @endsection
