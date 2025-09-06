@@ -31,4 +31,10 @@ class PromissoryNote extends Model
 
     return $this->hasOne(Approve::class, 'pn_id', );
   }
+
+
+
+
 }
+
+

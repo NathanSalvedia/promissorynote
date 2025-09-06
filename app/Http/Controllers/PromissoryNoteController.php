@@ -5,6 +5,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use  \Illuminate\Support\Facades\Auth;
 use App\Models\PromissoryNote;
+use App\Models\Notification;
+use Carbon\Carbon;
 
 
 
@@ -49,6 +51,7 @@ class PromissoryNoteController extends Controller
             'student_id' => 'required|string|max:50',
             'gender' => 'required|string|max:10',
             'department' => 'required|string|max:100',
+            'course' => 'required|string|max:250',
             'phone' => 'required|string|max:20',
             'year_level' => 'required|string|max:20',
             'amount' => 'required|numeric',
@@ -134,15 +137,49 @@ class PromissoryNoteController extends Controller
 
        public function checkStatus()
       {
-        $user = Auth::user();
-        $note = PromissoryNote::where('user_id', $user->id)
-            ->where('status', 'approved')
-            ->where('is_settled', false)
-            ->where('due_date', '<', now())
-            ->first();
+         $user = Auth::user();
+         $note = PromissoryNote::where('user_id', $user->id)
+        ->whereIn('status', ['pending', 'approved'])
+        ->where('is_settled', false)
+        ->first();
 
-        return response()->json(['hasUnsettled' => $note ? true : false]);
+    return response()->json(['hasUnsettled' => $note ? true : false]);
+      }
+
+      //public function getNotifications()
+     // {
+          //$user = Auth::user();
+          //$notes = PromissoryNote::where('user_id', $user->id)->pluck('pn_id');
+          //$notifications = Notification::whereIn('pn_id', $notes)
+              //->whereNull('read_at')
+              //->orderBy('sent_at', 'desc')
+             // ->get();
+
+         // return response()->json([
+             // 'count' => $notifications->count(),
+             // 'notifications' => $notifications,
+         // ]);
       }
 
 
-}
+      //public function markNotificationAsRead(Request $request)
+      //{
+        //  $user = Auth::user();
+         // $notificationId = $request->input('notification_id');
+
+
+         // $notes = PromissoryNote::where('user_id', $user->id)->pluck('pn_id');
+          //$notification = Notification::where('notification_id', $notificationId)
+              //->whereIn('pn_id', $notes)
+              //->first();
+
+         // if ($notification && $notification->read_at === null) {
+             // $notification->read_at = Carbon::now();
+             // $notification->save();
+             // return response()->json(['success' => true]);
+         // }
+
+          //return response()->json(['success' => false], 404);
+     // }
+
+

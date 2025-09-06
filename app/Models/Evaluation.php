@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Evaluation extends Model
 {
     protected $primaryKey = 'evaluation_id';
-    protected $fillable = ['pn_id', 'evaluation_status', 'evaluated_date'];
+    protected $fillable = ['pn_id', 'evaluation_status', 'evaluated_date', 'approved_by_admin', 'approved_at',];
 
     public function promissoryNote()
     {

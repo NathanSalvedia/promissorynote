@@ -15,14 +15,13 @@
     </div>
   </div>
 
-  {{-- Maroon contact strip (thin / optional) --}}
   <div class="bg-[#660809] text-white">
     <div class="max-w-7xl mx-auto flex justify-end items-center px-4 py-1 text-[11px] md:text-xs gap-4 md:gap-6">
 
     </div>
   </div>
 
-  {{-- White nav bar --}}
+
   <div class="bg-white shadow">
     <div class="max-w-10xl mx-auto grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 px-5 py-1.5">
 
@@ -30,10 +29,8 @@
         <img src="/img/spc-wordmark.png" alt="SPC Wordmark" class="h-12 md:h-16 object-contain">
       </div>
 
-      {{-- center nav (optional) --}}
       <nav class="hidden md:flex items-center gap-5 font-semibold text-[12px]"></nav>
 
-      {{-- login --}}
       <a href="{{ route('auth.login') }}"
          class="justify-self-end bg-[#660809] text-white px-3 py-1.5 rounded-md shadow hover:bg-black flex items-center gap-1 text-[12px]">
         <iconify-icon icon="mdi:login" class="text-sm"></iconify-icon>

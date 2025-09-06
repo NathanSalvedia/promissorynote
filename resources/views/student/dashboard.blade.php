@@ -2,28 +2,6 @@
 
 @section('content')
 
-{{-- ===== styles (marquee + icon animation) ===== --}}
-<style>
-  /* marquee for header strip */
-  .marquee { white-space:nowrap; overflow:hidden; box-sizing:border-box }
-  .marquee>span { display:inline-block; padding-left:100%; animation:marquee 16s linear infinite }
-  .marquee:hover>span { animation-play-state:paused }
-  @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-100%)} }
-
-  /* icon animation (bounce + pulse) */
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-  }
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-  }
-  .icon-anim {
-    animation: bounce 1.5s infinite, pulse 3s infinite;
-  }
-</style>
-
 <div class="min-h-screen bg-gray-100 flex flex-col">
 
     @include('includes.header')
@@ -84,10 +62,6 @@
 
 
             <div class="mb-6 grid grid-cols-2 gap-4">
-
-
-
-
 
                 <a href="{{ route('student.promissorynote') }}" id="newPromissoryNote"
                 class="bg-[#660809] hover:bg-[#000000] text-white px-5 py-2 rounded-lg shadow flex items-center gap-2 justify-center">
