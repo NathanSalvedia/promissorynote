@@ -37,6 +37,8 @@ class PromissoryNoteController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+
+
         $restricted = PromissoryNote::where('user_id', $user->id)
             ->where('status', 'approved')
             ->where('due_date', '<', now())
@@ -44,30 +46,33 @@ class PromissoryNoteController extends Controller
             ->exists();
 
         if ($restricted) {
-            return redirect()->route('student.dashboard')->with('error', 'Settle your previous promissory note before submitting a new application.');
+            return redirect()->route('student.dashboard')
+                ->with('error', 'Settle your previous promissory note before submitting a new application.');
         }
 
+        // Validate input
         $validated = $request->validate([
-            'fullname' => 'required|string|max:255',
-            'student_id' => 'required|string|max:50',
-            'gender' => 'required|string|max:10',
-            'department' => 'required|string|max:100',
-            'course' => 'required|string|max:250',
-            'phone' => 'required|string|max:20',
-            'year_level' => 'required|string|max:20',
-            'amount' => 'required|numeric',
-            'reason' => 'required|string',
-            'term' => 'required|string',
+            'fullname'      => 'required|string|max:255',
+            'student_id'    => 'required|string|max:50',
+            'gender'        => 'required|string|max:10',
+            'department'    => 'required|string|max:100',
+            'course'        => 'required|string|max:250',
+            'phone'         => 'required|string|max:20',
+            'year_level'    => 'required|string|max:20',
+            'amount'        => 'required|numeric',
+            'reason'        => 'required|string',
+            'term'          => 'required|string',
             'academic_year' => 'required|string',
-            'down_payment' => 'nullable|numeric',
-            'due_date' => 'nullable|date',
-            'notes' => 'nullable|string',
-            'attachments' => 'nullable',
+            'down_payment'  => 'nullable|numeric',
+            'due_date'      => 'nullable|date',
+            'notes'         => 'nullable|string',
+            'attachments'   => 'nullable',
             'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $validated['user_id'] = $user->id;
         $validated['status'] = 'pending';
+
 
         unset($validated['attachments']);
 
@@ -90,6 +95,7 @@ class PromissoryNoteController extends Controller
             }
         }
 
+
         $admins = User::where('role', Role::ADMIN->value)->get();
         foreach ($admins as $admin) {
             Notification::create([
@@ -101,8 +107,8 @@ class PromissoryNoteController extends Controller
             ]);
         }
 
-
-        return redirect()->route('student.dashboard')->with('success', 'Promissory Note submitted successfully.');
+        return redirect()->route('student.dashboard')
+            ->with('success', 'Promissory Note submitted successfully.');
     }
 
 

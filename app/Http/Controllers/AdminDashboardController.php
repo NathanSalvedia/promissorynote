@@ -14,16 +14,45 @@ use App\Models\AccountSubledger;
 class AdminDashboardController extends Controller
 {
     /**
-     * Display the dashboard with stats.
+     * Display the dashboard with stats and filtering.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $notes = PromissoryNote::with('user')->orderBy('created_at', 'desc')->get();
+
+        $departments = PromissoryNote::select('department')->distinct()->pluck('department');
+
+        $query = PromissoryNote::with('user')->orderBy('created_at', 'desc');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->whereHas('user', function($q) use ($search) {
+                $q->where('course', 'like', "%$search%");
+            });
+        }
+
+        if ($request->filled('department')) {
+            $query->where('department', $request->input('department'));
+        }
+
+        $notes = $query->get();
+
         $totalNotes = $notes->count();
         $pendingNotes = $notes->where('status', 'pending')->count();
         $approvedNotes = $notes->where('status', 'approved')->count();
         $rejectedNotes = $notes->where('status', 'rejected')->count();
-         return view('admin.admindashboard', compact('notes', 'totalNotes', 'pendingNotes', 'approvedNotes', 'rejectedNotes'));
+
+
+        $notifications = Notification::orderBy('sent_at', 'desc')->take(10)->get();
+
+        return view('admin.admindashboard', compact(
+            'notes',
+            'totalNotes',
+            'pendingNotes',
+            'approvedNotes',
+            'rejectedNotes',
+            'departments',
+            'notifications'
+        ));
     }
 
     /**
@@ -38,7 +67,6 @@ class AdminDashboardController extends Controller
     /**
      * Approve a promissory note → also mark as settled.
      */
-
     public function approve($pn_id)
     {
         $note = PromissoryNote::findOrFail($pn_id);
@@ -62,7 +90,6 @@ class AdminDashboardController extends Controller
             'approval_date' => Carbon::now(),
         ]);
 
-
         Notification::create([
             'user_id' => $note->user_id,
             'pn_id' => $note->pn_id,
@@ -77,13 +104,11 @@ class AdminDashboardController extends Controller
     /**
      * Reject a promissory note → keep as unsettled.
      */
-
     public function reject($pn_id)
     {
         $note = PromissoryNote::findOrFail($pn_id);
         $note->status = 'rejected';
         $note->save();
-
 
         Notification::create([
             'user_id' => $note->user_id,
@@ -95,6 +120,7 @@ class AdminDashboardController extends Controller
 
         return redirect()->back()->with('success', 'Promissorynote rejected successfully.');
     }
+
     /**
      * Display the subledger for a specific student.
      */
@@ -109,11 +135,6 @@ class AdminDashboardController extends Controller
 
         return view('admin.student-subledger', compact('user', 'entries'));
     }
-
-
-
-
-
 
     public function updateStatus(Request $request, $id)
     {
@@ -134,5 +155,4 @@ class AdminDashboardController extends Controller
 
         return redirect()->back()->with('success', 'Status updated and notification sent.');
     }
-    }
-
+}

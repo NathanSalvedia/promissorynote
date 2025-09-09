@@ -1,5 +1,3 @@
-
-
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -16,6 +14,7 @@ use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\PaymentTrackingController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\AnalyticsController;
+
 
 
 Route::get('/', function () {
@@ -62,15 +61,11 @@ Route::get('/auth/login', function () {
     Route::post('/evaluation/{id}/approve-by-admin', [EvaluationController::class, 'approvedByAdmin'])->name('evaluation.approve-by-admin');
     Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics');
     Route::get('/admin/student-subledger/{student_id}', [AdminDashboardController::class, 'StudentSubledger'])->name('admin.subledger');
+    Route::get('/admin/promissorynote-show/{pn_id}', [ManageRecordsController::class, 'show'])->name('admin.promissorynotes-show');
+    Route::post('/admin/promissorynotes-archive/{pn_id}/archive', [ManageRecordsController::class, 'archive'])->name('admin.promissorynotes-archive');
+    Route::post('/admin/promissorynotes-restore/{pn_id}/restore', [ManageRecordsController::class, 'restore'])->name('admin.promissorynotes-restore');
+    Route::get('/admin/archived-notes', [ManageRecordsController::class, 'archivedNotes'])->name('admin.archived-notes');
 });
 
-
-
-
-
-
-//Route::get('/admin/admindashboard', function () {
-    //return view('admin.admindashboard');
-//})->middleware(['web'])->name('admin.admindashboard');
 
 

@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-
     var fields = document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], select, textarea');
     fields.forEach(function(field) {
         field.addEventListener('input', function() {
@@ -26,59 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
             field.classList.add('border-green-600');
         }
     });
-});
 
-
-
-function reviewApplication() {
-    var form = document.getElementById('promissoryForm');
-    var formData = new FormData(form);
-    var reviewHtml = '<div class="grid grid-cols-2 md:grid-cols-2 gap-4">';
-    var fields = [
-        {name: 'fullname', label: 'Full Name'},
-        {name: 'student_id', label: 'Student ID'},
-        {name: 'gender', label: 'Gender'},
-        {name: 'department', label: 'Department'},
-        {name: 'phone', label: 'Phone Number'},
-        {name: 'year_level', label: 'Year Level'},
-        {name: 'amount', label: 'Amount'},
-        {name: 'reason', label: 'Reason'},
-        {name: 'other_reason', label: 'Other Reason'},
-        {name: 'term', label: 'Term'},
-        {name: 'academic_year', label: 'Academic Year'},
-        {name: 'down_payment', label: 'Down Payment'},
-        {name: 'due_date', label: 'Payment Due Date'},
-        {name: 'notes', label: 'Additional Notes'}
-    ];
-    fields.forEach(function(field) {
-        var value = formData.get(field.name) || '';
-        if (field.name === 'amount' || field.name === 'down_payment') {
-            value = value ? '₱ ' + value : '';
-        }
-        reviewHtml += `<div class='bg-gray-50 rounded p-3 shadow-sm'><div class='text-xs text-gray-500 mb-1'>${field.label}</div><div class='font-semibold text-gray-800'>${value}</div></div>`;
-    });
-    reviewHtml += '</div>';
-    var files = form.querySelector('input[name="attachments[]"]').files;
-    if (files.length > 0) {
-        reviewHtml += '<div class="mt-4"><div class="text-xs text-gray-500 mb-1 font-semibold">Attachments:</div><div class="grid grid-cols-1 md:grid-cols-2 gap-2">';
-        for (var i = 0; i < files.length; i++) {
-            reviewHtml += `<div class='bg-white rounded p-2 border border-gray-200 flex items-center gap-2'><span class='text-gray-700'>${files[i].name}</span></div>`;
-        }
-        reviewHtml += '</div></div>';
-    }
-    document.getElementById('reviewContent').innerHTML = reviewHtml;
-    document.getElementById('reviewModal').classList.remove('hidden');
-}
-function closeReviewModal() {
-    document.getElementById('reviewModal').classList.add('hidden');
-}
-function submitForm() {
-    document.getElementById('promissoryForm').submit();
-}
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
+    // Only one submit handler for promissoryForm
     var form = document.getElementById('promissoryForm');
     if (form) {
         form.addEventListener('submit', function(e) {
@@ -108,16 +56,107 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         });
                     } else {
-                        form.submit();
+                        Swal.fire({
+                            icon: 'success',
+                            title: '✅ Submitted Successfully!',
+                            text: 'Your promissory note has been submitted.',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            background: '#f0fff4',
+                            color: '#22543d'
+                        }).then(() => {
+                            form.submit();
+                        });
                     }
                 })
                 .catch(() => {
-                    form.submit();
+                    Swal.fire({
+                        icon: 'success',
+                        title: '✅ Submitted Successfully!',
+                        text: 'Your promissory note has been submitted.',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        background: '#f0fff4',
+                        color: '#22543d'
+                    }).then(() => {
+                        form.submit();
+                    });
                 });
         });
     }
 });
 
+function toggleOtherReason(select) {
+    const box = document.getElementById('otherReasonBox');
+    if (select.value === 'Other') {
+        box.style.display = 'block';
+    } else {
+        box.style.display = 'none';
+    }
+}
+
+function reviewApplication() {
+    const form = document.getElementById('promissoryForm');
+    const formData = new FormData(form);
+
+    const entries = [];
+    for (let [key, value] of formData.entries()) {
+        if (key !== "_token" && value) {
+            entries.push({ key, value });
+        }
+    }
+
+    const mid = Math.ceil(entries.length / 2);
+    const col1 = entries.slice(0, mid);
+    const col2 = entries.slice(mid);
+
+    let htmlContent = `
+        <div style="text-align:left; max-height:400px; overflow-y:auto; padding:5px;">
+            <div style="display:flex; gap:24px; font-size:14px; line-height:1.5;">
+                <div style="flex:1;">
+    `;
+    col1.forEach(entry => {
+        htmlContent += `
+            <div style="padding:8px; border-bottom:1px solid #eee;">
+                <span style="font-weight:600; color:#333;">${entry.key.replace("_", " ").toUpperCase()}:</span>
+                <span style="color:#555; margin-left:4px;">${entry.value}</span>
+            </div>
+        `;
+    });
+    htmlContent += `</div><div style="flex:1;">`;
+    col2.forEach(entry => {
+        htmlContent += `
+            <div style="padding:8px; border-bottom:1px solid #eee;">
+                <span style="font-weight:600; color:#333;">${entry.key.replace("_", " ").toUpperCase()}:</span>
+                <span style="color:#555; margin-left:4px;">${entry.value}</span>
+            </div>
+        `;
+    });
+    htmlContent += `</div></div></div>`;
+
+    Swal.fire({
+        title: '📋 Review Your Application',
+        html: htmlContent,
+        showCancelButton: true,
+        confirmButtonText: '✅ Submit Application',
+        cancelButtonText: '✏️ Edit',
+        confirmButtonColor: '#228B22',
+        cancelButtonColor: '#555',
+        width: 700,
+        padding: '2em',
+        background: '#f9f9f9',
+        color: '#333',
+        customClass: {
+            popup: 'animate__animated animate__fadeInDown animate__slower',
+            confirmButton: 'rounded-lg shadow px-4 py-2',
+            cancelButton: 'rounded-lg shadow px-4 py-2'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.requestSubmit();
+        }
+    });
+}
 
 function toggleOtherReasonBox(select) {
     var box = document.getElementById('otherReasonBox');

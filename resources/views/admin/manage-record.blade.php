@@ -25,7 +25,7 @@
         </div>
         <div>
           <div class="text-gray-500 text-sm">Archived</div>
-          <div class="text-green-600 text-2xl font-bold"></div>
+          <div class="text-green-600 text-2xl font-bold">{{ $archivedNotesCount }}</div>
         </div>
       </div>
 
@@ -40,18 +40,20 @@
         </div>
       </div>
 
-
       <div class="flex items-center ml-auto">
-        <button class="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg flex items-center gap-2">
-          <span class="iconify" data-icon="mdi:download" data-width="20" data-height="20"></span>
-          Export Records
-        </button>
+        <a href="{{ route('admin.archived-notes') }}" class="ml-4 text-green-600 hover:text-green-800 flex items-center gap-1 font-semibold">
+          <span class="iconify" data-icon="mdi:archive" data-width="20" data-height="20"></span>
+          Archived Records
+        </a>
         <a href="{{ route('admin.dashboard') }}" class="ml-4 text-gray-500 hover:text-gray-700 flex items-center gap-1">
           <span class="iconify" data-icon="mdi:arrow-left" data-width="20" data-height="20"></span>
           Back
         </a>
       </div>
     </div>
+
+
+
 
 
     <div class="bg-white rounded-xl shadow p-6">
@@ -88,17 +90,22 @@
               <td class="py-3 px-4">{{ $note->updated_at ? $note->updated_at->format('Y-m-d') : '' }}</td>
               <td class="py-3 px-4 flex gap-2">
 
-                <button class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg" title="View">
-                  <span class="iconify" data-icon="mdi:eye" data-width="20" data-height="20"></span>
-                </button>
+                @if(!empty($note->pn_id))
+                  <a href="{{ route('admin.promissorynotes-show', $note->pn_id) }}" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg" title="View">
+                    <span class="iconify" data-icon="mdi:eye" data-width="20" data-height="20"></span>
+                  </a>
+                @else
+                  <button class="bg-blue-300 text-white p-2 rounded-lg opacity-50" >
+                    <span class="iconify" data-icon="mdi:eye" data-width="20" data-height="20"></span>
+                  </button>
+                @endif
 
-                <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-lg" title="Archive">
-                  <span class="iconify" data-icon="mdi:archive" data-width="20" data-height="20"></span>
-                </button>
-
-                <button class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg" title="Download">
-                  <span class="iconify" data-icon="mdi:download" data-width="20" data-height="20"></span>
-                </button>
+                <form action="{{ route('admin.promissorynotes-archive', $note->pn_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to archive this record?');" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-lg" title="Archive">
+                        <span class="iconify" data-icon="mdi:archive" data-width="20" data-height="20"></span>
+                    </button>
+                </form>
               </td>
             </tr>
             @endforeach

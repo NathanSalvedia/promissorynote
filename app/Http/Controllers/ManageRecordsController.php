@@ -10,18 +10,53 @@ class ManageRecordsController extends Controller
 {
     public function index()
     {
-        $promissoryNotes = PromissoryNote::with('user')->orderBy('created_at', 'desc')->get();
-        $totalNotes = $promissoryNotes->count();
-        $pendingNotes = $promissoryNotes->where('status', 'pending')->count();
-        $approvedNotes = $promissoryNotes->where('status', 'approved')->count();
-        $rejectedNotes = $promissoryNotes->where('status', 'rejected')->count();
-        return view('admin.manage-record', compact('promissoryNotes', 'totalNotes', 'pendingNotes', 'approvedNotes', 'rejectedNotes'));
-    }
 
+        $promissoryNotes = PromissoryNote::where('archived', false)->get();
+        $archivedNotesCount = PromissoryNote::where('archived', true)->count();
+
+        return view('admin.manage-record', compact('promissoryNotes', 'archivedNotesCount'));
+    }
 
     public function manageRecords()
     {
         $promissoryNotes = PromissoryNote::with('user')->orderBy('created_at', 'desc')->get();
-        return view('admin.manage-record', compact('promissoryNotes'));
+        $notifications = [];
+        $totalNotes = $promissoryNotes->count();
+
+        return view('admin.manage-record', compact('promissoryNotes', 'notifications', 'totalNotes'));
     }
+
+    public function show($pn_id)
+    {
+        $note = PromissoryNote::with('user')->where('pn_id', $pn_id)->firstOrFail();
+        return view('admin.promissorynote-show', compact('note'));
+    }
+
+    public function archivedNotes()
+    {
+
+        $archivedNotes = PromissoryNote::where('archived', true)->get();
+
+        return view('admin.archived-notes', compact('archivedNotes'));
+    }
+
+    public function archive($pn_id)
+    {
+        $note = PromissoryNote::findOrFail($pn_id);
+        $note->archived = true;
+        $note->save();
+
+        return redirect()->route('admin.manage-record')->with('success', 'Record archived successfully.');
+    }
+
+    public function restore($pn_id)
+    {
+        $note = PromissoryNote::findOrFail($pn_id);
+        $note->archived = false;
+        $note->save();
+
+        return redirect()->route('admin.archived-notes')->with('success', 'Record restored successfully.');
+    }
+
+
 }
