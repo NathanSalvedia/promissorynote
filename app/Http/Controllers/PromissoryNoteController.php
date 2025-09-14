@@ -9,9 +9,9 @@ use App\Models\Notification;
 use App\Models\SupportingDocument;
 use Carbon\Carbon;
 use App\Enums\Role;
-
-
-
+use App\Models\AccountSubledger;
+use App\Models\PartialPayment;
+use App\Models\Period;
 
 class PromissoryNoteController extends Controller
 {
@@ -38,7 +38,6 @@ class PromissoryNoteController extends Controller
     {
         $user = Auth::user();
 
-
         $restricted = PromissoryNote::where('user_id', $user->id)
             ->where('status', 'approved')
             ->where('due_date', '<', now())
@@ -50,7 +49,6 @@ class PromissoryNoteController extends Controller
                 ->with('error', 'Settle your previous promissory note before submitting a new application.');
         }
 
-        // Validate input
         $validated = $request->validate([
             'fullname'      => 'required|string|max:255',
             'student_id'    => 'required|string|max:50',
@@ -61,11 +59,11 @@ class PromissoryNoteController extends Controller
             'year_level'    => 'required|string|max:20',
             'amount'        => 'required|numeric',
             'reason'        => 'required|string',
-            'term'          => 'required|string',
+            'other_reason'  => 'required_if:reason,Other|max:255',
             'academic_year' => 'required|string',
+            'semester'      => 'required|string',
             'down_payment'  => 'nullable|numeric',
             'due_date'      => 'nullable|date',
-            'notes'         => 'nullable|string',
             'attachments'   => 'nullable',
             'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -73,10 +71,27 @@ class PromissoryNoteController extends Controller
         $validated['user_id'] = $user->id;
         $validated['status'] = 'pending';
 
+        if ($validated['reason'] === 'Other') {
+            $validated['other_reason'] = $request->input('other_reason');
+        } else {
+            $validated['other_reason'] = null;
+        }
 
         unset($validated['attachments']);
 
         $promissoryNote = PromissoryNote::create($validated);
+
+        Period::create([
+            'pn_id'        => $promissoryNote->pn_id,
+            'semester'     => $validated['semester'],
+            'academic_year'=> $validated['academic_year'],
+        ]);
+
+        PartialPayment::create([
+            'pn_id'          => $promissoryNote->pn_id,
+            'payment_amount' => $validated['amount'],
+            'due_date'       => $validated['due_date'] ?? null,
+        ]);
 
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
@@ -94,7 +109,6 @@ class PromissoryNoteController extends Controller
                 }
             }
         }
-
 
         $admins = User::where('role', Role::ADMIN->value)->get();
         foreach ($admins as $admin) {
@@ -173,7 +187,8 @@ class PromissoryNoteController extends Controller
       }
 
 
-      }
+
+    }
 
 
 

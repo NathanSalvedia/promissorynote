@@ -9,9 +9,6 @@
     <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-bold text-gray-800">User Management</h2>
         <div class="flex gap-3">
-            <button class="bg-[#660809] hover:bg-[#000000] text-white px-5 py-2 rounded-lg flex items-center gap-2">
-                <span class="font-bold text-lg">+</span> Add User
-            </button>
             <a href="{{ route('admin.dashboard')}}" class="ml-2 text-gray-600 hover:text-gray-900 flex items-center">
                 <iconify-icon icon="mdi:arrow-left" class="w-6 h-6"></iconify-icon>
                 <span class="ml-1">Back</span>

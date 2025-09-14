@@ -1,8 +1,7 @@
 @extends('layouts.layout')
 
-
 @section('content')
- @include('includes.header')
+ @include('includes.admin')
 <div class="min-h-screen bg-gray-50 py-8 px-4">
 
   <div class="max-w-6xl mx-auto">
@@ -52,9 +51,31 @@
       </div>
     </div>
 
-
-
-
+    <form method="GET" action="{{ route('admin.manage-record') }}" class="flex flex-col sm:flex-row sm:items-end gap-4 w-full justify-end">
+      <div>
+        <label for="search" class="text-lg font-medium text-gray-700 mb-2">Search by Course</label>
+        <div class="relative">
+          <input type="text" id="search" name="search" value="{{ request('search') }}"
+            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2"
+            placeholder="Enter course name">
+          <iconify-icon icon="mdi:magnify"
+            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></iconify-icon>
+        </div>
+      </div>
+      <div>
+        <label for="department" class="text-lg font-medium text-gray-700 mb-2">Filter by Department</label>
+        <select id="department" name="department"
+          class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-2">
+          <option value="">All Departments</option>
+          @foreach($departments as $dept)
+            <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+          @endforeach
+        </select>
+      </div>
+      <div class="self-end">
+        <button type="submit" class="bg-[#660809] text-white px-4 py-2 rounded-lg shadow">Filter</button>
+      </div>
+    </form>
 
     <div class="bg-white rounded-xl shadow p-6">
       <h3 class="text-lg font-semibold mb-4 text-gray-700">All Promissory Note Records</h3>

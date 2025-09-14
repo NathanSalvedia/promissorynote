@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('partialpayment', function (Blueprint $table) {
-            $table->bigIncrements('payment_id');
+        Schema::create('periods', function (Blueprint $table) {
+            $table->bigIncrements('period_id');
             $table->unsignedBigInteger('pn_id');
             $table->foreign('pn_id')->references('pn_id')->on('promissory_notes')->onDelete('cascade');
-            $table->decimal('payment_amount', 8, 2);
+            $table->string('semester');
+            $table->string('academic_year');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('partialpayment');
+        Schema::dropIfExists('periods');
     }
 };

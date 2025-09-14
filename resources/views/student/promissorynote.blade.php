@@ -147,16 +147,16 @@
                 @enderror
               </div>
 
-
-               <div>
-              <label class="block text-sm font-medium mb-1">Term</label>
-              <select name="term" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('term')  @enderror">
-               <option value="">Select Term</option>
-               <option value="1st Term" {{ old('term') == '1st Term' ? 'selected' : '' }}>1st Term</option>
-               <option value="2nd Term" {{ old('term') == '2nd Term' ? 'selected' : '' }}>2nd Term</option>
+             <div>
+              <label class="block text-sm font-medium mb-1">Semester</label>
+              <select name="semester" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('semester') @enderror">
+                  <option value="">Select Semester</option>
+                  <option value="1st Semester" {{ old('semester') == '1st Semester' ? 'selected' : '' }}>1st Semester</option>
+                  <option value="2nd Semester" {{ old('semester') == '2nd Semester' ? 'selected' : '' }}>2nd Semester</option>
+                  <option value="Summer" {{ old('semester') == 'Summer' ? 'selected' : '' }}>Summer</option>
               </select>
-              @error('term')
-                <span class="text-red-600 text-xs">{{ $message }}</span>
+              @error('semester')
+                  <span class="text-red-600 text-xs">{{ $message }}</span>
               @enderror
              </div>
 
@@ -191,13 +191,6 @@
               @enderror
              </div>
              </div>
-
-             <div>
-               <label class="block text-sm font-medium mb-1">Additional Notes</label>
-               <textarea name="notes" rows="3"
-                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">{{ old('notes') }}</textarea>
-              </div>
-
 
             <div>
                <label class="block text-sm font-medium mb-1">Upload Supporting Documents</label>
