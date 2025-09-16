@@ -58,5 +58,36 @@ class ManageRecordsController extends Controller
         return redirect()->route('admin.archived-notes')->with('success', 'Record restored successfully.');
     }
 
+    public function manageRecord(Request $request)
+    {
+        $query = PromissoryNote::with('user')->where('archived', false);
+
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('course', 'like', "%{$search}%");
+        }
+
+        if ($request->filled('department')) {
+            $department = $request->input('department');
+            $query->where('department', $department);
+        }
+
+        $promissoryNotes = $query->orderBy('created_at', 'desc')->get();
+
+
+        $departments = PromissoryNote::whereNotNull('department')->distinct()->pluck('department');
+
+        $totalNotes = $promissoryNotes->count();
+        $archivedNotesCount = PromissoryNote::where('archived', true)->count();
+
+        return view('admin.manage-record', compact(
+            'promissoryNotes',
+            'departments',
+            'totalNotes',
+            'archivedNotesCount'
+        ));
+    }
+
 
 }

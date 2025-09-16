@@ -59,18 +59,28 @@
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Reason</label>
-                    <div class="text-gray-800 text-lg">{{ $note->reason }}</div>
+                    <div class="text-gray-800 text-lg">
+                        {{ $note->reason }}
+                        @if(strtolower($note->reason) === 'other' && !empty($note->other_reason))
+                            <br>
+                            <span class="text-sm  text-gray-600">
+                                <span class="font-semibold">Specified Reason:</span>
+                                {{ $note->other_reason }}
+                            </span>
+                        @endif
+                    </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm text-gray-500 mb-1">Term</label>
-                    <div class="text-gray-800 text-lg">{{ $note->term }}</div>
+                    <label class="block text-sm text-gray-500 mb-1">Semester</label>
+                    <div class="text-gray-800 text-lg">{{ $note->semester ?? $note->term }}</div>
                 </div>
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Academic Year</label>
                     <div class="text-gray-800 text-lg">{{ $note->academic_year }}</div>
                 </div>
+
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Down Payment</label>

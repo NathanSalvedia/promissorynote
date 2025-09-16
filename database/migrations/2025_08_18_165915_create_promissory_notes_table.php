@@ -24,11 +24,11 @@ return new class extends Migration
             $table->string('year_level');
             $table->decimal('amount', 10, 2);
             $table->string('reason');
-            $table->string('term');
+            $table->string('other_reason')->nullable();
+            $table->string('semester');
             $table->string('academic_year');
             $table->decimal('down_payment', 10, 2)->nullable();
             $table->date('due_date')->nullable();
-            $table->text('notes')->nullable();
             $table->boolean('is_settled')->default(false);
             $table->timestamps();
         });

@@ -1,14 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     var reasonSelect = document.querySelector('select[name="reason"]');
     var otherReasonBox = document.getElementById('otherReasonBox');
-    if (reasonSelect && otherReasonBox) {
-        reasonSelect.addEventListener('change', function() {
-            if (this.value === 'Other') {
+    var otherReasonTextarea = document.querySelector('textarea[name="other_reason"]');
+    if (reasonSelect && otherReasonBox && otherReasonTextarea) {
+        function toggleOtherReason() {
+            if (reasonSelect.value === 'Other') {
                 otherReasonBox.style.display = 'block';
+                otherReasonTextarea.setAttribute('required', 'required');
             } else {
                 otherReasonBox.style.display = 'none';
+                otherReasonTextarea.removeAttribute('required');
             }
-        });
+        }
+        reasonSelect.addEventListener('change', toggleOtherReason);
+        toggleOtherReason();
     }
 
     var fields = document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], select, textarea');
@@ -26,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Only one submit handler for promissoryForm
+
     var form = document.getElementById('promissoryForm');
     if (form) {
         form.addEventListener('submit', function(e) {
@@ -85,15 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-function toggleOtherReason(select) {
-    const box = document.getElementById('otherReasonBox');
-    if (select.value === 'Other') {
-        box.style.display = 'block';
-    } else {
-        box.style.display = 'none';
-    }
-}
 
 function reviewApplication() {
     const form = document.getElementById('promissoryForm');
@@ -156,9 +152,4 @@ function reviewApplication() {
             form.requestSubmit();
         }
     });
-}
-
-function toggleOtherReasonBox(select) {
-    var box = document.getElementById('otherReasonBox');
-    box.style.display = select.value === 'Other' ? 'block' : 'none';
 }

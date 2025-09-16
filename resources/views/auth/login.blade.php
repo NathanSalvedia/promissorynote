@@ -51,15 +51,14 @@
       <!-- Divider -->
       <div class="border-t border-gray-300 my-6"></div>
 
-      <!-- Links -->
-      <p class="text-sm text-left">
-         No account yet?
-         <a href="{{ route('register')}}" class="text-maroon-700 hover:underline">Sign Up here.</a>
-      </p>
-      <p class="text-sm mt-2 text-left">
-         Forgot Password? Email
-         <a href="mailto:spcportal@spc.edu.ph" class="text-maroon-700 hover:underline">spcportal@spc.edu.ph</a>
-      </p>
+        <p class="text-sm text-left">
+            No account yet?
+            <a href="{{ route('register')}}" class="text-black hover:underline hover:text-green-700">Sign Up here.</a>
+        </p>
+        <p class="text-sm mt-2 text-left">
+            Forgot Password? Email
+            <a href="mailto:spcportal@spc.edu.ph" class="text-black hover:underline hover:text-green-700">spcportal@spc.edu.ph</a>
+        </p>
    </div>
 </div>
 
