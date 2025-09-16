@@ -14,25 +14,25 @@
 
             <div class="flex gap-3 mt-4 sm:mt-0">
                 <a href="{{ route('admin.manage-record') }}"
-                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow transition"
                    title="Manage promissory note records">
                     <iconify-icon icon="mdi:file-document-edit-outline"></iconify-icon>
                     Manage Records
                 </a>
                 <a href="#"
-                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow transition"
                    title="View analytics and reports">
                     <iconify-icon icon="mdi:chart-line"></iconify-icon>
                     Analytics
                 </a>
                 <a href="{{ route('admin.manage-users') }}"
-                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow transition"
                    title="Manage user accounts">
                     <iconify-icon icon="mdi:account-multiple-outline"></iconify-icon>
                     Manage Users
                 </a>
                 <a href="{{ route('admin.payment-tracking') }}"
-                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow transition"
                    title="Track payments">
                     <iconify-icon icon="mdi:cash-multiple"></iconify-icon>
                     Payment Tracking
@@ -93,34 +93,39 @@
 
         <!-- Table Section -->
         <div class="bg-white rounded-2xl shadow border overflow-hidden">
-            <div class="px-6 py-4 bg-gray-100 border-b flex justify-between items-center">
+            <div class="px-6 py-4 bg-gray-100 border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <h3 class="text-xl font-bold text-[#000000]">Pending Requests</h3>
 
+                <!-- Polished Search & Filter -->
+                <form method="GET" action="{{ route('admin.dashboard') }}" 
+                      class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white px-4 py-3 rounded-xl shadow border">
 
-                <form method="GET" action="{{ route('admin.dashboard') }}" class="flex flex-col sm:flex-row sm:items-end gap-4 w-full justify-end">
-                    <div>
-                        <label for="search" class="text-lg font-medium text-gray-700 mb-2">Search by Name/ID</label>
-                        <div class="relative">
-                            <input type="text" id="search" name="search" value="{{ request('search') }}"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2"
-                                placeholder="Enter student name or ID">
-                            <iconify-icon icon="mdi:magnify"
-                                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></iconify-icon>
-                        </div>
+                    <!-- Search -->
+                    <div class="relative flex-1">
+                        <input type="text" id="search" name="search" value="{{ request('search') }}"
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2 text-sm"
+                            placeholder="Search by Name or ID">
+                        <iconify-icon icon="mdi:magnify"
+                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
                     </div>
+
+                    <!-- Department Filter -->
                     <div>
-                        <label for="department" class="text-lg font-medium text-gray-700 mb-2">Filter by Department</label>
                         <select id="department" name="department"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-2">
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-2 px-3 text-sm">
                             <option value="">All Departments</option>
                             @foreach($departments as $dept)
                                 <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
                             @endforeach
                         </select>
-
                     </div>
-                    <div class="self-end">
-                        <button type="submit" class="bg-[#660809] text-white px-4 py-2 rounded-lg shadow">Filter</button>
+
+                    <!-- Button -->
+                    <div>
+                        <button type="submit" 
+                            class="bg-[#660809] hover:bg-black transition text-white px-5 py-2 rounded-lg shadow font-semibold text-sm">
+                            Filter
+                        </button>
                     </div>
                 </form>
             </div>

@@ -9,7 +9,7 @@
   <div class="bg-black text-white text-[11px] md:text-xs py-0.5">
     <div class="max-w-7xl mx-auto px-4">
       <div class="marquee">
-        <span>Enroll Now  |  Experience a Modern SPC  |  Welcome to My.SPC</span>
+        <span>DATA-DRIVEN PROMISSORY NOTE MANAGEMENT SYSTEM WITH INTEGRATED NOTIFICATION AND ANALYTICS SOLUTION</span>
       </div>
     </div>
   </div>
