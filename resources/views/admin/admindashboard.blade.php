@@ -4,7 +4,7 @@
 <div class="min-h-screen bg-gray-100 flex flex-col">
 
     <header class="fixed top-0 left-0 w-full z-50 shadow bg-white">
-        @include('includes.admin')
+        @include('includes.header')
     </header>
 
     <main class="p-6 max-w-7xl mx-auto w-full mt-24">
@@ -19,7 +19,7 @@
                     <iconify-icon icon="mdi:file-document-edit-outline"></iconify-icon>
                     Manage Records
                 </a>
-                <a href="#"
+                <a href="{{ route('admin.analytics') }}"
                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
                    title="View analytics and reports">
                     <iconify-icon icon="mdi:chart-line"></iconify-icon>
@@ -129,7 +129,7 @@
                 <table class="min-w-full table-auto">
                     <thead class="bg-gray-50 text-gray-700">
                         <tr>
-                            <th class="px-6 py-3 text-left font-semibold">Note ID</th>
+                            <th class="px-6 py-3 text-left font-semibold">PN ID</th>
                             <th class="px-6 py-3 text-left font-semibold">Full Name</th>
                             <th class="px-6 py-3 text-left font-semibold">Department</th>
                             <th class="px-6 py-3 text-left font-semibold">Amount</th>

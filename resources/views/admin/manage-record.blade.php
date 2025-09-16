@@ -40,13 +40,14 @@
       </div>
 
       <div class="flex items-center ml-auto">
-        <a href="{{ route('admin.archived-notes') }}" class="ml-4 text-green-600 hover:text-green-800 flex items-center gap-1 font-semibold">
+        <a href="{{ route('admin.archived-notes') }}" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg flex items-center gap-2 transition">
           <span class="iconify" data-icon="mdi:archive" data-width="20" data-height="20"></span>
           Archived Records
         </a>
-        <a href="{{ route('admin.dashboard') }}" class="ml-4 text-gray-500 hover:text-gray-700 flex items-center gap-1">
-          <span class="iconify" data-icon="mdi:arrow-left" data-width="20" data-height="20"></span>
-          Back
+
+        <a href="{{ route('admin.dashboard') }}" class="ml-4 bg-gray-200 hover:bg-gray-300 text-gray-700 flex items-center gap-1 font-semibold px-5 py-2 rounded-lg transition">
+            <span class="iconify" data-icon="mdi:arrow-left" data-width="20" data-height="20"></span>
+            Back
         </a>
       </div>
     </div>
@@ -95,7 +96,7 @@
           <tbody>
             @foreach($promissoryNotes as $note)
             <tr class="border-b">
-              <td class="py-3 px-4 font-semibold">{{ $note->pn_id }}</td>
+              <td class="py-3 px-4 font-semibold">PN-{{ $note->pn_id }}</td>
               <td class="py-3 px-4">
                 <div class="font-semibold text-gray-800">{{ $note->user->name ?? $note->fullname }}</div>
                 <div class="text-gray-500 text-xs">{{ $note->user->student_id ?? $note->student_id }}</div>

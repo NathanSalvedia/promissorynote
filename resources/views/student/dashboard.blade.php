@@ -93,7 +93,7 @@
                 <table class="min-w-full table-auto">
                     <thead class="bg-gray-50 text-gray-700">
                         <tr>
-                            <th class="px-6 py-3 text-left font-semibold">Note ID</th>
+                            <th class="px-6 py-3 text-left font-semibold">PN ID</th>
                             <th class="px-6 py-3 text-left font-semibold">Amount</th>
                             <th class="px-6 py-3 text-left font-semibold">Reason</th>
                             <th class="px-6 py-3 text-left font-semibold">Status</th>
@@ -111,7 +111,7 @@
                         @endphp
                         @forelse($promissoryNotes as $note)
                             <tr class="border-b hover:bg-gray-50 transition">
-                                <td class="px-6 py-4 font-medium">{{ $note->pn_id }}</td>
+                                <td class="px-6 py-4 font-medium"> PN-{{ $note->pn_id }}</td>
                                 <td class="px-6 py-4 font-semibold">₱{{ number_format($note->amount, 2) }}</td>
                                 <td class="px-6 py-4">{{ $note->reason }}</td>
                                 <td class="px-6 py-4">

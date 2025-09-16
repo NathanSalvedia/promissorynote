@@ -37,11 +37,13 @@
           <tbody>
             @foreach($archivedNotes as $note)
             <tr class="border-b">
-              <td class="py-3 px-4 font-semibold">{{ $note->pn_id }}</td>
+              <td class="py-3 px-4 font-semibold">PN-{{ $note->pn_id }}</td>
+
               <td class="py-3 px-4">
                 <div class="font-semibold text-gray-800">{{ $note->user->name ?? $note->fullname }}</div>
                 <div class="text-gray-500 text-xs">{{ $note->user->student_id ?? $note->student_id }}</div>
               </td>
+
               <td class="py-3 px-4 text-green-600 font-bold">{{ $note->user->department ?? $note->department }}</td>
               <td class="py-3 px-4">
                 <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-500">
@@ -52,12 +54,14 @@
               <td class="py-3 px-4">{{ $note->created_at ? $note->created_at->format('Y-m-d') : '' }}</td>
               <td class="py-3 px-4">{{ $note->updated_at ? $note->updated_at->format('Y-m-d') : '' }}</td>
               <td class="py-3 px-4">
+
                 <form action="{{ route('admin.promissorynotes-restore', $note->pn_id) }}" method="POST" onsubmit="return confirm('Restore this record?');" style="display:inline;">
                   @csrf
                   <button type="submit" class="bg-blue-200 hover:bg-blue-300 text-blue-700 p-2 rounded-lg" title="Restore">
                     <span class="iconify" data-icon="mdi:backup-restore" data-width="20" data-height="20"></span>
                   </button>
                 </form>
+
                 <button class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg" title="Download">
                   <span class="iconify" data-icon="mdi:download" data-width="20" data-height="20"></span>
                 </button>

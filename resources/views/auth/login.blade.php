@@ -22,6 +22,12 @@
          <span class="text-red-500 text-sm">{{ $message }}</span>
         @enderror
 
+        <div class="flex items-center mb-5">
+            <input id="customCheck1" name="remember" type="checkbox" value="true"
+                class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+            <label for="customCheck1" class="ml-2 block text-sm text-gray-700">Remember me</label>
+        </div>
+
       <button type="submit"
         class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg mx-auto block">
         Sign In
@@ -37,7 +43,7 @@
 
         <p class="text-sm mt-2 text-left">
             Forgot Password? Email
-            <a href="mailto:spcportal@spc.edu.ph" class="text-black hover:underline hover:text-green-700">spcportal@spc.edu.ph</a>
+            <a href="{{ route('password.request') }}" class="text-black hover:underline hover:text-green-700">spcportal@spc.edu.ph</a>
         </p>
    </div>
  </div>

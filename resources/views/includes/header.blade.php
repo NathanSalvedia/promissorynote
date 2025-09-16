@@ -77,11 +77,11 @@
                         x-transition:leave-end="opacity-0 transform scale-95 -translate-y-1"
                         class="absolute right-0 mt-1 w-40 rounded-md shadow-lg bg-white z-50 origin-top-right">
                         <div class="py-1">
-                            <a href="{{ route('student.payment-history') }}"
+                          <!--  <a href="{{ route('student.payment-history') }}"
                                 class="block w-full px-3 py-1.5 text-sm bg-white text-black hover:bg-[#660809] hover:text-white text-left rounded-md transition">
                                 <iconify-icon icon="mdi:history" class="mr-1"></iconify-icon>
                                 Payment History
-                            </a>
+                            </a> -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                     <button type="submit"

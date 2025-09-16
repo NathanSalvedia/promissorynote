@@ -80,7 +80,6 @@ class PromissoryNoteController extends Controller
         unset($validated['attachments']);
 
         $promissoryNote = PromissoryNote::create($validated);
-
         Period::create([
             'pn_id'        => $promissoryNote->pn_id,
             'semester'     => $validated['semester'],

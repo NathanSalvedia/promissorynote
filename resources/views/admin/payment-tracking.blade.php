@@ -63,11 +63,10 @@
             <table class="min-w-full text-sm">
                 <thead>
                     <tr class="bg-gray-100 text-gray-700">
-                        <th class="px-4 py-2 font-semibold text-left">Note ID</th>
+                        <th class="px-4 py-2 font-semibold text-left">PN ID</th>
                         <th class="px-4 py-2 font-semibold text-left">Full Name</th>
-                        <th class="px-4 py-2 font-semibold text-left">Total Amount</th>
+                        <th class="px-4 py-2 font-semibold text-left">Amount</th>
                         <th class="px-4 py-2 font-semibold text-left">Down Payment</th>
-                        <th class="px-4 py-2 font-semibold text-left">Remaining</th>
                         <th class="px-4 py-2 font-semibold text-left">Due Date</th>
                         <th class="px-4 py-2 font-semibold text-left">Status</th>
                         <th class="px-4 py-2 font-semibold text-left">Actions</th>
@@ -81,14 +80,13 @@
                             $isOverdue = $note->due_date < now()->toDateString() && $remaining > 0;
                         @endphp
                         <tr class="bg-white border-b">
-                            <td class="px-4 py-2">PN-{{ $note->id }}</td>
+                            <td class="px-4 py-2">PN-{{ $note->pn_id }}</td>
                             <td class="px-4 py-2">
                                 <span class="font-semibold">{{ $note->fullname }}</span>
                                 <div class="text-xs text-gray-500">{{ $note->student_id }}</div>
                             </td>
                             <td class="px-4 py-2">₱{{ number_format($note->amount, 2) }}</td>
                             <td class="px-4 py-2 text-green-600">₱{{ number_format($note->down_payment, 2) }}</td>
-                            <td class="px-4 py-2 text-orange-600">₱{{ number_format($remaining, 2) }}</td>
                             <td class="px-4 py-2">{{ $note->due_date }}</td>
                             <td class="px-4 py-2">
                                 @if($isOverdue)
