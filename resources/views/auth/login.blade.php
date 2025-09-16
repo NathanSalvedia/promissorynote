@@ -34,6 +34,7 @@
             No account yet?
             <a href="{{ route('register')}}" class="text-black hover:underline hover:text-green-700">Sign Up here.</a>
         </p>
+
         <p class="text-sm mt-2 text-left">
             Forgot Password? Email
             <a href="mailto:spcportal@spc.edu.ph" class="text-black hover:underline hover:text-green-700">spcportal@spc.edu.ph</a>

@@ -11,8 +11,10 @@ class PromissoryNote extends Model
 
     protected $primaryKey = 'pn_id';
     protected $fillable = [
-        'user_id', 'fullname', 'student_id', 'gender', 'department', 'phone', 'year_level', 'amount', 'reason', 'term', 'academic_year', 'down_payment', 'due_date', 'notes', 'attachments', 'status', 'is_settled'
+        'user_id', 'fullname', 'student_id', 'gender', 'course', 'department', 'phone', 'year_level', 'amount', 'reason', 'other_reason',  'academic_year',  'semester', 'down_payment', 'due_date',  'attachments', 'status', 'is_settled'
     ];
+
+
     /**
      * Get the user that owns the promissory note.
      */
@@ -38,7 +40,15 @@ class PromissoryNote extends Model
       return $this->hasMany(SupportingDocument::class, 'pn_id', 'pn_id');
   }
 
+  public function payments()
+  {
+      return $this->hasMany(Payment::class, 'pn_id', 'pn_id');
+  }
 
+  public function period()
+  {
+      return $this->hasOne(Period::class, 'pn_id', 'pn_id');
+  }
 
 
 }

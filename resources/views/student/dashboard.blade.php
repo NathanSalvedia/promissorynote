@@ -8,7 +8,6 @@
 
     <main class="p-6 max-w-7xl mx-auto w-full">
 
-        {{-- Header + Actions --}}
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
             <h2 class="text-2xl font-bold text-[#660809]">Student Dashboard</h2>
 
@@ -27,7 +26,7 @@
             </div>
         </div>
 
-        {{-- Stats Cards --}}
+
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
             <div class="bg-[#660809] text-white p-6 rounded-xl shadow-lg hover:bg-black transition">
                 <div class="flex items-center gap-3">

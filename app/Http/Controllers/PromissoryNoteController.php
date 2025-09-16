@@ -9,9 +9,9 @@ use App\Models\Notification;
 use App\Models\SupportingDocument;
 use Carbon\Carbon;
 use App\Enums\Role;
-
-
-
+use App\Models\AccountSubledger;
+use App\Models\PartialPayment;
+use App\Models\Period;
 
 class PromissoryNoteController extends Controller
 {
@@ -37,6 +37,7 @@ class PromissoryNoteController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+
         $restricted = PromissoryNote::where('user_id', $user->id)
             ->where('status', 'approved')
             ->where('due_date', '<', now())
@@ -44,34 +45,53 @@ class PromissoryNoteController extends Controller
             ->exists();
 
         if ($restricted) {
-            return redirect()->route('student.dashboard')->with('error', 'Settle your previous promissory note before submitting a new application.');
+            return redirect()->route('student.dashboard')
+                ->with('error', 'Settle your previous promissory note before submitting a new application.');
         }
 
         $validated = $request->validate([
-            'fullname' => 'required|string|max:255',
-            'student_id' => 'required|string|max:50',
-            'gender' => 'required|string|max:10',
-            'department' => 'required|string|max:100',
-            'course' => 'required|string|max:250',
-            'phone' => 'required|string|max:20',
-            'year_level' => 'required|string|max:20',
-            'amount' => 'required|numeric',
-            'reason' => 'required|string',
-            'term' => 'required|string',
+            'fullname'      => 'required|string|max:255',
+            'student_id'    => 'required|string|max:50',
+            'gender'        => 'required|string|max:10',
+            'department'    => 'required|string|max:100',
+            'course'        => 'required|string|max:250',
+            'phone'         => 'required|string|max:20',
+            'year_level'    => 'required|string|max:20',
+            'amount'        => 'required|numeric',
+            'reason'        => 'required|string',
+            'other_reason'  => 'required_if:reason,Other|max:255',
             'academic_year' => 'required|string',
-            'down_payment' => 'nullable|numeric',
-            'due_date' => 'nullable|date',
-            'notes' => 'nullable|string',
-            'attachments' => 'nullable',
+            'semester'      => 'required|string',
+            'down_payment'  => 'nullable|numeric',
+            'due_date'      => 'nullable|date',
+            'attachments'   => 'nullable',
             'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $validated['user_id'] = $user->id;
         $validated['status'] = 'pending';
 
+        if ($validated['reason'] === 'Other') {
+            $validated['other_reason'] = $request->input('other_reason');
+        } else {
+            $validated['other_reason'] = null;
+        }
+
         unset($validated['attachments']);
 
         $promissoryNote = PromissoryNote::create($validated);
+
+        Period::create([
+            'pn_id'        => $promissoryNote->pn_id,
+            'semester'     => $validated['semester'],
+            'academic_year'=> $validated['academic_year'],
+        ]);
+
+        PartialPayment::create([
+            'pn_id'          => $promissoryNote->pn_id,
+            'payment_amount' => $validated['amount'],
+            'due_date'       => $validated['due_date'] ?? null,
+        ]);
 
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
@@ -101,8 +121,8 @@ class PromissoryNoteController extends Controller
             ]);
         }
 
-
-        return redirect()->route('student.dashboard')->with('success', 'Promissory Note submitted successfully.');
+        return redirect()->route('student.dashboard')
+            ->with('success', 'Promissory Note submitted successfully.');
     }
 
 
@@ -167,7 +187,8 @@ class PromissoryNoteController extends Controller
       }
 
 
-      }
+
+    }
 
 
 

@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supporting_documents', function (Blueprint $table) {
-            $table->bigIncrements('document_id');
+        Schema::create('partial_payments', function (Blueprint $table) {
+            $table->bigIncrements('payment_id');
             $table->unsignedBigInteger('pn_id');
             $table->foreign('pn_id')->references('pn_id')->on('promissory_notes')->onDelete('cascade');
-            $table->string('file_name');
-            $table->string('file_path');
-            $table->timestamp('upload_date');
-            $table->string('document_type');
+            $table->decimal('payment_amount', 8, 2);
+            $table->date('due_date')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('supporting_documents');
+        Schema::dropIfExists('partial_payments');
     }
 };

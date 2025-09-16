@@ -3,47 +3,40 @@
 @section('content')
 <div class="min-h-screen bg-gray-100 flex flex-col">
 
-    <!-- Fixed Header -->
     <header class="fixed top-0 left-0 w-full z-50 shadow bg-white">
-        @include('includes.header')
+        @include('includes.admin')
     </header>
 
-    <!-- Main content (offset with margin-top) -->
     <main class="p-6 max-w-7xl mx-auto w-full mt-24">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
             <h2 class="text-2xl font-bold">Admin Dashboard</h2>
 
             <div class="flex gap-3 mt-4 sm:mt-0">
-
-               <a href="{{ route('admin.manage-record') }}"
+                <a href="{{ route('admin.manage-record') }}"
                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
                    title="Manage promissory note records">
-                <iconify-icon icon="mdi:file-document-edit-outline"></iconify-icon>
-                Manage Records
+                    <iconify-icon icon="mdi:file-document-edit-outline"></iconify-icon>
+                    Manage Records
                 </a>
-
                 <a href="#"
                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
                    title="View analytics and reports">
                     <iconify-icon icon="mdi:chart-line"></iconify-icon>
                     Analytics
                 </a>
-
                 <a href="{{ route('admin.manage-users') }}"
                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
                    title="Manage user accounts">
                     <iconify-icon icon="mdi:account-multiple-outline"></iconify-icon>
                     Manage Users
                 </a>
-
                 <a href="{{ route('admin.payment-tracking') }}"
                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
                    title="Track payments">
                     <iconify-icon icon="mdi:cash-multiple"></iconify-icon>
                     Payment Tracking
                 </a>
-
             </div>
         </div>
 
@@ -103,16 +96,33 @@
             <div class="px-6 py-4 bg-gray-100 border-b flex justify-between items-center">
                 <h3 class="text-xl font-bold text-[#000000]">Pending Requests</h3>
 
-                <div class="flex flex-col">
-                    <label for="search" class="text-lg font-medium text-gray-700 mb-2">Search by Name/ID</label>
-                    <div class="relative">
-                        <input type="text" id="search" name="search"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2"
-                            placeholder="Enter student name or ID">
-                        <iconify-icon icon="mdi:magnify"
-                            class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></iconify-icon>
+
+                <form method="GET" action="{{ route('admin.dashboard') }}" class="flex flex-col sm:flex-row sm:items-end gap-4 w-full justify-end">
+                    <div>
+                        <label for="search" class="text-lg font-medium text-gray-700 mb-2">Search by Name/ID</label>
+                        <div class="relative">
+                            <input type="text" id="search" name="search" value="{{ request('search') }}"
+                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2"
+                                placeholder="Enter student name or ID">
+                            <iconify-icon icon="mdi:magnify"
+                                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></iconify-icon>
+                        </div>
                     </div>
-                </div>
+                    <div>
+                        <label for="department" class="text-lg font-medium text-gray-700 mb-2">Filter by Department</label>
+                        <select id="department" name="department"
+                            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-2">
+                            <option value="">All Departments</option>
+                            @foreach($departments as $dept)
+                                <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                    <div class="self-end">
+                        <button type="submit" class="bg-[#660809] text-white px-4 py-2 rounded-lg shadow">Filter</button>
+                    </div>
+                </form>
             </div>
 
             <div class="overflow-x-auto">
@@ -123,13 +133,12 @@
                             <th class="px-6 py-3 text-left font-semibold">Full Name</th>
                             <th class="px-6 py-3 text-left font-semibold">Department</th>
                             <th class="px-6 py-3 text-left font-semibold">Amount</th>
-                            <th class="px-6 py-3 text-left font-semibold">Reason</th>
+                            <th class="px-6 py-3 text-left font-semibold">Course</th>
                             <th class="px-6 py-3 text-left font-semibold">Date</th>
                             <th class="px-6 py-3 text-left font-semibold">Status</th>
                             <th class="px-6 py-3 text-left font-semibold">Actions</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         @php
                             $statusColors = [
@@ -151,7 +160,9 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 font-semibold">₱{{ number_format($note->amount, 2) }}</td>
-                                <td class="px-6 py-4">{{ $note->reason }}</td>
+                                <td class="px-6 py-4">
+                                    {{ $note->course ?? 'N/A' }}
+                                </td>
                                 <td class="px-6 py-4">
                                     <div>{{ $note->created_at->format('Y-m-d') }}</div>
                                     <div class="text-gray-500 text-xs">{{ $note->created_at->diffForHumans() }}</div>
@@ -170,7 +181,6 @@
                                                     <iconify-icon icon="mdi:check"></iconify-icon>
                                                 </button>
                                             </form>
-
                                             <form method="POST" action="{{ route('admin.promissory.reject', $note->pn_id) }}" style="display:inline-block;">
                                                 @csrf
                                                 <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-600 hover:bg-red-700 text-white" title="Reject">
@@ -178,11 +188,9 @@
                                                 </button>
                                             </form>
                                         @endif
-
                                         <a href="{{ route('admin.promissorynote-detail', $note->pn_id) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white" title="View">
                                             <iconify-icon icon="mdi:eye-outline"></iconify-icon>
                                         </a>
-
                                         <a href="{{ route('admin.subledger', $note->user->student_id) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-purple-600 hover:bg-purple-700 text-white" title="View Subledger">
                                             <iconify-icon icon="mdi:book-account-outline"></iconify-icon>
                                         </a>
