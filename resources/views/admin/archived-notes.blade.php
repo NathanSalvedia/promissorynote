@@ -21,7 +21,6 @@
     <div class="bg-white rounded-xl shadow p-6">
       <div class="overflow-x-auto">
         <table class="min-w-full text-sm">
-
           <thead>
             <tr class="bg-gray-100 text-gray-600">
               <th class="py-3 px-4 text-left font-medium">PN ID</th>
@@ -47,17 +46,18 @@
                 <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-500">
                   Archived
                 </span>
-
               </td>
               <td class="py-3 px-4">{{ $note->created_at ? $note->created_at->format('Y-m-d') : '' }}</td>
               <td class="py-3 px-4">{{ $note->updated_at ? $note->updated_at->format('Y-m-d') : '' }}</td>
               <td class="py-3 px-4">
-                <form action="{{ route('admin.promissorynotes-restore', $note->pn_id) }}" method="POST" onsubmit="return confirm('Restore this record?');" style="display:inline;">
+                {{-- ✅ Restore button with SweetAlert --}}
+                <form id="restore-form-{{ $note->pn_id }}" action="{{ route('admin.promissorynotes-restore', $note->pn_id) }}" method="POST" style="display:none;">
                   @csrf
-                  <button type="submit" class="bg-blue-200 hover:bg-blue-300 text-blue-700 p-2 rounded-lg" title="Restore">
-                    <span class="iconify" data-icon="mdi:backup-restore" data-width="20" data-height="20"></span>
-                  </button>
                 </form>
+                <button onclick="confirmRestore({{ $note->pn_id }})" class="bg-blue-200 hover:bg-blue-300 text-blue-700 p-2 rounded-lg" title="Restore">
+                  <span class="iconify" data-icon="mdi:backup-restore" data-width="20" data-height="20"></span>
+                </button>
+
                 <button class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg" title="Download">
                   <span class="iconify" data-icon="mdi:download" data-width="20" data-height="20"></span>
                 </button>
@@ -70,4 +70,39 @@
     </div>
   </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function confirmRestore(id) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "This record will be restored.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#2563eb',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, restore it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        document.getElementById('restore-form-' + id).submit();
+      }
+    });
+  }
+</script>
+
+{{-- ✅ Success popup after restore --}}
+@if(session('success'))
+<script>
+  Swal.fire({
+    icon: 'success',
+    title: 'Restored!',
+    text: '{{ session('success') }}',
+    showConfirmButton: false,
+    timer: 2000
+  })
+</script>
+@endif
 @endsection
