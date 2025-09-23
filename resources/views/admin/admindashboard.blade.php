@@ -40,56 +40,52 @@
             </div>
         </div>
 
-        <!-- Cards Section -->
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:file-document-outline" class="text-2xl"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm/5 opacity-90">Total Notes</p>
-                        <p class="text-3xl">{{ $totalNotes }}</p>
-                    </div>
-                </div>
-            </div>
+     <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
 
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:clock-outline" class="text-2xl"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm/5 opacity-90">Pending Review</p>
-                        <p class="text-3xl">{{ $pendingNotes }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:check-circle-outline" class="text-2xl"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm/5 opacity-90">Approved</p>
-                        <p class="text-3xl">{{ $approvedNotes }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:close-circle-outline" class="text-2xl"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm/5 opacity-90">Rejected</p>
-                        <p class="text-3xl">{{ $rejectedNotes }}</p>
-                    </div>
-                </div>
-            </div>
+    <!-- Total Notes -->
+    <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+            <iconify-icon icon="mdi:file-document-outline" class="text-blue-600 text-2xl"></iconify-icon>
         </div>
+        <div>
+            <p class="text-sm opacity-80">Total Notes</p>
+            <p class="text-3xl font-bold">{{ $totalNotes }}</p>
+        </div>
+    </div>  
+
+    <!-- Pending Review -->
+    <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-100">
+            <iconify-icon icon="mdi:clock-time-four-outline" class="text-yellow-600 text-2xl"></iconify-icon>
+        </div>
+        <div>
+            <p class="text-sm opacity-80">Pending Review</p>
+            <p class="text-3xl font-bold">{{ $pendingNotes }}</p>
+        </div>
+    </div>
+
+    <!-- Approved -->
+    <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-green-100">
+            <iconify-icon icon="mdi:check-circle-outline" class="text-green-600 text-2xl"></iconify-icon>
+        </div>
+        <div>
+            <p class="text-sm opacity-80">Approved</p>
+            <p class="text-3xl font-bold">{{ $approvedNotes }}</p>
+        </div>
+    </div>
+
+    <!-- Rejected -->
+    <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-100">
+            <iconify-icon icon="mdi:close-circle-outline" class="text-red-600 text-2xl"></iconify-icon>
+        </div>
+        <div>
+            <p class="text-sm opacity-80">Rejected</p>
+            <p class="text-3xl font-bold">{{ $rejectedNotes }}</p>
+        </div>
+    </div>
+</div>
 
         <!-- Table Section -->
         <div class="bg-white rounded-2xl shadow border overflow-hidden">
