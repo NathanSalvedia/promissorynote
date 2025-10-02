@@ -1,13 +1,15 @@
 <header class="w-full">
     {{-- Top black strip with scrolling text --}}
-    <div class="bg-black text-white text-[11px] md:text-xs py-0.5">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="marquee">
-                <span>  DATA-DRIVEN PROMISSORY NOTE MANAGEMENT SYSTEM WITH INTEGRATED NOTIFICATION AND ANALYTICS SOLUTION
- </span>
-            </div>
+   <div class="bg-black text-white text-[11px] md:text-xs py-0.5">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="marquee flex items-center gap-2">
+            <span class="flex items-center gap-2">
+                <img src="/img/logo.jpg" alt="Logo" class="h-4 w-auto object-contain inline-block">
+                DATA-DRIVEN PROMISSORY NOTE MANAGEMENT SYSTEM WITH INTEGRATED NOTIFICATION AND ANALYTICS SOLUTION
+            </span>
         </div>
     </div>
+</div>
 
     {{-- Maroon strip --}}
     <div class="bg-[#660809] text-white">
