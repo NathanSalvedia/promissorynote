@@ -3,72 +3,69 @@
 @section('content')
 <div class="min-h-screen bg-gray-100 flex">
 
-    {{-- ✅ Sidebar --}}
-    @include('includes.sidebar')
-
     {{-- ✅ Main Content --}}
-    <div class="flex-1 ml-64">
+    <div class="flex-1">
 
-       {{-- ✅ Header/Navbar (always on top) --}}
-        <header class="fixed top-0 left-64 right-0 z-50 shadow bg-white">
-            @include('includes.admin')
+       {{-- ✅ Header/Navbar (always on top, full width) --}}
+        <header class="fixed top-0 left-0 right-0 z-50 shadow bg-white">
+            @include('includes.header')
         </header>
 
-        {{-- ✅ Dashboard Content --}}
-        <main class="p-6 mt-24">
-            <h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>    
+      {{-- ✅ Dashboard Content --}}
+<main class="p-6 max-w-7xl mx-auto w-full mt-24">
+    <h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>    
 
-            {{-- Stats Cards --}}
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
-                <!-- Total Notes -->
-                <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
-                    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
-                        <iconify-icon icon="mdi:file-document-outline" class="text-blue-600 text-2xl"></iconify-icon>
-                    </div>
-                    <div>
-                        <p class="text-sm opacity-80">Total Notes</p>
-                        <p class="text-3xl font-bold">{{ $totalNotes }}</p>
-                    </div>
-                </div>
-
-                <!-- Pending Review -->
-                <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
-                    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-100">
-                        <iconify-icon icon="mdi:clock-time-four-outline" class="text-yellow-600 text-2xl"></iconify-icon>
-                    </div>
-                    <div>
-                        <p class="text-sm opacity-80">Pending Review</p>
-                        <p class="text-3xl font-bold">{{ $pendingNotes }}</p>
-                    </div>
-                </div>
-
-                <!-- Approved -->
-                <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
-                    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-green-100">
-                        <iconify-icon icon="mdi:check-circle-outline" class="text-green-600 text-2xl"></iconify-icon>
-                    </div>
-                    <div>
-                        <p class="text-sm opacity-80">Approved</p>
-                        <p class="text-3xl font-bold">{{ $approvedNotes }}</p>
-                    </div>
-                </div>
-
-                <!-- Rejected -->
-                <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
-                    <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-100">
-                        <iconify-icon icon="mdi:close-circle-outline" class="text-red-600 text-2xl"></iconify-icon>
-                    </div>
-                    <div>
-                        <p class="text-sm opacity-80">Rejected</p>
-                        <p class="text-3xl font-bold">{{ $rejectedNotes }}</p>
-                    </div>
-                </div>
+    {{-- Stats Cards --}}
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
+        <!-- Total Notes -->
+        <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+                <iconify-icon icon="mdi:file-document-outline" class="text-blue-600 text-2xl"></iconify-icon>
             </div>
+            <div>
+                <p class="text-sm opacity-80">Total Notes</p>
+                <p class="text-3xl font-bold">{{ $totalNotes }}</p>
+            </div>
+        </div>
+
+        <!-- Pending Review -->
+        <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-100">
+                <iconify-icon icon="mdi:clock-time-four-outline" class="text-yellow-600 text-2xl"></iconify-icon>
+            </div>
+            <div>
+                <p class="text-sm opacity-80">Pending Review</p>
+                <p class="text-3xl font-bold">{{ $pendingNotes }}</p>
+            </div>
+        </div>
+
+        <!-- Approved -->
+        <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-green-100">
+                <iconify-icon icon="mdi:check-circle-outline" class="text-green-600 text-2xl"></iconify-icon>
+            </div>
+            <div>
+                <p class="text-sm opacity-80">Approved</p>
+                <p class="text-3xl font-bold">{{ $approvedNotes }}</p>
+            </div>
+        </div>
+
+        <!-- Rejected -->
+        <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-100">
+                <iconify-icon icon="mdi:close-circle-outline" class="text-red-600 text-2xl"></iconify-icon>
+            </div>
+            <div>
+                <p class="text-sm opacity-80">Rejected</p>
+                <p class="text-3xl font-bold">{{ $rejectedNotes }}</p>
+            </div>
+        </div>
+    </div>
 
             {{-- Table Section --}}
             <div class="bg-white rounded-2xl shadow border overflow-hidden">
-                <div class="px-6 py-4 bg-gray-100 border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    <h3 class="text-xl font-bold text-[#000000]">Pending Requests</h3>
+    <div class="px-6 py-4 bg-[#660809] border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <h3 class="text-xl font-bold text-[#ffffff]">Pending Requests</h3>
 
                     <!-- Polished Search & Filter -->
                     <form method="GET" action="{{ route('admin.dashboard') }}" 

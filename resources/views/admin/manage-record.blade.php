@@ -3,23 +3,19 @@
 @section('content')
 <div class="flex min-h-screen bg-gray-50">
 
-  {{-- ✅ Sidebar (fixed) --}}
-  @include('includes.sidebar')
-
   {{-- ✅ Main Content --}}
-  <div class="flex-1 ml-64">
+  <div class="flex-1">
 
-    {{-- ✅ Header (fixed top, shifted right para dili matabunan) --}}
-    <header class="fixed top-0 left-64 right-0 z-40 shadow bg-white">
-      @include('includes.admin')
+    {{-- ✅ Header (fixed full width) --}}
+    <header class="fixed top-0 left-0 right-0 z-40 shadow bg-white">
+      @include('includes.header')
     </header>
 
     {{-- ✅ Page Content (with padding top to avoid header overlap) --}}
-    <main class="p-6 mt-20 max-w-6xl mx-auto">
+    <main class="p-6 mt-24 max-w-6xl mx-auto">
 
-    
-
-      <h2 class="text-2xl font-bold mb-6 text-gray-800">Centralized Record Management</h2>
+      {{-- Title --}}
+      <h2 class="text-2xl font-bold mb-6 text-gray-800 mt-4">Centralized Record Management</h2>
 
       {{-- 📊 Dashboard Cards --}}
       <div class="flex flex-wrap gap-6 mb-8">
@@ -62,46 +58,48 @@
         </div>
       </div>
 
-      {{-- 🔎 Search & Filter --}}
-      <div class="bg-white p-4 rounded-xl shadow border mb-6">
-        <form method="GET" action="{{ route('admin.manage-record') }}" 
-              class="flex flex-col sm:flex-row gap-4 sm:items-center">
-
-          <!-- Search -->
-          <div class="relative flex-1">
-            <input type="text" id="search" name="search" value="{{ request('search') }}"
-              class="w-full border-gray-300 rounded-full shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2 text-sm"
-              placeholder="Search by Course or Name...">
-            <iconify-icon icon="mdi:magnify"
-              class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
-          </div>
-
-          <!-- Department Filter -->
-          <div>
-            <select id="department" name="department"
-              class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-2 px-3 text-sm">
-              <option value="">All Departments</option>
-              @foreach($departments as $dept)
-                <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>
-                  {{ $dept }}
-                </option>
-              @endforeach
-            </select>
-          </div>
-
-          <!-- Button -->
-          <div>
-            <button type="submit" 
-              class="bg-[#660809] hover:bg-red-800 transition text-white px-6 py-2 rounded-lg shadow font-semibold text-sm">
-              Apply
-            </button>
-          </div>
-        </form>
-      </div>
-
       {{-- 📋 Records Table --}}
       <div class="bg-white rounded-xl shadow p-6">
-        <h3 class="text-lg font-semibold mb-4 text-gray-700">All Promissory Note Records</h3>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-4">
+          <h3 class="text-lg font-semibold text-gray-700">All Promissory Note Records</h3>
+
+          {{-- 🔎 Search & Filter --}}
+          <form method="GET" action="{{ route('admin.manage-record') }}" 
+                class="flex flex-col sm:flex-row gap-3 sm:items-center w-full sm:w-auto">
+
+            <!-- Search -->
+            <div class="relative flex-1 sm:w-64">
+              <input type="text" id="search" name="search" value="{{ request('search') }}"
+                class="w-full border-gray-300 rounded-full shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-3 py-1.5 text-sm"
+                placeholder="Search by Course or Name...">
+              <iconify-icon icon="mdi:magnify"
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
+            </div>
+
+            <!-- Department Filter -->
+            <div>
+              <select id="department" name="department"
+                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-1.5 px-3 text-sm">
+                <option value="">All Departments</option>
+                @foreach($departments as $dept)
+                  <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>
+                    {{ $dept }}
+                  </option>
+                @endforeach
+              </select>
+            </div>
+
+            <!-- Button -->
+            <div>
+              <button type="submit" 
+                class="bg-[#660809] hover:bg-red-800 transition text-white px-5 py-1.5 rounded-lg shadow font-semibold text-sm">
+                Apply
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {{-- Table --}}
         <div class="overflow-x-auto">
           <table class="min-w-full text-sm">
             <thead>
@@ -158,23 +156,22 @@
     </main>
   </div>
 </div>
-@endsection
 
-@section('scripts')
+{{-- ✅ SweetAlert --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  // ✅ SweetAlert Confirm Archive
-  document.querySelectorAll('.archive-form').forEach(form => {
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".archive-form").forEach(form => {
+    form.addEventListener("submit", function(e) {
+      e.preventDefault(); // prevent auto submit
       Swal.fire({
-        title: 'Are you sure?',
-        text: "This record will be archived.",
-        icon: 'warning',
+        title: "Are you sure?",
+        text: "This record will be moved to Archived Records.",
+        icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, archive it!'
+        confirmButtonColor: "#660809",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Yes, archive it!"
       }).then((result) => {
         if (result.isConfirmed) {
           form.submit();
@@ -182,17 +179,6 @@
       });
     });
   });
+});
 </script>
-
-@if(session('success'))
-<script>
-  Swal.fire({
-    icon: 'success',
-    title: 'Success!',
-    text: '{{ session('success') }}',
-    showConfirmButton: false,
-    timer: 2000
-  })
-</script>
-@endif
 @endsection
