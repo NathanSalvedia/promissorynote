@@ -14,12 +14,22 @@ use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\PaymentTrackingController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\AnalyticsController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SubledgerShowController;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\SubledgerCreateController;
 
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/admin/admin-hompage', function () {
+    return view('admin.admin-homepage');
+})->name('admin.home');
+
+
 
 Route::get('/auth/login', function () {
     return view('auth.login');
@@ -32,15 +42,12 @@ Route::get('/auth/login', function () {
     Route::post('/student/promissorynote', [PromissoryNoteController::class, 'store'])->name('promissorynotes.store');
     Route::get('/promissorynotes', [PromissoryNoteController::class, 'index'])->name('promissorynotes.index');
     Route::get('/student/promissorynote/check-status', [PromissoryNoteController::class, 'checkStatus'])->name('promissorynote.checkStatus');
-    //Route::get('/student/promissorynote/images', [ImageController::class, 'create'])->name('promissorynotes.images.create');
-    //Route::post('/student/promissorynote/images', [ImageController::class, 'store'])->name('promissorynotes.images.store');
     Route::get('/student/subledger', [SubledgerController::class, 'index'])->name('student.subledger');
     Route::get('/student/status-tracking', [StatusTrackingController::class, 'index'])->name('student.status-tracking');
     Route::get('/student/payment-history', [PaymentHistoryController::class, 'index'])->name('student.payment-history');
     Route::get('/student/promissorynote/view/{id}', [PromissoryNoteController::class, 'view'])->name('student.promissorynote.view');
-    //Route::post('/notifications/read', [PromissoryNoteController::class, 'markNotificationAsRead'])->name('notifications.read');
-     //Route::get('/notifications', [PromissoryNoteController::class, 'getNotifications'])->name('notifications');
-    // Route::post('/student/promissorynote/{pn_id}/settle', [PromissoryNoteController::class, 'settle'])->name('promissorynote.settle');
+    Route::get('/student/notification-view', [NotificationController::class, 'index'])->name('student.notification-view');
+   Route::get('/student/notification-view', [NotificationController::class, 'view'])->name('student.notification-view');
 
  });
 
@@ -62,19 +69,24 @@ Route::get('/auth/login', function () {
     Route::post('/evaluation/{id}/approve-by-admin', [EvaluationController::class, 'approvedByAdmin'])->name('evaluation.approve-by-admin');
     Route::get('/admin/analytics', [AnalyticsController::class, 'index'])->name('admin.analytics');
     Route::get('/admin/student-subledger/{student_id}', [AdminDashboardController::class, 'StudentSubledger'])->name('admin.subledger');
+    Route::get('/admin/subledger-show/{student_id}', [SubledgerShowController::class, 'index'])->name('admin.subledger-show');
     Route::get('/admin/promissorynote-show/{pn_id}', [ManageRecordsController::class, 'show'])->name('admin.promissorynotes-show');
     Route::post('/admin/promissorynotes-archive/{pn_id}/archive', [ManageRecordsController::class, 'archive'])->name('admin.promissorynotes-archive');
     Route::post('/admin/promissorynotes-restore/{pn_id}/restore', [ManageRecordsController::class, 'restore'])->name('admin.promissorynotes-restore');
     Route::get('/admin/archived-notes', [ManageRecordsController::class, 'archivedNotes'])->name('admin.archived-notes');
     Route::get('/admin/manage-record', [ManageRecordsController::class, 'manageRecord'])->name('admin.manage-record');
+    Route::get('/admin/archived-notes/download/{pn_id}', [AdminDashboardController::class, 'downloadArchivedNote'])->name('admin.archived-notes.download');
+    Route::post('/admin/promissorynotes/{pn_id}/record-payment', [PromissoryNoteController::class, 'recordPayment'])->name('admin.promissorynotes.recordPayment');
+    Route::get('/admin/subledger-create', [SubledgerCreateController::class, 'index'])->name('admin.subledger-create');
+    Route::post('/admin/subledger-create', [SubledgerCreateController::class, 'store'])->name('admin.subledger.create');
 });
 
 
 
-Route::get('/test-mail', function () {
-    Mail::raw('This is a test email from Laravel using Testmail.app!', function ($message) {
-        $message->to('cj2fu.test@inbox.testmail.app')
-                ->subject('Test Email');
-    });
-    return 'Test email sent!';
-});
+//Route::get('/test-mail', function () {
+   // Mail::raw('This is a test email from Laravel using Testmail.app!', function ($message) {
+        //$message->to('cj2fu.test@inbox.testmail.app')
+               // ->subject('Test Email');
+   // });
+   // return 'Test email sent!';
+//});

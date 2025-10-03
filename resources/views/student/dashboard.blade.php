@@ -14,76 +14,18 @@
             <div class="flex gap-3 mt-4 sm:mt-0">
                 <a href="{{ route('student.promissorynote') }}"
                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white px-4 py-2 rounded-lg shadow transition">
-                    <iconify-icon icon="mdi:plus-circle-outline" class="animate-bounce"></iconify-icon>
+                    <iconify-icon icon="mdi:plus-circle-outline"></iconify-icon>
                     New Promissory Note
                 </a>
 
                 <a href="{{ route('student.subledger')}}"
                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white px-4 py-2 rounded-lg shadow transition">
-                    <iconify-icon icon="mdi:clipboard-list-outline" class="animate-bounce"></iconify-icon>
+                    <iconify-icon icon="mdi:clipboard-list-outline"></iconify-icon>
                     Account Subledger
                 </a>
             </div>
         </div>
 
-
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow-lg hover:bg-black transition">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:file-document-outline" class="text-2xl animate-pulse"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm opacity-90">Total Notes</p>
-                        <p class="text-3xl font-bold">{{ $promissoryNotes->count() }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow-lg hover:bg-black transition">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:clock-outline" class="text-2xl animate-bounce"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm opacity-90">Pending</p>
-                        <p class="text-3xl font-bold">
-                            {{ $promissoryNotes->where('status', 'pending')->count() }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow-lg hover:bg-black transition">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:check-circle-outline" class="text-2xl animate-pulse"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm opacity-90">Approved</p>
-                        <p class="text-3xl font-bold">
-                            {{ $promissoryNotes->where('status', 'approved')->count() }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow-lg hover:bg-black transition">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:currency-php" class="text-2xl animate-bounce"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm opacity-90">Total Amount</p>
-                        <p class="text-2xl font-bold">
-                            ₱{{ number_format($promissoryNotes->sum('amount'), 2) }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Promissory Notes Table --}}
         <div class="bg-white rounded-2xl shadow border overflow-hidden">
             <div class="px-6 py-4 bg-[#660809] text-white flex justify-between items-center">
                 <h3 class="text-xl font-bold">My Promissory Notes</h3>
@@ -97,7 +39,6 @@
                             <th class="px-6 py-3 text-left font-semibold">Amount</th>
                             <th class="px-6 py-3 text-left font-semibold">Reason</th>
                             <th class="px-6 py-3 text-left font-semibold">Status</th>
-                            <th class="px-6 py-3 text-left font-semibold">Date</th>
                             <th class="px-6 py-3 text-left font-semibold">Actions</th>
                         </tr>
                     </thead>
@@ -118,10 +59,6 @@
                                     <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold {{ $statusColors[$note->status] ?? 'bg-gray-100 text-gray-800' }}">
                                         {{ ucfirst($note->status) }}
                                     </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div>{{ $note->created_at->format('Y-m-d') }}</div>
-                                    <div class="text-gray-500 text-xs">{{ $note->created_at->diffForHumans() }}</div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <a href="{{ route('student.promissorynote.view', $note->pn_id) }}"

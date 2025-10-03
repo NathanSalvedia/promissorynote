@@ -1,3 +1,5 @@
+
+
 <header class="w-full">
     {{-- Top black strip with scrolling text --}}
     <div class="bg-black text-white text-[11px] md:text-xs py-0.5">
@@ -52,7 +54,7 @@
                             @endforelse
                         </ul>
                         <div class="p-2 text-right">
-                            <a href="{{ route('student.dashboard') }}" class="text-[#660809] text-xs hover:underline">View all</a>
+                            <a href="{{ route('student.notification-view') }}" class="text-[#660809] text-xs hover:underline">View all</a>
                         </div>
                     </div>
                 </div>
@@ -97,3 +99,4 @@
         </div>
     </div>
 </header>
+

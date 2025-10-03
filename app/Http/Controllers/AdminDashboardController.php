@@ -10,6 +10,7 @@ use App\Models\Approve;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\AccountSubledger;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminDashboardController extends Controller
 {
@@ -155,4 +156,15 @@ class AdminDashboardController extends Controller
 
         return redirect()->back()->with('success', 'Status updated and notification sent.');
     }
+
+
+    public function downloadArchivedNote($pn_id)
+  {
+    $note = PromissoryNote::with('user')->findOrFail($pn_id);
+    $pdf = Pdf::loadView('admin.pdf.archived-note', compact('note'));
+    return $pdf->download('PN-'.$note->pn_id.'.pdf');
+  }
+
+
+
 }

@@ -5,7 +5,15 @@
  @include('includes.header')
 
  <main class="max-w-7xl mx-auto px-6 pb-10">
-        {{-- TOP KPI CARDS (keep yours) --}}
+
+         <div class="mt-6">
+            <a href="{{ route('admin.dashboard') }}"
+               class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#660809] text-white font-medium rounded-md shadow hover:bg-black transition duration-200">
+                <iconify-icon icon="mdi:arrow-left"></iconify-icon>
+                Back to Dashboard
+            </a>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 mb-6">
             <div class="rounded-2xl shadow bg-[#660809] text-white p-6">
                 <div class="flex items-start gap-4">

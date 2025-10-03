@@ -22,10 +22,13 @@
          <span class="text-red-500 text-sm">{{ $message }}</span>
         @enderror
 
-        <div class="flex items-center mb-5">
-            <input id="customCheck1" name="remember" type="checkbox" value="true"
-                class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
-            <label for="customCheck1" class="ml-2 block text-sm text-gray-700">Remember me</label>
+        <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center">
+                <input id="customCheck1" name="remember" type="checkbox" value="true"
+                    class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                <label for="customCheck1" class="ml-2 block text-sm text-gray-700">Remember me</label>
+            </div>
+            <a href="{{ route('password.request') }}" class="text-sm text-green-700 hover:underline">Forgot Password?</a>
         </div>
 
       <button type="submit"
@@ -39,11 +42,6 @@
         <p class="text-sm text-left">
             No account yet?
             <a href="{{ route('register')}}" class="text-black hover:underline hover:text-green-700">Sign Up here.</a>
-        </p>
-
-        <p class="text-sm mt-2 text-left">
-            Forgot Password? Email
-            <a href="{{ route('password.request') }}" class="text-black hover:underline hover:text-green-700">spcportal@spc.edu.ph</a>
         </p>
    </div>
  </div>

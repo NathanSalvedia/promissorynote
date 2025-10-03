@@ -100,7 +100,7 @@
             </button>
         </form>
         <p class="mt-4 text-md text-gray-600 text-center">
-            Already have an account? <a href="" class="text-[#660809] hover:underline">Login</a>
+            Already have an account? <a href="{{ route('login') }}" class="text-[#660809] hover:underline">Login</a>
         </p>
     </div>
 </div>

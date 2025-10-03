@@ -30,42 +30,10 @@
                   data-check-status-url="{{ route('promissorynote.checkStatus') }}">
                 @csrf
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
 
              <div>
-             <label class="block text-sm font-medium mb-1">Full Name</label>
-             <input type="text" name="fullname" value="{{ old('fullname')}}"
-             class="@error('fullname') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
-               @error('fullname')
-                <span class="text-red-600 text-xs">{{ $message }}</span>
-               @enderror
-             </div>
-
-             <div>
-              <label class="block text-sm font-medium mb-1">Student ID</label>
-              <input type="text" name="student_id" value="{{ old('student_id')}}"
-              class=" @error('student_id')
-                   is-invalid
-              @enderror w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
-              @error('student_id')
-               <span class="text-red-600 text-xs">{{ $message }}</span>
-              @enderror
-             </div>
-
-             <div>
-              <label class="block text-sm font-medium mb-1">Gender</label>
-              <select name="gender"  class="@error('gender')
-              @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
-              <option value="">Select Gender</option>
-              <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
-              <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
-              </select>
-               @error('gender')
-                <span class="text-red-600 text-xs">{{ $message }}</span>
-              @enderror
-             </div>
-
-            <div>
                 <label for="course" class="@error('course') text-red-600 @enderror block text-sm font-medium mb-1">Course</label>
                 <input type="text"
                        id="course"
@@ -75,7 +43,8 @@
                 @error('course')
                     <span class="text-red-600 text-xs">{{ $message }}</span>
                 @enderror
-            </div>
+             </div>
+
 
               <div>
                <label class="block text-sm font-medium mb-1">Department</label>
@@ -92,6 +61,24 @@
                  <span class="text-red-600 text-xs">{{ $message }}</span>
                @enderror
              </div>
+
+
+             <div>
+              <label class="block text-sm font-medium mb-1">Gender</label>
+              <select name="gender"  class="@error('gender')
+              @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
+              <option value="">Select Gender</option>
+              <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+              <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+              </select>
+               @error('gender')
+                <span class="text-red-600 text-xs">{{ $message }}</span>
+              @enderror
+             </div>
+
+
+
+
 
               <div>
               <label class="block text-sm font-medium mb-1">Phone Number</label>
@@ -175,7 +162,9 @@
                <div>
               <label class="block text-sm font-medium mb-1">Down Payment (₱)</label>
               <input type="number" name="down_payment" value="{{ old('down_payment') }}"
-               class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('down_payment') @enderror">
+       min="0" step="any"
+       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('down_payment') @enderror"
+       oninput="this.value = this.value < 0 ? 0 : this.value;">
               @error('down_payment')
                 <span class="text-red-600 text-xs">{{ $message }}</span>
               @enderror
@@ -184,7 +173,7 @@
 
                <div>
               <label class="block text-sm font-medium mb-1">Payment Due Date</label>
-              <input type="date" name="due_date" value="{{ old('due_date') }}"
+              <input type="date" id="due_date" name="due_date" value="{{ old('due_date') }}"
               class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('due_date') @enderror">
               @error('due_date')
                 <span class="text-red-600 text-xs">{{ $message }}</span>

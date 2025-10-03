@@ -53,18 +53,19 @@
               </td>
               <td class="py-3 px-4">{{ $note->created_at ? $note->created_at->format('Y-m-d') : '' }}</td>
               <td class="py-3 px-4">{{ $note->updated_at ? $note->updated_at->format('Y-m-d') : '' }}</td>
-              <td class="py-3 px-4">
-
-                <form action="{{ route('admin.promissorynotes-restore', $note->pn_id) }}" method="POST" onsubmit="return confirm('Restore this record?');" style="display:inline;">
+              <td class="py-3 px-4 flex gap-2">
+                <form action="{{ route('admin.promissorynotes-restore', $note->pn_id) }}" method="POST" class="archived-restore" style="display:inline;">
                   @csrf
-                  <button type="submit" class="bg-blue-200 hover:bg-blue-300 text-blue-700 p-2 rounded-lg" title="Restore">
+                  <button type="button" class="bg-blue-200 hover:bg-blue-300 text-blue-700 p-2 rounded-lg restore-btn flex items-center justify-center" title="Restore">
                     <span class="iconify" data-icon="mdi:backup-restore" data-width="20" data-height="20"></span>
                   </button>
                 </form>
 
-                <button class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg" title="Download">
-                  <span class="iconify" data-icon="mdi:download" data-width="20" data-height="20"></span>
-                </button>
+                <a href="{{ route('admin.archived-notes.download', $note->pn_id) }}"
+                   class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg flex items-center justify-center"
+                   title="Download PDF">
+                  <span class="iconify" data-icon="mdi:file-download-outline" data-width="20" data-height="20"></span>
+                </a>
               </td>
             </tr>
             @endforeach

@@ -89,6 +89,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         });
     }
+
+    const selectAllIcon = document.getElementById('select-all-icon');
+    let allChecked = false;
+
+    if (selectAllIcon) {
+        selectAllIcon.addEventListener('click', function() {
+            allChecked = !allChecked;
+            toggleAll({ checked: allChecked });
+
+            const icon = selectAllIcon.querySelector('iconify-icon');
+            if (allChecked) {
+                icon.setAttribute('icon', 'mdi:checkbox-marked');
+                icon.classList.add('text-[#660809]');
+            } else {
+                icon.setAttribute('icon', 'mdi:checkbox-blank-outline');
+                icon.classList.remove('text-[#660809]');
+            }
+        });
+    }
+
+
+    const dueDateInput = document.getElementById('due_date');
+    if (dueDateInput) {
+        dueDateInput.addEventListener('change', function() {
+            const selected = new Date(this.value);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            if (selected < today) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Invalid Due Date',
+                    text: 'You cannot select a past date for Payment Due Date.',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    background: '#fffbe6',
+                    color: '#d7263d',
+                    customClass: {
+                        popup: 'rounded-xl shadow-lg px-4 py-3'
+                    }
+                });
+                this.value = '';
+            }
+        });
+    }
 });
 
 function reviewApplication() {
@@ -153,3 +201,148 @@ function reviewApplication() {
         }
     });
 }
+
+function toggleAll(source) {
+    const checkboxes = document.getElementsByName('selected[]');
+    for (let i = 0, n = checkboxes.length; i < n; i++) {
+        checkboxes[i].checked = source.checked;
+    }
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.archive-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Archive Record?',
+                text: 'Are you sure you want to archive this record?',
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Yes, archive it!',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                background: '#fffbe6',
+                color: '#333',
+                customClass: {
+                    popup: 'rounded-xl shadow-lg',
+                    confirmButton: 'px-4 py-2 font-semibold rounded-lg',
+                    cancelButton: 'px-4 py-2 font-semibold rounded-lg'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    btn.closest('form').submit();
+                }
+            });
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.restore-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'Restore Record?',
+                    text: 'Are you sure you want to restore this record?',
+                    showConfirmButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, restore it!',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    background: '#fffbe6',
+                    color: '#333',
+                    customClass: {
+                        popup: 'rounded-xl shadow-lg',
+                        confirmButton: 'px-4 py-2 font-semibold rounded-lg',
+                        cancelButton: 'px-4 py-2 font-semibold rounded-lg'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        btn.closest('form').submit();
+                    }
+                });
+        });
+    });
+});
+
+
+document.getElementById('subledgerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Save Entry?',
+        html: `
+            <div class="flex flex-col items-center">
+                <span class="iconify" data-icon="mdi:content-save-outline" data-width="48" data-height="48" style="color:#660809;"></span>
+                <div class="mt-4 text-gray-700">Please confirm you want to save this subledger entry.</div>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Save',
+        cancelButtonText: 'Cancel',
+        customClass: {
+            popup: 'rounded-xl',
+            confirmButton: 'bg-[#660809] text-white px-6 py-2 rounded-lg font-bold shadow-none',
+            cancelButton: 'bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-bold shadow-none ml-2'
+        },
+        buttonsStyling: false,
+        background: '#fff',
+        color: '#222',
+        focusConfirm: false,
+        didOpen: () => {
+
+            if (window.Iconify) {
+                Iconify.scan();
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            e.target.submit();
+        }
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const minDate = `${yyyy}-${mm}-${dd}`;
+        document.getElementById('due_date').setAttribute('min', minDate);
+    });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const downPaymentInput = document.querySelector('input[name="down_payment"]');
+    if (downPaymentInput) {
+        downPaymentInput.addEventListener('input', function(e) {
+            if (this.value < 0 || isNaN(this.value)) {
+                this.value = '';
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'Invalid Down Payment',
+                    text: 'Down Payment cannot be negative or non-numeric.',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    background: '#fffbe6',
+                    color: '#d7263d',
+                    customClass: {
+                        popup: 'rounded-xl shadow-lg px-4 py-3'
+                    }
+                });
+            }
+        });
+    }
+});
+

@@ -4,7 +4,7 @@
 
 <div class="flex items-center justify-center min-h-screen bg-gray-50">
     <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-8">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Forgot Your Password?</h2>
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">RESET PASSWORD</h2>
         <form action="{{ route('password.email')}}" class="space-y-5" method="POST">
             @csrf
             <div>

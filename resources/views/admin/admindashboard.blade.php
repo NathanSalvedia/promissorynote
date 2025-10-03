@@ -13,6 +13,14 @@
             <h2 class="text-2xl font-bold">Admin Dashboard</h2>
 
             <div class="flex gap-3 mt-4 sm:mt-0">
+
+                <a href="{{ route('admin.subledger-create') }}"
+                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
+                   title="Manage promissory note records">
+                    <iconify-icon icon="mdi:file-document-edit-outline"></iconify-icon>
+                    Subledger Entry
+                </a>
+
                 <a href="{{ route('admin.manage-record') }}"
                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#000000] text-white px-4 py-2 rounded-lg shadow"
                    title="Manage promissory note records">
@@ -40,89 +48,54 @@
             </div>
         </div>
 
-        <!-- Cards Section -->
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:file-document-outline" class="text-2xl"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm/5 opacity-90">Total Notes</p>
-                        <p class="text-3xl">{{ $totalNotes }}</p>
-                    </div>
+            <div class="mt-6 mb-4">
+
+                <div class="bg-gray-100 rounded-2xl shadow p-6 border flex flex-col sm:flex-row sm:items-end gap-6 w-full justify-end">
+                    <form method="GET" action="{{ route('admin.dashboard') }}" class="flex flex-col sm:flex-row sm:items-end gap-6 w-full">
+                        <div class="flex-1">
+                            <label for="search" class="block text-base font-semibold text-[#660809] mb-2 tracking-wide">
+                                <iconify-icon icon="mdi:magnify" class="inline-block mr-1 text-xl align-middle"></iconify-icon>
+                                <span class="align-middle">Search by Course</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" id="search" name="search" value="{{ request('search') }}"
+                                    class="w-full border-2 border-gray-200 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-12 pr-4 py-2 text-gray-800 transition"
+                                    placeholder="Search by Course">
+                                <iconify-icon icon="mdi:magnify"
+                                    class="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#660809] text-2xl pointer-events-none"></iconify-icon>
+                            </div>
+                        </div>
+
+                        <div class="flex-1">
+                            <label for="department" class="block text-base font-semibold text-[#660809] mb-2 tracking-wide">
+                                <iconify-icon icon="mdi:office-building-outline" class="inline-block mr-1 text-xl align-middle"></iconify-icon>
+                                <span class="align-middle">Filter by Department</span>
+                            </label>
+                            <select id="department" name="department"
+                                class="w-full border-2 border-gray-200 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-2 text-gray-800 transition">
+                                <option value="">All Departments</option>
+                                @foreach($departments as $dept)
+                                    <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="self-end">
+                            <button type="submit" class="bg-[#660809] hover:bg-black transition text-white px-6 py-2 rounded-lg shadow font-bold text-base flex items-center gap-2">
+                               <iconify-icon icon="mdi:tune-variant" class="text-xl"></iconify-icon>
+                                Filter
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:clock-outline" class="text-2xl"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm/5 opacity-90">Pending Review</p>
-                        <p class="text-3xl">{{ $pendingNotes }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:check-circle-outline" class="text-2xl"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm/5 opacity-90">Approved</p>
-                        <p class="text-3xl">{{ $approvedNotes }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <span class="inline-flex rounded-xl bg-white/20 p-3">
-                        <iconify-icon icon="mdi:close-circle-outline" class="text-2xl"></iconify-icon>
-                    </span>
-                    <div>
-                        <p class="text-sm/5 opacity-90">Rejected</p>
-                        <p class="text-3xl">{{ $rejectedNotes }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Table Section -->
         <div class="bg-white rounded-2xl shadow border overflow-hidden">
             <div class="px-6 py-4 bg-gray-100 border-b flex justify-between items-center">
                 <h3 class="text-xl font-bold text-[#000000]">Pending Requests</h3>
 
-
-                <form method="GET" action="{{ route('admin.dashboard') }}" class="flex flex-col sm:flex-row sm:items-end gap-4 w-full justify-end">
-                    <div>
-                        <label for="search" class="text-lg font-medium text-gray-700 mb-2">Search by Name/ID</label>
-                        <div class="relative">
-                            <input type="text" id="search" name="search" value="{{ request('search') }}"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2"
-                                placeholder="Enter student name or ID">
-                            <iconify-icon icon="mdi:magnify"
-                                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></iconify-icon>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="department" class="text-lg font-medium text-gray-700 mb-2">Filter by Department</label>
-                        <select id="department" name="department"
-                            class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-2">
-                            <option value="">All Departments</option>
-                            @foreach($departments as $dept)
-                                <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
-                            @endforeach
-                        </select>
-
-                    </div>
-                    <div class="self-end">
-                        <button type="submit" class="bg-[#660809] text-white px-4 py-2 rounded-lg shadow">Filter</button>
-                    </div>
-                </form>
             </div>
 
             <div class="overflow-x-auto">

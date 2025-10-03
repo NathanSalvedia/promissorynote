@@ -1,6 +1,21 @@
 @extends('layouts.layout')
 
 @section('content')
+@php
+    $pendingPayments = 0;
+    $overdue = 0;
+    foreach ($notes as $note) {
+        $paid = $note->payments->sum('amount') + $note->down_payment;
+        $remaining = $note->amount - $paid;
+        $isOverdue = $note->due_date <= now()->toDateString() && $remaining > 0;
+        if (!$note->is_settled && $isOverdue) {
+            $overdue++;
+        }
+        if (!$note->is_settled && !$isOverdue) {
+            $pendingPayments++;
+        }
+    }
+@endphp
 @include('includes.header')
  <div class="max-w-5xl mx-auto bg-white rounded-xl shadow p-6 mt-6">
 
@@ -11,6 +26,7 @@
                 <iconify-icon icon="mdi:plus" class="w-5 h-5"></iconify-icon>
                 Record Payment
             </a>
+
             <a href="{{ route('admin.dashboard')}}" class="text-gray-600 hover:text-gray-900 flex items-center gap-1">
                 <iconify-icon icon="mdi:arrow-left" class="w-5 h-5"></iconify-icon>
                 Back
@@ -77,9 +93,9 @@
                         @php
                             $paid = $note->payments->sum('amount') + $note->down_payment;
                             $remaining = $note->amount - $paid;
-                            $isOverdue = $note->due_date < now()->toDateString() && $remaining > 0;
+                            $isOverdue = $note->due_date <= now()->toDateString() && $remaining > 0;
                         @endphp
-                        <tr class="bg-white border-b">
+                        <tr class="border-b {{ $note->is_settled ? 'bg-green-50' : ($isOverdue ? 'bg-red-50' : 'bg-white') }}">
                             <td class="px-4 py-2">PN-{{ $note->pn_id }}</td>
                             <td class="px-4 py-2">
                                 <span class="font-semibold">{{ $note->fullname }}</span>
@@ -89,26 +105,32 @@
                             <td class="px-4 py-2 text-green-600">₱{{ number_format($note->down_payment, 2) }}</td>
                             <td class="px-4 py-2">{{ $note->due_date }}</td>
                             <td class="px-4 py-2">
-                                @if($isOverdue)
-                                    <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-semibold">Overdue</span>
-                                @elseif($remaining <= 0)
+                                @if($note->is_settled)
                                     <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-semibold">Paid</span>
+                                @elseif($isOverdue)
+                                    <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-semibold">Overdue</span>
                                 @else
-                                    <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-semibold">Pending</span>
+                                    <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-semibold">Not overdue yet</span>
                                 @endif
                             </td>
                             <td class="px-4 py-2 flex gap-2">
-                                <button class="bg-green-500 hover:bg-green-600 text-white p-2 rounded" title="Record Payment">
-                                    <iconify-icon icon="mdi:plus" class="w-4 h-4"></iconify-icon>
-                                </button>
+                                  <form action="{{ route('admin.promissorynotes.recordPayment', $note->pn_id) }}" method="POST" style="display:inline;">
+                                  @csrf
+                                  <button type="submit" class="bg-green-500 hover:bg-green-600 text-white p-2 rounded" title="Record Payment">
+                                      <iconify-icon icon="mdi:plus" class="w-4 h-4"></iconify-icon>
+                                  </button>
+                                 </form>
 
-                                <button class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded" title="View Details">
-                                    <iconify-icon icon="mdi:history" class="w-4 h-4"></iconify-icon>
-                                </button>
+                                 <a href="{{ route('admin.subledger-show', $note->user->student_id) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-purple-600 hover:bg-purple-700 text-white" title="View Subledger">
+                                            <iconify-icon icon="mdi:book-account-outline"></iconify-icon>
+                                 </a>
 
-                                <button class="bg-red-500 hover:bg-red-600 text-white p-2 rounded" title="Alert">
-                                    <iconify-icon icon="mdi:alert" class="w-4 h-4"></iconify-icon>
+                                   <form action="{{ route('admin.promissorynotes-archive', $note->pn_id) }}" method="POST"  class="archive-form" style="display:inline;">
+                                   @csrf
+                                 <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-lg archive-btn" title="Archive">
+                                  <span class="iconify" data-icon="mdi:archive" data-width="20" data-height="20"></span>
                                 </button>
+                               </form>
                             </td>
                         </tr>
                     @endforeach

@@ -50,8 +50,6 @@ class PromissoryNoteController extends Controller
         }
 
         $validated = $request->validate([
-            'fullname'      => 'required|string|max:255',
-            'student_id'    => 'required|string|max:50',
             'gender'        => 'required|string|max:10',
             'department'    => 'required|string|max:100',
             'course'        => 'required|string|max:250',
@@ -62,8 +60,8 @@ class PromissoryNoteController extends Controller
             'other_reason'  => 'required_if:reason,Other|max:255',
             'academic_year' => 'required|string',
             'semester'      => 'required|string',
-            'down_payment'  => 'nullable|numeric',
-            'due_date'      => 'nullable|date',
+            'down_payment'  => 'nullable|numeric|min:0',
+            'due_date'      => 'required|date|after_or_equal:today', // <-- updated line
             'attachments'   => 'nullable',
             'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -92,6 +90,18 @@ class PromissoryNoteController extends Controller
             'due_date'       => $validated['due_date'] ?? null,
         ]);
 
+
+        if ($promissoryNote->due_date) {
+            Notification::create([
+                'user_id'   => $user->id,
+                'pn_id'     => $promissoryNote->pn_id,
+                'content'   => "Reminder: Your promissory note is due on {$promissoryNote->due_date}.",
+                'sent_at'   => now(),
+                'is_read'   => false,
+            ]);
+        }
+
+
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
                 if ($file) {
@@ -109,20 +119,15 @@ class PromissoryNoteController extends Controller
             }
         }
 
-        $admins = User::where('role', Role::ADMIN->value)->get();
-        foreach ($admins as $admin) {
-            Notification::create([
-                'user_id'   => $admin->id,
-                'pn_id'     => $promissoryNote->pn_id,
-                'content'   => $promissoryNote->fullname . ' submitted a new promissory note.',
-                'sent_at'   => now(),
-                'is_read'   => false,
-            ]);
-        }
+
 
         return redirect()->route('student.dashboard')
             ->with('success', 'Promissory Note submitted successfully.');
     }
+
+
+
+
 
 
 
@@ -182,14 +187,20 @@ class PromissoryNoteController extends Controller
         ->where('is_settled', false)
         ->first();
 
-    return response()->json(['hasUnsettled' => $note ? true : false]);
+       return response()->json(['hasUnsettled' => $note ? true : false]);
       }
 
 
+       public function recordPayment($pn_id)
+    {
+        $note = PromissoryNote::findOrFail($pn_id);
+        $note->is_settled = true;
+        $note->save();
 
+        return redirect()->back()->with('success', 'Payment recorded and status updated.');
     }
 
-
+}
 
 
 

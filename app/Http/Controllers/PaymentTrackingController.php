@@ -21,7 +21,7 @@ class PaymentTrackingController extends Controller
         })->count();
         $overdue = $notes->filter(function ($note) {
             $paid = $note->payments->sum('amount') + $note->down_payment;
-            return $note->due_date < now()->toDateString() && $paid < $note->amount;
+            return $note->due_date <= now()->toDateString() && $paid < $note->amount;
         })->count();
 
         return view('admin.payment-tracking', compact(
@@ -33,4 +33,8 @@ class PaymentTrackingController extends Controller
         ));
 
     }
+
+
+
+
 }

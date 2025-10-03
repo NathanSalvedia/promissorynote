@@ -11,7 +11,7 @@ class PromissoryNote extends Model
 
     protected $primaryKey = 'pn_id';
     protected $fillable = [
-        'user_id', 'fullname', 'student_id', 'gender', 'course', 'department', 'phone', 'year_level', 'amount', 'reason', 'other_reason',  'academic_year',  'semester', 'down_payment', 'due_date',  'attachments', 'status', 'is_settled'
+        'user_id', 'gender', 'course', 'department', 'phone', 'year_level', 'amount', 'reason', 'other_reason',  'academic_year',  'semester', 'down_payment', 'due_date',  'attachments', 'status', 'is_settled'
     ];
 
 

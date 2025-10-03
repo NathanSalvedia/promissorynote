@@ -1,7 +1,7 @@
 @extends('layouts.layout')
-
 @section('content')
  @include('includes.admin')
+
 <div class="min-h-screen bg-gray-50 py-8 px-4">
 
   <div class="max-w-6xl mx-auto">
@@ -122,9 +122,9 @@
                   </button>
                 @endif
 
-                <form action="{{ route('admin.promissorynotes-archive', $note->pn_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to archive this record?');" style="display:inline;">
+                <form action="{{ route('admin.promissorynotes-archive', $note->pn_id) }}" method="POST"  class="archive-form" style="display:inline;">
                     @csrf
-                    <button type="submit" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-lg" title="Archive">
+                    <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-lg archive-btn" title="Archive">
                         <span class="iconify" data-icon="mdi:archive" data-width="20" data-height="20"></span>
                     </button>
                 </form>
@@ -137,4 +137,7 @@
     </div>
   </div>
 </div>
+
+
+
 @endsection
