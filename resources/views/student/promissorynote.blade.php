@@ -3,212 +3,189 @@
 @section('content')
 <div class="min-h-screen bg-gray-100 flex flex-col">
 
-    <!-- Fixed Header -->
-    <header class="fixed top-0 left-0 w-full z-50 shadow">
+    <!-- ✅ Fixed Header -->
+    <header class="fixed top-0 left-0 w-full z-50 shadow bg-white">
         @include('includes.header')
     </header>
 
-    <!-- Main content -->
-    <main class="p-6 max-w-5xl mx-auto w-full mt-24">
+    <!-- ✅ Main Content -->
+    <main class="p-6 max-w-5xl mx-auto w-full mt-28">
+
+        <!-- 🔙 Back Button -->
         <div class="mb-6 flex justify-between items-center">
-            <a href="{{ route('student.dashboard') }}"
+            <a href="{{ route('student.dashboard') }}" 
                class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white px-4 py-2 rounded-lg shadow transition">
                 <iconify-icon icon="mdi:arrow-left"></iconify-icon>
                 Back to Dashboard
             </a>
         </div>
 
-        <!-- Card -->
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-bold mb-6">Submit New Promissory Note</h2>
+        <!-- 🧾 Paper-style Card -->
+        <div class="bg-white p-10 rounded-xl shadow-lg border border-gray-200 relative overflow-hidden">
 
-            <form id="promissoryForm"
-                  action="{{ route('promissorynotes.store') }}"
-                  method="POST"
-                  enctype="multipart/form-data"
-                  class="space-y-6"
+            <!-- 🏫 Logo & Title -->
+            <div class="text-center mb-8 relative">
+                <img src="{{ asset('img/logo.jpg') }}" alt="School Logo" class="w-20 h-20 mx-auto mb-4">
+                <h2 class="text-2xl font-bold text-[#660809]">Promissory Note Application Form</h2>
+                <p class="text-gray-500 text-sm">Please fill in all the required details below</p>
+            </div>
+
+            <form id="promissoryForm" 
+                  action="{{ route('promissorynotes.store') }}" 
+                  method="POST" 
+                  enctype="multipart/form-data" 
+                  class="space-y-8"
                   data-check-status-url="{{ route('promissorynote.checkStatus') }}">
                 @csrf
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 🧩 Form Fields -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-             <div>
-             <label class="block text-sm font-medium mb-1">Full Name</label>
-             <input type="text" name="fullname" value="{{ old('fullname')}}"
-             class="@error('fullname') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
-               @error('fullname')
-                <span class="text-red-600 text-xs">{{ $message }}</span>
-               @enderror
-             </div>
+                    <!-- Full Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" name="fullname" placeholder="Enter your full name"
+                            value="{{ auth()->user()->fullname }}"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm" />
+                    </div>
 
-             <div>
-              <label class="block text-sm font-medium mb-1">Student ID</label>
-              <input type="text" name="student_id" value="{{ old('student_id')}}"
-              class=" @error('student_id')
-                   is-invalid
-              @enderror w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
-              @error('student_id')
-               <span class="text-red-600 text-xs">{{ $message }}</span>
-              @enderror
-             </div>
+                    <!-- Student ID -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Student ID</label>
+                        <input type="text" name="student_id" placeholder="Enter your student ID"
+                            value="{{ auth()->user()->student_id }}"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm" />
+                    </div>
 
-             <div>
-              <label class="block text-sm font-medium mb-1">Gender</label>
-              <select name="gender"  class="@error('gender')
-              @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
-              <option value="">Select Gender</option>
-              <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
-              <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
-              </select>
-               @error('gender')
-                <span class="text-red-600 text-xs">{{ $message }}</span>
-              @enderror
-             </div>
+                    <!-- Gender -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Gender</label>
+                        <select name="gender" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm">
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
 
-            <div>
-                <label for="course" class="@error('course') text-red-600 @enderror block text-sm font-medium mb-1">Course</label>
-                <input type="text"
-                       id="course"
-                       name="course"
-                       value="{{ old('course') }}"
-                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('course') @enderror">
-                @error('course')
-                    <span class="text-red-600 text-xs">{{ $message }}</span>
-                @enderror
-            </div>
+                    <!-- Course -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Course</label>
+                        <input type="text" name="course" placeholder="Enter your course"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm" />
+                    </div>
 
-              <div>
-               <label class="block text-sm font-medium mb-1">Department</label>
-                <select name="department" class=" block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('department') @enderror">
-                 <option value="" disabled {{ old('department') ? '' : 'selected' }}>Select your college</option>
-                 <option value="College of Arts and Sciences" {{ old('department') == 'College of Arts and Sciences' ? 'selected' : '' }}>College of Arts and Sciences</option>
-                 <option value="College of Engineering" {{ old('department') == 'College of Engineering' ? 'selected' : '' }}>College of Engineering</option>
-                 <option value="College of Business Administration" {{ old('department') == 'College of Business Administration' ? 'selected' : '' }}>College of Business Administration</option>
-                 <option value="College of Education" {{ old('department') == 'College of Education' ? 'selected' : '' }}>College of Education</option>
-                 <option value="College of Computer Studies" {{ old('department') == 'College of Computer Studies' ? 'selected' : '' }}>College of Computer Studies</option>
-                 <option value="College of Criminology" {{ old('department') == 'College of Criminology' ? 'selected' : '' }}>College of Criminology</option>
-               </select>
-               @error('department')
-                 <span class="text-red-600 text-xs">{{ $message }}</span>
-               @enderror
-             </div>
+                    <!-- Department -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Department</label>
+                        <select name="department" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm">
+                            <option value="">Select department</option>
+                            <option>College of Arts and Sciences</option>
+                            <option>College of Engineering</option>
+                            <option>College of Business Administration</option>
+                            <option>College of Education</option>
+                            <option>College of Computer Studies</option>
+                            <option>College of Criminology</option>
+                        </select>
+                    </div>
 
-              <div>
-              <label class="block text-sm font-medium mb-1">Phone Number</label>
-              <input type="text" name="phone" value="{{ old('phone') }}" placeholder="+63 912 345 6789"
-               class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('phone') @enderror">
-              @error('phone')
-                <span class="text-red-600 text-xs">{{ $message }}</span>
-              @enderror
-              </div>
+                    <!-- Phone -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <input type="text" name="phone" placeholder="+63 912 345 6789"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm" />
+                    </div>
 
-               <div>
-               <label class="block text-sm font-medium mb-1">Year Level</label>
-               <select name="year_level" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('year_level') @enderror">
-                <option value="">Select Year</option>
-                <option value="1st Year" {{ old('year_level') == '1st Year' ? 'selected' : '' }}>1st Year</option>
-                <option value="2nd Year" {{ old('year_level') == '2nd Year' ? 'selected' : '' }}>2nd Year</option>
-                <option value="3rd Year" {{ old('year_level') == '3rd Year' ? 'selected' : '' }}>3rd Year</option>
-                <option value="4th Year" {{ old('year_level') == '4th Year' ? 'selected' : '' }}>4th Year</option>
-                </select>
-                @error('year_level')
-                  <span class="text-red-600 text-xs">{{ $message }}</span>
-                @enderror
-              </div>
+                    <!-- Year Level -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Year Level</label>
+                        <select name="year_level" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm">
+                            <option value="">Select year level</option>
+                            <option>1st Year</option>
+                            <option>2nd Year</option>
+                            <option>3rd Year</option>
+                            <option>4th Year</option>
+                        </select>
+                    </div>
 
+                    <!-- Amount -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Amount (₱)</label>
+                        <input type="number" name="amount" placeholder="Enter total amount"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm" />
+                    </div>
 
-              <div>
-               <label class="block text-sm font-medium mb-1">Amount (₱)</label>
-               <input type="number" name="amount" value="{{ old('amount') }}"
-                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('amount') @enderror">
-               @error('amount')
-                 <span class="text-red-600 text-xs">{{ $message }}</span>
-               @enderror
-              </div>
+                    <!-- Reason -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Reason</label>
+                        <select name="reason" onchange="toggleOtherReason(this)" 
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm">
+                            <option value="">Select reason</option>
+                            <option value="Financial Problem">Financial Problem</option>
+                            <option value="Delayed release of salary or allowance">Delayed release of salary or allowance</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div id="otherReasonBox" class="mt-3 hidden">
+                            <textarea name="other_reason" rows="2" placeholder="Please specify your reason"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm"></textarea>
+                        </div>
+                    </div>
 
+                    <!-- Term -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Term</label>
+                        <select name="term" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm">
+                            <option value="">Select term</option>
+                            <option>1st Term</option>
+                            <option>2nd Term</option>
+                        </select>
+                    </div>
 
-               <div>
-              <label class="block text-sm font-medium mb-1">Reason</label>
-              <select name="reason" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('reason')  @enderror" onchange="toggleOtherReasonBox(this)">
-               <option value="">Select Reason</option>
-               <option value="Financial Problem" {{ old('reason') == 'Financial Problem' ? 'selected' : '' }}>Financial Problem</option>
-               <option value="Delayed release of salary or allowance" {{ old('reason') == 'Delayed release of salary or allowance' ? 'selected' : '' }}>Delayed release of salary or allowance</option>
-               <option value="Other" {{ old('reason') == 'Other' ? 'selected' : '' }}>Other</option>
-               </select>
-                <div id="otherReasonBox" style="display:{{ old('reason') == 'Other' ? 'block' : 'none' }};" class="mt-2">
-                 <label class="block text-sm font-medium mb-1">Please specify other reason</label>
-                 <textarea name="other_reason" rows="2" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('other_reason') @enderror">{{ old('other_reason') }}</textarea>
-                 @error('other_reason')
-                   <span class="text-red-600 text-xs">{{ $message }}</span>
-                 @enderror
+                    <!-- Academic Year -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Academic Year</label>
+                        <input type="text" name="academic_year" placeholder="Ex. 2025-2026"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm" />
+                    </div>
+
+                    <!-- Down Payment -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Down Payment (₱)</label>
+                        <input type="number" name="down_payment" placeholder="Enter down payment"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm" />
+                    </div>
+
+                    <!-- Due Date -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Payment Due Date</label>
+                        <input type="date" name="due_date"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm" />
+                    </div>
                 </div>
-                @error('reason')
-                  <span class="text-red-600 text-xs">{{ $message }}</span>
-                @enderror
-              </div>
 
-             <div>
-              <label class="block text-sm font-medium mb-1">Semester</label>
-              <select name="semester" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('semester') @enderror">
-                  <option value="">Select Semester</option>
-                  <option value="1st Semester" {{ old('semester') == '1st Semester' ? 'selected' : '' }}>1st Semester</option>
-                  <option value="2nd Semester" {{ old('semester') == '2nd Semester' ? 'selected' : '' }}>2nd Semester</option>
-                  <option value="Summer" {{ old('semester') == 'Summer' ? 'selected' : '' }}>Summer</option>
-              </select>
-              @error('semester')
-                  <span class="text-red-600 text-xs">{{ $message }}</span>
-              @enderror
-             </div>
+                <!-- Notes -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Additional Notes</label>
+                    <textarea name="notes" rows="3" placeholder="Add any additional information here..."
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm"></textarea>
+                </div>
 
+                <!-- Attachments -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Upload Supporting Documents</label>
+                    <input type="file" name="attachments[]" multiple accept="image/*"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#660809] focus:ring-[#660809] sm:text-sm" />
+                    <p class="text-xs text-gray-500 mt-1">Attach valid ID, proof of hardship, or related documents.</p>
+                </div>
 
-             <div>
-              <label class="block text-sm font-medium mb-1">Academic Year</label>
-              <input type="text" name="academic_year" value="{{ old('academic_year') }}"
-               class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('academic_year') @enderror">
-              @error('academic_year')
-                <span class="text-red-600 text-xs">{{ $message }}</span>
-              @enderror
-             </div>
-
-
-
-               <div>
-              <label class="block text-sm font-medium mb-1">Down Payment (₱)</label>
-              <input type="number" name="down_payment" value="{{ old('down_payment') }}"
-               class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('down_payment') @enderror">
-              @error('down_payment')
-                <span class="text-red-600 text-xs">{{ $message }}</span>
-              @enderror
-             </div>
-
-
-               <div>
-              <label class="block text-sm font-medium mb-1">Payment Due Date</label>
-              <input type="date" name="due_date" value="{{ old('due_date') }}"
-              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('due_date') @enderror">
-              @error('due_date')
-                <span class="text-red-600 text-xs">{{ $message }}</span>
-              @enderror
-             </div>
-             </div>
-
-            <div>
-               <label class="block text-sm font-medium mb-1">Upload Supporting Documents</label>
-               <input type="file" name="attachments[]" multiple accept="image/*"
-                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('attachments.*') @enderror">
-                <p class="text-xs text-gray-500 mt-1">Attach ID, proof of hardship, etc.</p>
-                @error('attachments.*')
-                  <span class="text-red-600 text-xs">{{ $message }}</span>
-                @enderror
-              </div>
-
-
-              <div class="grid grid-cols-2 gap-4 mb-4">
-
-                <div class="pt-4">
+                <!-- Buttons -->
+                <div class="flex justify-between pt-6 border-t border-gray-200">
                     <button type="button" onclick="reviewApplication()"
-                            class="bg-[#660809] hover:bg-[#000000] text-white px-6 py-2 rounded-lg shadow ">
+                        class="bg-[#660809] hover:bg-black text-white px-6 py-2 rounded-lg shadow transition">
                         Review Application
+                    </button>
+                    <button type="submit"
+                        class="bg-[#660809] hover:bg-black text-white px-6 py-2 rounded-lg shadow transition">
+                        Submit Application
                     </button>
                 </div>
             </form>
@@ -217,6 +194,46 @@
 </div>
 @endsection
 
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function toggleOtherReason(select) {
+    document.getElementById('otherReasonBox').style.display =
+        select.value === 'Other' ? 'block' : 'none';
+}
 
+function reviewApplication() {
+    const form = document.getElementById('promissoryForm');
+    const formData = new FormData(form);
+    let html = `
+        <div style="background:#fff; padding:15px; border-radius:10px; text-align:left; max-height:400px; overflow-y:auto;">
+    `;
+    formData.forEach((value, key) => {
+        if (value && key !== '_token' && key !== 'attachments[]') {
+            const label = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            html += `
+                <div style="margin-bottom:8px;">
+                    <strong style="color:#660809;">${label}:</strong>
+                    <span style="color:#333;"> ${value}</span>
+                </div>
+            `;
+        }
+    });
+    html += "</div>";
 
-
+    Swal.fire({
+        title: '📋 Review Your Application',
+        html: html,
+        width: 600,
+        background: '#f9f9f9',
+        showCancelButton: true,
+        confirmButtonText: '✅ Submit',
+        cancelButtonText: '✏️ Edit',
+        confirmButtonColor: '#660809',
+        scrollbarPadding: false
+    }).then(result => {
+        if (result.isConfirmed) form.requestSubmit();
+    });
+}
+</script>
+@endsection

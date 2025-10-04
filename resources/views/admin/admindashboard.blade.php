@@ -8,7 +8,7 @@
 
        {{-- ✅ Header/Navbar (always on top, full width) --}}
         <header class="fixed top-0 left-0 right-0 z-50 shadow bg-white">
-            @include('includes.header')
+            @include('includes.admin')
         </header>
 
       {{-- ✅ Dashboard Content --}}

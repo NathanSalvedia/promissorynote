@@ -19,6 +19,7 @@
     {{-- ⚪ White navbar --}}
     <div class="bg-white shadow">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+            {{-- 🏫 SPC Logo --}}
             <div class="flex items-center gap-3">
                 <img src="/img/spc-wordmark.png" alt="SPC" class="h-10 md:h-12 object-contain">
             </div>
@@ -58,48 +59,23 @@
                     </div>
                 </div>
 
-                {{-- 👤 Admin Dropdown --}}
+                {{-- 👤 Student Dropdown (Logout only) --}}
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open" @click.away="open = false"
                         class="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium focus:outline-none transition bg-[#660809] text-white hover:bg-green-600">
-                        Admin User
+                        {{ auth()->user()->fullname ?? 'Student User' }}
                         <iconify-icon icon="mdi:chevron-down"
                             class="ml-1 text-white text-lg transform transition-transform duration-200"
                             :class="{'rotate-180': open}"></iconify-icon>
                     </button>
 
                     <div x-show="open" x-transition
-                        class="absolute right-0 mt-2 w-52 rounded-md shadow-lg bg-white z-50 origin-top-right">
+                        class="absolute right-0 mt-2 w-44 rounded-md shadow-lg bg-white z-50 origin-top-right">
                         <div class="py-1">
-                            <a href="{{ route('admin.dashboard') }}"
-                                class="flex items-center px-3 py-2 text-sm text-gray-800 hover:bg-[#660809] hover:text-white transition">
-                                <iconify-icon icon="mdi:view-dashboard-outline" class="mr-2"></iconify-icon>
-                                Dashboard
-                            </a>
-                            <a href="{{ route('admin.manage-record') }}"
-                                class="flex items-center px-3 py-2 text-sm text-gray-800 hover:bg-[#660809] hover:text-white transition">
-                                <iconify-icon icon="mdi:file-document-edit-outline" class="mr-2"></iconify-icon>
-                                Manage Records
-                            </a>
-                            <a href="#"
-                                class="flex items-center px-3 py-2 text-sm text-gray-800 hover:bg-[#660809] hover:text-white transition">
-                                <iconify-icon icon="mdi:chart-line" class="mr-2"></iconify-icon>
-                                Analytics
-                            </a>
-                            <a href="{{ route('admin.manage-users') }}"
-                                class="flex items-center px-3 py-2 text-sm text-gray-800 hover:bg-[#660809] hover:text-white transition">
-                                <iconify-icon icon="mdi:account-multiple-outline" class="mr-2"></iconify-icon>
-                                Manage Users
-                            </a>
-                            <a href="{{ route('admin.payment-tracking') }}"
-                                class="flex items-center px-3 py-2 text-sm text-gray-800 hover:bg-[#660809] hover:text-white transition">
-                                <iconify-icon icon="mdi:cash-multiple" class="mr-2"></iconify-icon>
-                                Payment Tracking
-                            </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit"
-                                    class="flex items-center w-full px-3 py-2 text-sm text-gray-800 hover:bg-[#660809] hover:text-white transition text-left">
+                                    class="flex items-center w-full px-3 py-2 text-sm text-gray-800 hover:bg-[#660809] hover:text-white transition text-left rounded-md">
                                     <iconify-icon icon="mdi:logout" class="mr-2"></iconify-icon>
                                     Logout
                                 </button>

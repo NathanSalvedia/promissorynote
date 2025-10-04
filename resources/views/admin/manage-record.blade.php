@@ -8,7 +8,7 @@
 
     {{-- ✅ Header (fixed full width) --}}
     <header class="fixed top-0 left-0 right-0 z-40 shadow bg-white">
-      @include('includes.header')
+      @include('includes.admin')
     </header>
 
     {{-- ✅ Page Content (with padding top to avoid header overlap) --}}
