@@ -3,17 +3,17 @@
 @section('content')
 <div class="min-h-screen bg-gray-100 flex flex-col">
 
-    {{-- ✅ Header (fixed, full width) --}}
+    {{-- ✅ Fixed Header (Admin Navbar) --}}
     <header class="fixed top-0 left-0 right-0 z-50 shadow bg-white">
         @include('includes.admin')
     </header>
 
-    {{-- ✅ Page Content --}}
+    {{-- ✅ Main Content --}}
     <main class="p-6 mt-24 w-full max-w-7xl mx-auto">
 
         <h2 class="text-2xl font-bold mb-6">Payment Tracking</h2>
 
-        {{-- ✅ Stats Cards (same design as Admin Dashboard) --}}
+        {{-- ✅ Stats Cards --}}
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
             <!-- Total Collected -->
             <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
@@ -60,25 +60,12 @@
             </div>
         </div>
 
-        {{-- ✅ Table Section (same design as Admin table) --}}
+        {{-- ✅ Payment Table --}}
         <div class="bg-white rounded-2xl shadow border overflow-hidden">
-            <div class="px-6 py-4 bg-[#660809] border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <h3 class="text-xl font-bold text-[#ffffff]">Payment Compliance Monitoring</h3>
-
-                <div class="flex gap-2">
-                    <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2">
-                        <iconify-icon icon="mdi:plus" class="w-5 h-5"></iconify-icon>
-                        Record Payment
-                    </a>
-                    <a href="{{ route('admin.dashboard')}}" 
-                        class="border px-3 py-2 rounded-lg text-white hover:bg-white hover:text-[#660809] transition bg-[#660809] flex items-center gap-1">
-                        <iconify-icon icon="mdi:arrow-left" class="w-5 h-5"></iconify-icon>
-                        Back
-                    </a>
-                </div>
+            <div class="px-6 py-4 bg-[#660809] border-b">
+                <h3 class="text-xl font-bold text-white">Payment Tracking</h3>
             </div>
 
-            {{-- ✅ Table --}}
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto">
                     <thead class="bg-gray-50 text-gray-700">
@@ -121,13 +108,10 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2">
-                                        <button class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-green-600 hover:bg-green-700 text-white" title="Record Payment">
-                                            <iconify-icon icon="mdi:plus"></iconify-icon>
-                                        </button>
                                         <button class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white" title="View Details">
                                             <iconify-icon icon="mdi:history"></iconify-icon>
                                         </button>
-                                        <button class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-600 hover:bg-red-700 text-white" title="Alert">
+                                        <button class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-600 hover:bg-red-700 text-white" title="Send Alert">
                                             <iconify-icon icon="mdi:alert"></iconify-icon>
                                         </button>
                                     </div>

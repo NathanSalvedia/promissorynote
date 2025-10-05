@@ -3,27 +3,20 @@
 @section('content')
 <div class="min-h-screen bg-gray-100 flex flex-col">
 
-    {{-- ✅ Header (fixed, dili matabunan) --}}
+    {{-- ✅ Sticky Header --}}
     <header class="fixed top-0 left-0 right-0 z-50 shadow bg-white">
         @include('includes.admin')
     </header>
 
-    {{-- ✅ Page Content --}}
-    <main class="p-6 mt-24 w-full max-w-6xl mx-auto">
+    {{-- ✅ Page Content (adjusted top margin so header won't cover it) --}}
+    <main class="p-6 mt-28 w-full max-w-6xl mx-auto">
 
-        {{-- ✅ Card Container (same sa admin dashboard) --}}
+        {{-- ✅ Card Container --}}
         <div class="bg-white rounded-2xl shadow border overflow-hidden">
 
-            {{-- ✅ Header Bar (same maroon header style) --}}
-            <div class="px-6 py-4 bg-[#660809] border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            {{-- ✅ Header Bar (maroon header style) --}}
+            <div class="px-6 py-4 bg-[#660809] border-b flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <h2 class="text-xl font-bold text-white">User Management</h2>
-
-                {{-- Back Button --}}
-                <a href="{{ route('admin.dashboard')}}" 
-                    class="inline-flex items-center gap-2 bg-white text-[#660809] hover:bg-gray-100 px-4 py-2 rounded-lg font-semibold shadow transition">
-                    <iconify-icon icon="mdi:arrow-left" class="w-5 h-5"></iconify-icon>
-                    <span>Back</span>
-                </a>
             </div>
 
             {{-- ✅ Table Section --}}
@@ -42,11 +35,12 @@
                         @php
                             $nonAdminUsers = $users->where('role', '!=', 'admin');
                         @endphp
+
                         @forelse ($nonAdminUsers as $user)
-                            <tr class="border-b hover:bg-gray-50">
-                                <td class="px-6 py-4 font-medium">{{ $user->fullname }}</td>
-                                <td class="px-6 py-4">{{ $user->email }}</td>
-                                <td class="px-6 py-4">{{ $user->student_id }}</td>
+                            <tr class="border-b hover:bg-gray-50 transition">
+                                <td class="px-6 py-4 font-medium text-gray-800">{{ $user->fullname }}</td>
+                                <td class="px-6 py-4 text-gray-600">{{ $user->email }}</td>
+                                <td class="px-6 py-4 text-gray-600">{{ $user->student_id }}</td>
                                 <td class="px-6 py-4">
                                     <span class="inline-block bg-blue-100 text-blue-700 text-xs px-3 py-1 rounded-full">
                                         {{ is_string($user->role) ? ucfirst($user->role) : ucfirst($user->role->value) }}

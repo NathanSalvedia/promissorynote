@@ -11,7 +11,7 @@
       @include('includes.admin')
     </header>
 
-    {{-- ✅ Page Content (with padding top to avoid header overlap) --}}
+    {{-- ✅ Page Content --}}
     <main class="p-6 mt-24 max-w-6xl mx-auto">
 
       {{-- Title --}}
@@ -88,22 +88,14 @@
                 @endforeach
               </select>
             </div>
-
-            <!-- Button -->
-            <div>
-              <button type="submit" 
-                class="bg-[#660809] hover:bg-red-800 transition text-white px-5 py-1.5 rounded-lg shadow font-semibold text-sm">
-                Apply
-              </button>
-            </div>
           </form>
         </div>
 
         {{-- Table --}}
         <div class="overflow-x-auto">
-          <table class="min-w-full text-sm">
+          <table class="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
             <thead>
-              <tr class="bg-gray-100 text-gray-600">
+              <tr class="bg-[#660809] text-white">
                 <th class="py-3 px-4 text-left font-medium">PN ID</th>
                 <th class="py-3 px-4 text-left font-medium">Full Name</th>
                 <th class="py-3 px-4 text-left font-medium">Department</th>
@@ -115,13 +107,13 @@
             </thead>
             <tbody>
               @foreach($promissoryNotes as $note)
-              <tr class="border-b">
+              <tr class="border-b hover:bg-gray-50 transition">
                 <td class="py-3 px-4 font-semibold">{{ $note->pn_id }}</td>
                 <td class="py-3 px-4">
                   <div class="font-semibold text-gray-800">{{ $note->user->name ?? $note->fullname }}</div>
                   <div class="text-gray-500 text-xs">{{ $note->user->student_id ?? $note->student_id }}</div>
                 </td>
-                <td class="py-3 px-4 text-green-600 font-bold">{{ $note->user->department ?? $note->department }}</td>
+                <td class="py-3 px-4 text-[#660809] font-bold">{{ $note->user->department ?? $note->department }}</td>
                 <td class="py-3 px-4">
                   <span class="px-3 py-1 rounded-full text-xs font-semibold"
                     style="background-color:{{ $note->status == 'approved' ? '#d1fae5' : ($note->status == 'pending' ? '#fef3c7' : '#fee2e2') }}; color:{{ $note->status == 'approved' ? '#059669' : ($note->status == 'pending' ? '#d97706' : '#b91c1c') }};">

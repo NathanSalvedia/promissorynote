@@ -13,7 +13,7 @@
 
       {{-- ✅ Dashboard Content --}}
 <main class="p-6 max-w-7xl mx-auto w-full mt-24">
-    <h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>    
+    <h2 class="text-2xl font-bold mb-6">Admin/Secretary Dashboard</h2>    
 
     {{-- Stats Cards --}}
     <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-8">
