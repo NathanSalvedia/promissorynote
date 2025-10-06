@@ -21,7 +21,7 @@
     </div>
 
     {{-- ⚪ White Navbar --}}
-    <div class="bg-white shadow">
+    <div class="bg-white shadow relative z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
             {{-- 🏫 SPC Logo --}}
             <div class="flex items-center gap-3">
@@ -48,14 +48,8 @@
                         <ul class="max-h-64 overflow-y-auto">
                             @forelse($notifications->take(5) as $notification)
                                 <li class="px-3 py-2 border-b {{ $notification->is_read ? 'opacity-60' : 'font-bold' }}">
-                                    {{-- Content --}}
-                                    @if($notification->content)
-                                        {{ $notification->content }}
-                                    @else
-                                        A student submitted a new promissory note.
-                                    @endif
+                                    {{ $notification->content ?? 'A student submitted a new promissory note.' }}
                                     <br>
-                                    {{-- Timestamp --}}
                                     <span class="text-xs text-gray-500">
                                         {{ $notification->sent_at ? \Carbon\Carbon::parse($notification->sent_at)->diffForHumans() : '' }}
                                     </span>
@@ -115,10 +109,11 @@
                                 Payment Tracking
                             </a>
 
-                            <form method="POST" action="{{ route('logout') }}">
+                            {{-- 🚪 Logout (with same animation as student) --}}
+                            <form method="POST" action="{{ route('logout') }}" id="logoutForm">
                                 @csrf
                                 <button type="submit"
-                                    class="flex items-center w-full px-3 py-2 text-sm text-gray-800 hover:bg-[#660809] hover:text-white transition text-left">
+                                    class="flex items-center w-full px-3 py-2 text-sm text-gray-800 hover:bg-[#660809] hover:text-white transition text-left rounded-md">
                                     <iconify-icon icon="mdi:logout" class="mr-2"></iconify-icon>
                                     Logout
                                 </button>
@@ -130,3 +125,42 @@
         </div>
     </div>
 </header>
+
+{{-- 🌑 Logout Loading Screen (same as student) --}}
+<div id="logoutScreen" class="hidden fixed inset-0 bg-black/90 flex flex-col items-center justify-center z-[9999] backdrop-blur-md">
+    <img src="{{ asset('img/logo.jpg') }}" class="w-24 h-24 mb-6 animate-pulse rounded-full border-4 border-white shadow-lg">
+    <div class="loader border-t-4 border-white rounded-full w-12 h-12 animate-spin mb-3"></div>
+    <p class="text-white text-lg font-semibold animate-pulse">Logging out...</p>
+</div>
+
+{{-- ⚙️ Script for Logout Animation --}}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const logoutForm = document.getElementById('logoutForm');
+    const logoutScreen = document.getElementById('logoutScreen');
+
+    logoutForm.addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent instant logout
+        logoutScreen.classList.remove('hidden'); // Show overlay
+        setTimeout(() => this.submit(), 2000); // Simulate loading before actual logout
+    });
+});
+</script>
+
+{{-- 🎨 Styles --}}
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+.animate-pulse {
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+}
+</style>

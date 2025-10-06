@@ -72,7 +72,7 @@
                     <div x-show="open" x-transition
                         class="absolute right-0 mt-2 w-44 rounded-md shadow-lg bg-white z-50 origin-top-right">
                         <div class="py-1">
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('logout') }}" id="logoutForm">
                                 @csrf
                                 <button type="submit"
                                     class="flex items-center w-full px-3 py-2 text-sm text-gray-800 hover:bg-[#660809] hover:text-white transition text-left rounded-md">
@@ -87,3 +87,42 @@
         </div>
     </div>
 </header>
+
+{{-- 🌑 Logout Loading Screen --}}
+<div id="logoutScreen" class="hidden fixed inset-0 bg-black/90 flex flex-col items-center justify-center z-[9999] backdrop-blur-md">
+    <img src="{{ asset('img/logo.jpg') }}" class="w-24 h-24 mb-6 animate-pulse rounded-full border-4 border-white shadow-lg">
+    <div class="loader border-t-4 border-white rounded-full w-12 h-12 animate-spin mb-3"></div>
+    <p class="text-white text-lg font-semibold animate-pulse">Logging out...</p>
+</div>
+
+{{-- ⚙️ Script for Logout Animation --}}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const logoutForm = document.getElementById('logoutForm');
+    const logoutScreen = document.getElementById('logoutScreen');
+
+    logoutForm.addEventListener('submit', function (e) {
+        e.preventDefault(); // prevent instant logout
+        logoutScreen.classList.remove('hidden'); // show overlay
+        setTimeout(() => this.submit(), 2000); // simulate loading before actual logout
+    });
+});
+</script>
+
+{{-- 🎨 Styles --}}
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+.animate-pulse {
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+}
+</style>
