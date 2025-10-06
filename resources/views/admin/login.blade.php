@@ -1,40 +1,94 @@
 @extends('layouts.layout')
 
 @section('content')
+<div class="min-h-screen flex items-center justify-center bg-gray-100 bg-cover bg-center bg-fixed relative" 
+    style="background-image: url('{{ asset('img/background.jpg') }}');">
 
- <div class="flex items-center justify-center min-h-screen bg-gray-100">
-   <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md text-center">
+    {{-- ✅ Dark overlay --}}
+    <div class="absolute inset-0 bg-black opacity-60"></div>
 
-     <img src="{{ asset('img/logo.jpg') }}" alt="Logo" class="mx-auto mb-4 w-24 h-24 rounded-full">
+    {{-- ✅ Login Card --}}
+    <div class="relative z-10 bg-white/10 rounded-2xl shadow-2xl p-8 sm:p-10 w-full max-w-md text-center backdrop-blur-md border border-white/20">
 
-     <h2 class="text-xl font-bold">
-        <span class="text-black hover:underline hover:text-green-700">My.SPC</span> <span class="text-black">» Sign In</span>
-     </h2>
+        {{-- ✅ Logo --}}
+        <img src="{{ asset('img/logo.jpg') }}" 
+            alt="Admin Logo"
+            class="mx-auto mb-5 w-20 h-20 rounded-full border-4 border-white shadow-lg">
 
-  <form action="{{ route('admin.login') }}" class="mt-6 text-left" method="POST">
-        @csrf
-       <input type="email" id="email"  name="email" value="{{ old('email') }}" placeholder="Email" class="@error('email') is-invalid @enderror block w-full px-3 py-2 mb-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
-        @error('email')
-        <span class="text-red-500 text-sm">{{ $message }}</span>
-         @enderror
+        {{-- ✅ Title & Subtitle --}}
+        <h2 class="text-3xl font-extrabold text-white mb-1 tracking-tight">Admin Sign In</h2>
+        <p class="text-gray-200 text-sm mb-8">Access your Administrative Dashboard</p>
 
-        <input type="password" id="password" name="password" placeholder="Password" class="@error('password') is-invalid @enderror block w-full px-3 py-2  mb-5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
-        @error('password')
-         <span class="text-red-500 text-sm">{{ $message }}</span>
-        @enderror
+        {{-- ✅ Login Form --}}
+        <form id="loginForm" action="{{ route('admin.login') }}" method="POST" class="space-y-6 text-left w-full max-w-sm mx-auto px-4">
+            @csrf
 
-      <button type="submit"
-        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg mx-auto block">
-        Sign In
-      </button>
+            {{-- Email Field --}}
+            <div class="flex items-center border border-white/40 rounded-lg bg-transparent focus-within:ring-2 focus-within:ring-[#660809]">
+                <iconify-icon icon="mdi:email-outline" class="text-white/70 text-xl ml-3"></iconify-icon>
+                <input type="email" id="email" name="email" value="{{ old('email') }}" required
+                    placeholder="Email Address"
+                    class="w-full px-3 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none rounded-lg" />
+            </div>
+            @error('email')
+                <span class="text-red-300 text-xs mt-1 block">{{ $message }}</span>
+            @enderror
+
+            {{-- Password Field --}}
+            <div class="flex items-center border border-white/40 rounded-lg bg-transparent focus-within:ring-2 focus-within:ring-[#660809]">
+                <iconify-icon icon="mdi:lock-outline" class="text-white/70 text-xl ml-3"></iconify-icon>
+                <input type="password" id="password" name="password" required
+                    placeholder="Password"
+                    class="w-full px-3 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none rounded-lg" />
+            </div>
+            @error('password')
+                <span class="text-red-300 text-xs mt-1 block">{{ $message }}</span>
+            @enderror
+
+            {{-- Sign In Button --}}
+            <button type="submit"
+                class="bg-[#660809] hover:bg-black text-white font-bold py-3 px-6 rounded-xl w-full transition-all duration-300 shadow-lg shadow-[#660809]/60 transform hover:scale-[1.03]">
+                Sign In
+            </button>
         </form>
-   </div>
- </div>
+    </div>
 
- <footer class="mt-6 text-center text-sm">
-    <a href="#" class="text-green-700 hover:underline">My.SPC</a> ·
-    <a href="#" class="text-green-700 hover:underline">St. Peter’s College, Inc.</a>
+    {{-- ✅ Loading Screen Overlay --}}
+    <div id="loadingScreen" class="hidden fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-50">
+        <img src="{{ asset('img/logo.jpg') }}" class="w-24 h-24 mb-6 animate-pulse rounded-full border-4 border-white">
+        <div class="loader border-t-4 border-white rounded-full w-12 h-12 animate-spin mb-3"></div>
+        <p class="text-white text-lg font-semibold animate-pulse">Signing in...</p>
+    </div>
+
+</div>
+
+{{-- ✅ Footer --}}
+<footer class="text-center py-4 bg-white shadow-inner border-t border-gray-200 text-sm text-gray-500">
+   <p>&copy; {{ date('Y') }} My.SPC · St. Peter’s College, Inc.</p>
 </footer>
 
+{{-- ✅ Script --}}
+<script>
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent immediate submit
+    const loading = document.getElementById('loadingScreen');
+    loading.classList.remove('hidden'); // Show loader
 
+    // Optional delay before form submission (simulate loading)
+    setTimeout(() => {
+        this.submit(); // Continue form submission
+    }, 2000); // 2 seconds
+});
+</script>
+
+{{-- ✅ Spinner Style --}}
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+</style>
 @endsection

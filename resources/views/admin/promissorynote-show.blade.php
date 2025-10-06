@@ -3,7 +3,7 @@
 @section('content')
 @include('includes.admin')
 
-<div class="min-h-screen bg-gray-100 py-8 px-4 flex flex-col items-center">
+<div class="min-h-screen bg-white py-8 px-4 flex flex-col items-center">
 
     <!-- 🔙 Back Button (Outside Card) -->
     <div class="w-full max-w-3xl mb-6">

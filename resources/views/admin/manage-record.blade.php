@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="flex min-h-screen bg-gray-50">
+<div class="flex min-h-screen bg-white">
 
   {{-- ✅ Main Content --}}
   <div class="flex-1">
@@ -70,16 +70,16 @@
             <!-- Search -->
             <div class="relative flex-1 sm:w-64">
               <input type="text" id="search" name="search" value="{{ request('search') }}"
-                class="w-full border-gray-300 rounded-full shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-3 py-1.5 text-sm"
+                class="w-full border-gray-300 rounded-full shadow-lg focus:ring-[#660809] focus:border-[#660809] pl-10 pr-3 py-1.5 text-sm"
                 placeholder="Search by Course or Name...">
               <iconify-icon icon="mdi:magnify"
-                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
+                class="absolute left-3 top-7 transform -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
             </div>
 
             <!-- Department Filter -->
             <div>
               <select id="department" name="department"
-                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-1.5 px-3 text-sm">
+                class="text-gray-400 w-full border-gray-300 rounded-full shadow-lg focus:ring-[#660809] focus:border-[#660809] py-1.5 px-3 text-sm">
                 <option value="">All Departments</option>
                 @foreach($departments as $dept)
                   <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>

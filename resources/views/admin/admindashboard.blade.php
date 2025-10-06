@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="min-h-screen bg-gray-100 flex">
+<div class="min-h-screen bg-white flex">
 
     {{-- ✅ Main Content --}}
     <div class="flex-1">
@@ -69,21 +69,21 @@
 
                     <!-- Polished Search & Filter -->
                     <form method="GET" action="{{ route('admin.dashboard') }}" 
-                        class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white px-4 py-3 rounded-xl shadow border">
+                        class="flex flex-col sm:flex-row sm:items-center gap-4  px-4 py-3 rounded-xl">
 
                         <!-- Search -->
-                        <div class="relative flex-1">
+                        <div class="relative flex-1 bg-white rounded-lg">
                             <input type="text" id="search" name="search" value="{{ request('search') }}"
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2 text-sm"
                                 placeholder="Search by Name or ID">
                             <iconify-icon icon="mdi:magnify"
-                                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
+                                class="absolute left-3 top-7 transform -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
                         </div>
 
                         <!-- Department Filter -->
-                        <div>
+                        <div class="bg-white rounded-lg">
                             <select id="department" name="department"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-2 px-3 text-sm">
+                                class="text-gray-400 w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-2 px-3 text-sm">
                                 <option value="">All Departments</option>
                                 @foreach($departments as $dept)
                                     <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
@@ -91,13 +91,7 @@
                             </select>
                         </div>
 
-                        <!-- Button -->
-                        <div>
-                            <button type="submit" 
-                                class="bg-[#660809] hover:bg-black transition text-white px-5 py-2 rounded-lg shadow font-semibold text-sm">
-                                Filter
-                            </button>
-                        </div>
+                       
                     </form>
                 </div>
 

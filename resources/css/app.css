@@ -1,11 +1,26 @@
-@import 'tailwindcss';
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+/*
+ * NOTE: Lahat ng @source, @theme, at @font-face rules ay dapat nasa
+ * tailwind.config.js o PostCSS config file.
+ * Ang CSS file na ito ay para lang sa actual CSS rules at @import ng Tailwind.
+*/
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* Animation for the Approved Card to simulate "water filling" or a gentle glow */
+@keyframes card-glow {
+    0%, 100% {
+        /* Base color with a slight transparency for the effect */
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1), 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+        /* Stronger white glow at the halfway point */
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2), 0 0 30px rgba(255, 255, 255, 0.5);
+    }
+}
+
+.glowing-card {
+    /* Apply continuous, gentle glow */
+    animation: card-glow 3s infinite alternate ease-in-out;
 }

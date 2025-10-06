@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="flex min-h-screen bg-gray-50">
+<div class="flex min-h-screen bg-white">
 
   {{-- ✅ Main Content Area (wala na sidebar) --}}
   <div class="flex-1">
