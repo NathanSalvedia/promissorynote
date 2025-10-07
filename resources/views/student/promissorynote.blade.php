@@ -35,11 +35,29 @@
 
              <div>
                 <label for="course" class="@error('course') text-red-600 @enderror block text-sm font-medium mb-1">Course</label>
-                <input type="text"
-                       id="course"
-                       name="course"
-                       value="{{ old('course') }}"
-                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('course') @enderror">
+                <select id="course"
+                        name="course"
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('course') @enderror">
+                    <option value="" disabled {{ old('course') ? '' : 'selected' }}>Select your course</option>
+                    <option value="BS Computer Science" {{ old('course') == 'BS Computer Science' ? 'selected' : '' }}>BS Computer Science</option>
+                    <option value="BS Information Technology" {{ old('course') == 'BS Information Technology' ? 'selected' : '' }}>BS Information Technology</option>
+                    <option value="BS Civil Engineering" {{ old('course') == 'BS Civil Engineering' ? 'selected' : '' }}>BS Civil Engineering</option>
+                    <option value="BS Electrical Engineering" {{ old('course') == 'BS Electrical Engineering' ? 'selected' : '' }}>BS Electrical Engineering</option>
+                    <option value="BS Mechanical Engineering" {{ old('course') == 'BS Mechanical Engineering' ? 'selected' : '' }}>BS Mechanical Engineering</option>
+                    <option value="BS Electronics Engineering" {{ old('course') == 'BS Electronics Engineering' ? 'selected' : '' }}>BS Electronics Engineering</option>
+                    <option value="BS Computer Engineering" {{ old('course') == 'BS Computer Engineering' ? 'selected' : '' }}>BS Computer Engineering</option>
+                    <option value="BS Business Administration - Major in Marketing Management" {{ old('course') == 'BS Business Administration - Major in Marketing Management' ? 'selected' : '' }}>BS Business Administration - Major in Marketing Management</option>
+                    <option value="BS Business Administration - Major in Operation Management" {{ old('course') == 'BS Business Administration - Major in Operation Management' ? 'selected' : '' }}>BS Business Administration - Major in Operation Management</option>
+                    <option value="BS Business Administration - Major in Financial Management" {{ old('course') == 'BS Business Administration - Major in Financial Management' ? 'selected' : '' }}>BS Business Administration - Major in Financial Management</option>
+                    <option value="BS Business Administration - Major in Human Resource Management" {{ old('course') == 'BS Business Administration - Major in Human Resource Management' ? 'selected' : '' }}>BS Business Administration - Major in Human Resource Management</option>
+                    <option value="BS Elementary Education" {{ old('course') == 'BS Elementary Education' ? 'selected' : '' }}>BS Elementary Education</option>
+                     <option value="BS Secondary Education - Major in English" {{ old('course') == 'BS Secondary Education - Major in English' ? 'selected' : '' }}>BS Secondary Education - Major in English</option>
+                     <option value="BS Secondary Education - Major in Filipino" {{ old('course') == 'BS Secondary Education - Major in Filipino' ? 'selected' : '' }}>BS Secondary Education - Major in Filipino</option>
+                      <option value="BS Secondary Education - Major in Math" {{ old('course') == 'BS Secondary Education - Major in Math' ? 'selected' : '' }}>BS Secondary Education - Major in Math</option>
+                    <option value="BA of Arts in English Language" {{ old('course') == 'BA of Arts in English Language' ? 'selected' : '' }}>BA of Arts in English Language</option>
+                    <option value="BA  Political Science" {{ old('course') == 'BA  Political Science' ? 'selected' : '' }}>BA  Political Science</option>
+                    <option value="BA  Filipino" {{ old('course') == 'BA  Filipino' ? 'selected' : '' }}>BA  Filipino</option>
+                </select>
                 @error('course')
                     <span class="text-red-600 text-xs">{{ $message }}</span>
                 @enderror
@@ -76,10 +94,6 @@
               @enderror
              </div>
 
-
-
-
-
               <div>
               <label class="block text-sm font-medium mb-1">Phone Number</label>
               <input type="text" name="phone" value="{{ old('phone') }}" placeholder="+63 912 345 6789"
@@ -112,7 +126,6 @@
                  <span class="text-red-600 text-xs">{{ $message }}</span>
                @enderror
               </div>
-
 
                <div>
               <label class="block text-sm font-medium mb-1">Reason</label>
@@ -162,14 +175,13 @@
                <div>
               <label class="block text-sm font-medium mb-1">Down Payment (₱)</label>
               <input type="number" name="down_payment" value="{{ old('down_payment') }}"
-       min="0" step="any"
-       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('down_payment') @enderror"
-       oninput="this.value = this.value < 0 ? 0 : this.value;">
+               min="0" step="any"
+              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('down_payment') @enderror"
+                oninput="this.value = this.value < 0 ? 0 : this.value;">
               @error('down_payment')
                 <span class="text-red-600 text-xs">{{ $message }}</span>
               @enderror
              </div>
-
 
                <div>
               <label class="block text-sm font-medium mb-1">Payment Due Date</label>
@@ -181,7 +193,7 @@
              </div>
              </div>
 
-            <div>
+             <div>
                <label class="block text-sm font-medium mb-1">Upload Supporting Documents</label>
                <input type="file" name="attachments[]" multiple accept="image/*"
                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('attachments.*') @enderror">

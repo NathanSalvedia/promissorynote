@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
-use  \Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Models\PromissoryNote;
 use App\Models\Notification;
 use App\Models\SupportingDocument;
@@ -28,7 +28,7 @@ class PromissoryNoteController extends Controller
      */
     public function create()
     {
-    return view('student.promissorynoteform');
+        return view('student.promissorynoteform');
     }
 
     /**
@@ -61,7 +61,7 @@ class PromissoryNoteController extends Controller
             'academic_year' => 'required|string',
             'semester'      => 'required|string',
             'down_payment'  => 'nullable|numeric|min:0',
-            'due_date'      => 'required|date|after_or_equal:today', // <-- updated line
+            'due_date'      => 'required|date|after_or_equal:today',
             'attachments'   => 'nullable',
             'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -90,7 +90,6 @@ class PromissoryNoteController extends Controller
             'due_date'       => $validated['due_date'] ?? null,
         ]);
 
-
         if ($promissoryNote->due_date) {
             Notification::create([
                 'user_id'   => $user->id,
@@ -101,6 +100,17 @@ class PromissoryNoteController extends Controller
             ]);
         }
 
+
+        $admins = User::where('role', Role::ADMIN->value)->get();
+        foreach ($admins as $admin) {
+            Notification::create([
+                'user_id'   => $admin->id,
+                'pn_id'     => $promissoryNote->pn_id,
+                'content'   => $user->fullname . ' submitted a new promissory note.',
+                'sent_at'   => now(),
+                'is_read'   => false,
+            ]);
+        }
 
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
@@ -119,15 +129,9 @@ class PromissoryNoteController extends Controller
             }
         }
 
-
-
         return redirect()->route('student.dashboard')
             ->with('success', 'Promissory Note submitted successfully.');
     }
-
-
-
-
 
 
 

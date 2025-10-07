@@ -139,14 +139,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function renderEntry(entry) {
+    if (entry.isFile && entry.value.type.startsWith('image/')) {
+
+        return `
+            <div class="flex flex-col items-center mb-2">
+                <img src="${URL.createObjectURL(entry.value)}" alt="${entry.value.name}" class="max-w-[120px] max-h-[120px] rounded shadow border border-gray-300 mb-1">
+                <span class="text-xs text-gray-500">${entry.value.name}</span>
+            </div>
+        `;
+    } else if (entry.isFile) {
+        return `
+            <div class="mb-2">
+                <span class="font-semibold text-gray-700">${entry.key.replace("_", " ").toUpperCase()}:</span>
+                <span class="text-gray-500 ml-1">${entry.value.name}</span>
+            </div>
+        `;
+    } else {
+        return `
+            <div class="mb-2">
+                <span class="font-semibold text-gray-700">${entry.key.replace("_", " ").toUpperCase()}:</span>
+                <span class="text-gray-600 ml-1">${entry.value}</span>
+            </div>
+        `;
+    }
+}
+
 function reviewApplication() {
     const form = document.getElementById('promissoryForm');
     const formData = new FormData(form);
 
     const entries = [];
+    const attachments = [];
     for (let [key, value] of formData.entries()) {
         if (key !== "_token" && value) {
-            entries.push({ key, value });
+            if (value instanceof File && value.name) {
+                attachments.push({ key, value, isFile: true });
+            } else {
+                entries.push({ key, value, isFile: false });
+            }
         }
     }
 
@@ -155,27 +186,34 @@ function reviewApplication() {
     const col2 = entries.slice(mid);
 
     let htmlContent = `
-        <div style="text-align:left; max-height:400px; overflow-y:auto; padding:5px;">
-            <div style="display:flex; gap:24px; font-size:14px; line-height:1.5;">
-                <div style="flex:1;">
+        <div class="text-left max-h-[400px] overflow-y-auto p-2">
+            <div class="flex gap-6 text-[14px] leading-6">
+                <div class="flex-1">
     `;
     col1.forEach(entry => {
-        htmlContent += `
-            <div style="padding:8px; border-bottom:1px solid #eee;">
-                <span style="font-weight:600; color:#333;">${entry.key.replace("_", " ").toUpperCase()}:</span>
-                <span style="color:#555; margin-left:4px;">${entry.value}</span>
-            </div>
-        `;
+        htmlContent += renderEntry(entry);
     });
-    htmlContent += `</div><div style="flex:1;">`;
+    htmlContent += `</div><div class="flex-1">`;
     col2.forEach(entry => {
+        htmlContent += renderEntry(entry);
+    });
+
+    // Render attachments in two columns
+    if (attachments.length > 0) {
         htmlContent += `
-            <div style="padding:8px; border-bottom:1px solid #eee;">
-                <span style="font-weight:600; color:#333;">${entry.key.replace("_", " ").toUpperCase()}:</span>
-                <span style="color:#555; margin-left:4px;">${entry.value}</span>
+            <div class="col-span-2 mt-4">
+                <span class="font-semibold text-gray-700 block mb-2">ATTACHMENTS:</span>
+                <div class="grid grid-cols-2 gap-4">
+        `;
+        attachments.forEach(att => {
+            htmlContent += renderEntry(att);
+        });
+        htmlContent += `
+                </div>
             </div>
         `;
-    });
+    }
+
     htmlContent += `</div></div></div>`;
 
     Swal.fire({

@@ -23,47 +23,55 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                 <div>
-                    <label class="block text-sm text-gray-500 mb-1">Full Name</label>
-                    <div class="text-gray-800 text-lg">{{ $note->fullname }}</div>
+                    <span class="block text-sm font-medium text-gray-600">Full Name</span>
+                    <p class="text-base font-semibold text-gray-900">{{ $note->user->fullname ?? $note->fullname ?? 'N/A' }}</p>
                 </div>
 
                 <div>
-                    <label class="block text-sm text-gray-500 mb-1">Student ID</label>
-                    <div class="text-gray-800 text-lg">{{ $note->student_id }}</div>
+                    <span class="block text-sm font-medium text-gray-600">Student ID</span>
+                    <p class="text-base font-semibold text-gray-900">{{ $note->user->student_id ?? $note->student_id ?? 'N/A' }}</p>
+                </div>
+
+
+
+                 <div>
+                    <span class="block text-sm font-medium text-gray-600">Course</span>
+                     <p class="text-base font-semibold text-gray-900">{{ $note->course ?? 'N/A' }}</p>
+                </div>
+
+                 <div>
+                    <label class="block text-sm text-gray-500 mb-1">Department</label>
+                    <div class="text-gray-900 text-lg">{{ $note->department }}</div>
                 </div>
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Gender</label>
-                    <div class="text-gray-800 text-lg">{{ $note->gender }}</div>
+                    <div class="text-gray-900 text-lg">{{ $note->gender }}</div>
                 </div>
 
-                <div>
-                    <label class="block text-sm text-gray-500 mb-1">Department</label>
-                    <div class="text-gray-800 text-lg">{{ $note->department }}</div>
-                </div>
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Phone</label>
-                    <div class="text-gray-800 text-lg">{{ $note->phone }}</div>
+                    <div class="text-gray-900 text-lg">{{ $note->phone }}</div>
                 </div>
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Year Level</label>
-                    <div class="text-gray-800 text-lg">{{ $note->year_level }}</div>
+                    <div class="text-gray-900 text-lg">{{ $note->year_level }}</div>
                 </div>
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Amount</label>
-                    <div class="text-gray-800 text-lg">₱{{ number_format($note->amount, 2) }}</div>
+                    <div class="text-gray-900 text-lg">₱{{ number_format($note->amount, 2) }}</div>
                 </div>
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Reason</label>
-                    <div class="text-gray-800 text-lg">
+                    <div class="text-gray-900 text-lg">
                         {{ $note->reason }}
                         @if(strtolower($note->reason) === 'other' && !empty($note->other_reason))
                             <br>
-                            <span class="text-sm  text-gray-600">
+                            <span class="text-sm text-gray-900">
                                 <span class="font-semibold">Specified Reason:</span>
                                 {{ $note->other_reason }}
                             </span>
@@ -73,31 +81,27 @@
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Semester</label>
-                    <div class="text-gray-800 text-lg">{{ $note->semester ?? $note->term }}</div>
+                    <div class="text-gray-900 text-lg">{{ $note->semester ?? $note->term }}</div>
                 </div>
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Academic Year</label>
-                    <div class="text-gray-800 text-lg">{{ $note->academic_year }}</div>
+                    <div class="text-gray-900 text-lg">{{ $note->academic_year }}</div>
                 </div>
 
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Down Payment</label>
-                    <div class="text-gray-800 text-lg">₱{{ number_format($note->down_payment, 2) }}</div>
+                    <div class="text-gray-900 text-lg">₱{{ number_format($note->down_payment, 2) }}</div>
                 </div>
 
                 <div>
                     <label class="block text-sm text-gray-500 mb-1">Due Date</label>
-                    <div class="text-gray-800 text-lg">{{ $note->due_date }}</div>
+                    <div class="text-gray-900 text-lg">{{ $note->due_date }}</div>
                 </div>
             </div>
 
 
-            <div class="mt-8">
-                <label class="block text-sm text-gray-500 mb-1">Additional Notes</label>
-                <div class="text-gray-800 text-lg">{{ $note->notes }}</div>
-            </div>
 
               <div class="md:col-span-2">
                    <label class="block text-sm font-medium mb-1">Attachments</label>

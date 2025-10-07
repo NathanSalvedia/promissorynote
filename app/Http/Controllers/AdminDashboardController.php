@@ -11,6 +11,7 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Models\AccountSubledger;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
@@ -43,7 +44,17 @@ class AdminDashboardController extends Controller
         $rejectedNotes = $notes->where('status', 'rejected')->count();
 
 
-        $notifications = Notification::orderBy('sent_at', 'desc')->take(10)->get();
+        // Fetch notifications for the logged-in admin only
+        $adminId = Auth::id();
+
+        $notifications = Notification::where('user_id', $adminId)
+            ->orderBy('sent_at', 'desc')
+            ->take(10)
+            ->get();
+
+        $unreadCount = Notification::where('user_id', $adminId)
+            ->where('is_read', false)
+            ->count();
 
         return view('admin.admindashboard', compact(
             'notes',
@@ -52,7 +63,8 @@ class AdminDashboardController extends Controller
             'approvedNotes',
             'rejectedNotes',
             'departments',
-            'notifications'
+            'notifications',
+            'unreadCount'
         ));
     }
 

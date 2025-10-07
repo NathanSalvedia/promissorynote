@@ -16,6 +16,11 @@ class Payment extends Model
         'remarks',
     ];
 
+    protected $casts = [
+        'payment_date' => 'date',
+        'amount' => 'float',
+    ];
+
     public function promissoryNote()
     {
         return $this->belongsTo(PromissoryNote::class, 'pn_id', 'pn_id');

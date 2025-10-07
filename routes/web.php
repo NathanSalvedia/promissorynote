@@ -59,6 +59,7 @@ Route::get('/auth/login', function () {
 
     Route::middleware(['web'])->group(function () {
     Route::get('/admin/admindashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/notifications', [App\Http\Controllers\AdminDashboardController::class, 'notifications'])->name('admin.notifications');
     Route::get('/admin/manage-record', [ManageRecordsController::class, 'index'])->name('admin.manage-record');
     Route::get('/admin/promissorynote-detail/{pn_id}', [AdminDashboardController::class, 'show'])->name('admin.promissorynote-detail');
     Route::post('/admin/promissory/approve/{pn_id}', [AdminDashboardController::class, 'approve'])->name('admin.promissory.approve');

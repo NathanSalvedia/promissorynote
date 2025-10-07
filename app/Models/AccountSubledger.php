@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class AccountSubledger extends Model
 {
+    use HasFactory;
+
     protected $table = 'student_account_subledger';
 
     protected $primaryKey = 'subledger_id';

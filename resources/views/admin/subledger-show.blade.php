@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
- @include('includes.header')
+ @include('includes.admin')
 
 <div class="bg-gradient-to-b from-gray-200 to-gray-100 min-h-screen py-2">
     <div class="max-w-5xl mx-auto p-4">

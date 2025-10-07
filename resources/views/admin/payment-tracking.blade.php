@@ -1,22 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-@php
-    $pendingPayments = 0;
-    $overdue = 0;
-    foreach ($notes as $note) {
-        $paid = $note->payments->sum('amount') + $note->down_payment;
-        $remaining = $note->amount - $paid;
-        $isOverdue = $note->due_date <= now()->toDateString() && $remaining > 0;
-        if (!$note->is_settled && $isOverdue) {
-            $overdue++;
-        }
-        if (!$note->is_settled && !$isOverdue) {
-            $pendingPayments++;
-        }
-    }
-@endphp
-@include('includes.header')
+@include('includes.admin')
  <div class="max-w-5xl mx-auto bg-white rounded-xl shadow p-6 mt-6">
 
     <div class="flex justify-between items-center mb-6">
@@ -98,8 +83,8 @@
                         <tr class="border-b {{ $note->is_settled ? 'bg-green-50' : ($isOverdue ? 'bg-red-50' : 'bg-white') }}">
                             <td class="px-4 py-2">PN-{{ $note->pn_id }}</td>
                             <td class="px-4 py-2">
-                                <span class="font-semibold">{{ $note->fullname }}</span>
-                                <div class="text-xs text-gray-500">{{ $note->student_id }}</div>
+                                <div class="font-semibold">{{ $note->user->fullname ?? 'N/A' }}</div>
+                                <div class="text-xs text-gray-500">Student ID: {{ $note->user->student_id ?? 'N/A' }}</div>
                             </td>
                             <td class="px-4 py-2">₱{{ number_format($note->amount, 2) }}</td>
                             <td class="px-4 py-2 text-green-600">₱{{ number_format($note->down_payment, 2) }}</td>

@@ -10,6 +10,7 @@
 
     <title>@yield('title', 'Promissory Note Management System')</title>
     <link rel="stylesheet" href="{{ asset('css/reuse.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
@@ -25,6 +26,7 @@
 
    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
    <script src="{{ asset('js/main.js') }}"></script>
+   <script src="{{ asset('js/reuse.js') }}"></script>
     @yield('scripts')
 
 </body>

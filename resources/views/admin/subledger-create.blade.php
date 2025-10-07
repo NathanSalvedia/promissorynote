@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 
-@include('includes.header')
+@include('includes.admin')
 @section('content')
 <div class="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-lg mt-8">
 
