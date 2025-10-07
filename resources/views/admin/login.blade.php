@@ -28,7 +28,7 @@
                 <iconify-icon icon="mdi:email-outline" class="text-white/70 text-xl ml-3"></iconify-icon>
                 <input type="email" id="email" name="email" value="{{ old('email') }}" required
                     placeholder="Email Address"
-                    class="w-full px-3 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none rounded-lg" />
+                    class="w-full px-3 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none rounded-lg autofill:bg-transparent" />
             </div>
             @error('email')
                 <span class="text-red-300 text-xs mt-1 block">{{ $message }}</span>
@@ -39,7 +39,7 @@
                 <iconify-icon icon="mdi:lock-outline" class="text-white/70 text-xl ml-3"></iconify-icon>
                 <input type="password" id="password" name="password" required
                     placeholder="Password"
-                    class="w-full px-3 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none rounded-lg" />
+                    class="w-full px-3 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none rounded-lg autofill:bg-transparent" />
             </div>
             @error('password')
                 <span class="text-red-300 text-xs mt-1 block">{{ $message }}</span>
@@ -81,7 +81,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
 });
 </script>
 
-{{-- ✅ Spinner Style --}}
+{{-- ✅ Spinner Style + Autofill Fix --}}
 <style>
 @keyframes spin {
     0% { transform: rotate(0deg); }
@@ -89,6 +89,20 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
 }
 .animate-spin {
     animation: spin 1s linear infinite;
+}
+
+/* 🧊 Chrome autofill fix (transparent input background) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 9999s ease-in-out 0s;
+}
+
+input {
+    background-color: transparent !important;
 }
 </style>
 @endsection

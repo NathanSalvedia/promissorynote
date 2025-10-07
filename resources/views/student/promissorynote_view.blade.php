@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="min-h-screen bg-gray-100 flex flex-col">
+<div class="min-h-screen bg-white flex flex-col">
 
     {{-- ✅ Sticky Header --}}
     <header class="sticky top-0 z-50 bg-white shadow">
