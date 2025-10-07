@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'My.SPC')
+@section('title', 'SPC Promissorynote')
 
 @section('content')
 
