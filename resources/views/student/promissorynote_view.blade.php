@@ -28,26 +28,46 @@
     {{-- Printable container --}}
     <div class="w-full flex justify-center pb-12">
         <article
-            class="bg-white border border-gray-200 shadow-lg print:shadow-none rounded-lg overflow-hidden"
-            style="width: 210mm; min-height: 297mm; max-width: 100%;">
+            class="bg-white border border-gray-200 shadow-lg print:shadow-none rounded-none overflow-hidden"
+            style="width: 210mm; min-height: 297mm; max-width: 100%; margin: 0; padding: 0;">
 
             <style>
                 @media print {
-                    @page { size: A4; margin: 10mm; } /* Smaller margin */
-                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                    @page { 
+                        size: A4; 
+                        margin: 0;
+                    }
+
+                    html, body {
+                        background: white !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                        zoom: 0.96;
+                    }
+
+                    .min-h-screen,
+                    .bg-gray-100,
+                    .flex,
+                    .items-center,
+                    .pb-12 {
+                        background: white !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
+
                     .print\:hidden { display: none !important; }
                     .shadow-lg { box-shadow: none !important; }
                     .border { border: 0 !important; }
-                    html, body { zoom: 0.9; } /* Slightly smaller scale */
                 }
 
-                .paper-padding { padding: 18px 24px; } /* Less padding */
                 .text-xs { font-size: 0.75rem; }
                 .text-sm { font-size: 0.85rem; }
                 .text-base { font-size: 0.95rem; }
             </style>
 
-            <div class="paper-padding text-gray-900 text-sm leading-snug">
+            <div class="text-gray-900 text-sm leading-snug p-0 m-0">
 
                 {{-- Letterhead --}}
                 <header class="text-center mb-4">
@@ -104,30 +124,28 @@
 
                 {{-- Tuition Section --}}
                 <section class="mb-5">
-                    <h3 class="text-center text-xs font-bold uppercase border-y border-gray-300 py-1 mb-2">Tuition Fee Status</h3>
+                    <h3 class="text-center text-xs font-bold uppercase border-y border-gray-300 py-1 mb-2">
+                        Tuition Fee Status
+                    </h3>
 
                     <div class="border border-gray-400 text-xs">
                         <div class="flex border-b border-gray-400">
                             <div class="w-1/2 px-2 py-2 font-medium bg-gray-50">Balance (Assessment):</div>
                             <div class="w-1/2 px-2 py-2">₱{{ number_format($note->amount ?? 0, 2) }}</div>
                         </div>
-
                         <div class="flex border-b border-gray-400">
                             <div class="w-1/2 px-2 py-2 font-medium bg-gray-50">Partial Payment:</div>
                             <div class="w-1/2 px-2 py-2">₱{{ number_format($note->down_payment ?? 0, 2) }}</div>
                         </div>
-
                         <div class="flex border-b border-gray-400">
                             <div class="w-1/2 px-2 py-2 font-medium bg-gray-50">Remaining Balance:</div>
                             <div class="w-1/2 px-2 py-2">₱{{ number_format((($note->amount ?? 0) - ($note->down_payment ?? 0)), 2) }}</div>
                         </div>
-
                         <div class="flex border-b border-gray-400">
                             <div class="w-1/2 px-2 py-2 font-medium bg-gray-50">Due Date:</div>
                             <div class="w-1/2 px-2 py-2">{{ $note->due_date ?? '-' }}</div>
                         </div>
-
-                        <div class="flex border-b border-gray-400">
+                        <div class="flex">
                             <div class="w-1/2 px-2 py-2 font-medium bg-gray-50">Reason:</div>
                             <div class="w-1/2 px-2 py-2">
                                 {{ $note->reason }}
@@ -135,11 +153,6 @@
                                     - {{ $note->other_reason }}
                                 @endif
                             </div>
-                        </div>
-
-                        <div class="flex">
-                            <div class="w-1/2 px-2 py-3 font-medium bg-gray-50">Parent's Name & Signature:</div>
-                            <div class="w-1/2 px-2 py-3"></div>
                         </div>
                     </div>
                 </section>
