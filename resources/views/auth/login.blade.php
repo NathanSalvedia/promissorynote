@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="min-h-screen flex items-center justify-center bg-gray-100 bg-cover bg-center bg-fixed relative" 
-    style="background-image: url('{{ asset('img/background.jpg') }}');">
+    style="background-image: url({{ asset('img/background.jpg') }});">
 
     {{-- ✅ Dark overlay --}}
     <div class="absolute inset-0 bg-black opacity-60"></div>
@@ -20,16 +20,17 @@
         <h2 class="text-3xl font-extrabold text-white mb-1 tracking-tight">Sign In</h2>
         <p class="text-gray-200 text-sm mb-8">Access your Promissory Note Portal</p>
 
-        {{-- ✅ FORM --}}
-        <form id="loginForm" action="{{ route('login') }}" method="POST" class="space-y-6 text-left w-full max-w-sm mx-auto px-4">
+        {{-- ✅ Login Form --}}
+        <form id="loginForm" action="{{ route('login') }}" method="POST" 
+              class="space-y-6 text-left w-full max-w-sm mx-auto px-4">
             @csrf
 
             {{-- Email Field --}}
             <div class="flex items-center border border-white/40 rounded-lg bg-transparent focus-within:ring-2 focus-within:ring-[#660809]">
                 <iconify-icon icon="mdi:email-outline" class="text-white/70 text-xl ml-3"></iconify-icon>
                 <input type="email" id="email" name="email" value="{{ old('email') }}" required
-                    placeholder="Email Address"
-                    class="w-full px-3 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none rounded-lg autofill:bg-transparent" />
+                       placeholder="Email Address"
+                       class="w-full px-3 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none rounded-lg autofill:bg-transparent" />
             </div>
             @error('email')
                 <span class="text-red-300 text-xs mt-1 block">{{ $message }}</span>
@@ -39,8 +40,8 @@
             <div class="flex items-center border border-white/40 rounded-lg bg-transparent focus-within:ring-2 focus-within:ring-[#660809]">
                 <iconify-icon icon="mdi:lock-outline" class="text-white/70 text-xl ml-3"></iconify-icon>
                 <input type="password" id="password" name="password" required
-                    placeholder="Password"
-                    class="w-full px-3 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none rounded-lg autofill:bg-transparent" />
+                       placeholder="Password"
+                       class="w-full px-3 py-3 bg-transparent text-white placeholder-gray-300 focus:outline-none rounded-lg autofill:bg-transparent" />
             </div>
             @error('password')
                 <span class="text-red-300 text-xs mt-1 block">{{ $message }}</span>
@@ -57,14 +58,16 @@
         <div class="border-t border-white/20 mt-8 pt-6 space-y-3 text-sm">
             <p class="text-gray-100">
                 No account yet? 
-                <a href="{{ route('register') }}" class="text-white font-semibold hover:text-gray-300 hover:underline transition">
-                    Sign Up here.
+                <a href="{{ route('register') }}" 
+                   class="text-white font-semibold hover:text-gray-300 hover:underline transition">
+                    Sign up here.
                 </a>
             </p>
 
             <p class="text-gray-300">
-                Forgot Password? Email
-                <a href="mailto:spcportal@spc.edu.ph" class="text-white hover:text-gray-300 hover:underline transition">
+                Forgot Password? Email 
+                <a href="mailto:spcportal@spc.edu.ph" 
+                   class="text-white hover:text-gray-300 hover:underline transition">
                     spcportal@spc.edu.ph
                 </a>
             </p>
@@ -72,29 +75,31 @@
     </div>
 
     {{-- ✅ Loading Screen Overlay --}}
-    <div id="loadingScreen" class="hidden fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-50">
-        <img src="{{ asset('img/logo.jpg') }}" class="w-24 h-24 mb-6 animate-pulse rounded-full border-4 border-white">
+    <div id="loadingScreen" 
+         class="hidden fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-50">
+        <img src="{{ asset('img/logo.jpg') }}" 
+             class="w-24 h-24 mb-6 animate-pulse rounded-full border-4 border-white">
         <div class="loader border-t-4 border-white rounded-full w-12 h-12 animate-spin mb-3"></div>
         <p class="text-white text-lg font-semibold animate-pulse">Signing in...</p>
     </div>
-
 </div>
 
+{{-- ✅ Footer --}}
 <footer class="text-center py-4 bg-white shadow-inner border-t border-gray-200 text-sm text-gray-500">
-   <p>&copy; {{ date('Y') }} My.SPC · St. Peter’s College, Inc.</p>
+    <p>&copy; {{ date('Y') }} My.SPC · St. Peter’s College, Inc.</p>
 </footer>
 
-{{-- ✅ Script --}}
+{{-- ✅ Scripts --}}
 <script>
 document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Stop default form submission
+    e.preventDefault();
     const loading = document.getElementById('loadingScreen');
-    loading.classList.remove('hidden'); // Show the loader
+    loading.classList.remove('hidden');
 
-    // Wait a bit before submitting (simulate loading)
+    // Simulate a short delay before form submission
     setTimeout(() => {
         this.submit();
-    }, 2000); // 2 seconds
+    }, 2000);
 });
 </script>
 
@@ -108,7 +113,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     animation: spin 1s linear infinite;
 }
 
-/* 🧊 Chrome autofill fix (remove white background) */
+/* 🧊 Chrome autofill fix */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
@@ -122,4 +127,5 @@ input {
     background-color: transparent !important;
 }
 </style>
+
 @endsection
