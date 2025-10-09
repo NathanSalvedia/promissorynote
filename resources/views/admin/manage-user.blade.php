@@ -8,18 +8,16 @@
         @include('includes.admin')
     </header>
 
-    {{-- ✅ Page Content (adjusted top margin so header won't cover it) --}}
+    {{-- ✅ Page Content --}}
     <main class="p-6 mt-28 w-full max-w-6xl mx-auto">
-
-        {{-- ✅ Card Container --}}
         <div class="bg-white rounded-2xl shadow border overflow-hidden">
-
-            {{-- ✅ Header Bar (maroon header style) --}}
+            
+            {{-- ✅ Header --}}
             <div class="px-6 py-4 bg-[#660809] border-b flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <h2 class="text-xl font-bold text-white">User Management</h2>
             </div>
 
-            {{-- ✅ Table Section --}}
+            {{-- ✅ Table --}}
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto">
                     <thead class="bg-gray-50 text-gray-700">
@@ -48,9 +46,28 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2">
-                                        <a href="#" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white" title="Edit">
-                                            <iconify-icon icon="mdi:square-edit-outline"></iconify-icon>
-                                        </a>
+                                        {{-- 🔵 View Details --}}
+                                        <button 
+                                            class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white view-btn"
+                                            data-fullname="{{ $user->fullname }}"
+                                            data-email="{{ $user->email }}"
+                                            data-student_id="{{ $user->student_id }}"
+                                            data-course="Bachelor of Science in Information Technology (BSIT)"
+                                            data-year="First Term, AY 2025-2026"
+                                            data-gender="M"
+                                            data-status="S"
+                                            data-citizenship="Filipino"
+                                            data-religion="Roman Catholic"
+                                            data-birthdate="December 15, 2000"
+                                            data-birthplace="Iligan City"
+                                            data-father="N/A"
+                                            data-mother="N/A"
+                                            data-address="Prk 22, Zone 9, Brgy. Maria Cristina Fuentes"
+                                            title="View Details">
+                                            <iconify-icon icon="mdi:eye-outline"></iconify-icon>
+                                        </button>
+
+                                        {{-- 🔴 Delete --}}
                                         <a href="#" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-600 hover:bg-red-700 text-white" title="Delete">
                                             <iconify-icon icon="mdi:delete-outline"></iconify-icon>
                                         </a>
@@ -69,4 +86,67 @@
         </div>
     </main>
 </div>
+
+{{-- ✅ SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.querySelectorAll('.view-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const data = {
+            fullname: button.dataset.fullname,
+            email: button.dataset.email,
+            student_id: button.dataset.student_id,
+            course: button.dataset.course,
+            year: button.dataset.year,
+            gender: button.dataset.gender,
+            status: button.dataset.status,
+            citizenship: button.dataset.citizenship,
+            religion: button.dataset.religion,
+            birthdate: button.dataset.birthdate,
+            birthplace: button.dataset.birthplace,
+            father: button.dataset.father,
+            mother: button.dataset.mother,
+            address: button.dataset.address,
+        };
+
+        Swal.fire({
+            title: '<h2 class="text-lg font-bold text-[#660809] mb-3">Student Details</h2>',
+            html: `
+                <div class="text-sm text-gray-700 text-left">
+                    <table class="w-full border-collapse">
+                        <tr class="bg-gray-200 font-semibold">
+                            <td colspan="2" class="p-2">Enrollment Information</td>
+                        </tr>
+                        <tr><td class="p-2 w-1/3 bg-gray-50">Student ID Number</td><td class="p-2">${data.student_id}</td></tr>
+                        <tr><td class="p-2 bg-gray-50">Name</td><td class="p-2">${data.fullname}</td></tr>
+                        <tr><td class="p-2 bg-gray-50">Course</td><td class="p-2">${data.course}</td></tr>
+                        <tr><td class="p-2 bg-gray-50">Last Enrolled</td><td class="p-2">${data.year}</td></tr>
+                        
+                        <tr class="bg-gray-200 font-semibold">
+                            <td colspan="2" class="p-2">Personal Information</td>
+                        </tr>
+                        <tr><td class="p-2 bg-gray-50">Gender</td><td class="p-2">${data.gender}</td></tr>
+                        <tr><td class="p-2 bg-gray-50">Civil Status</td><td class="p-2">${data.status}</td></tr>
+                        <tr><td class="p-2 bg-gray-50">Citizenship</td><td class="p-2">${data.citizenship}</td></tr>
+                        <tr><td class="p-2 bg-gray-50">Religion</td><td class="p-2">${data.religion}</td></tr>
+                        <tr><td class="p-2 bg-gray-50">Date of Birth</td><td class="p-2">${data.birthdate}</td></tr>
+                        <tr><td class="p-2 bg-gray-50">Place of Birth</td><td class="p-2">${data.birthplace}</td></tr>
+                        <tr><td class="p-2 bg-gray-50">Father</td><td class="p-2">${data.father}</td></tr>
+                        <tr><td class="p-2 bg-gray-50">Mother</td><td class="p-2">${data.mother}</td></tr>
+                        <tr><td class="p-2 bg-gray-50">Permanent Address</td><td class="p-2">${data.address}</td></tr>
+                    </table>
+                </div>
+            `,
+            confirmButtonColor: '#660809',
+            confirmButtonText: 'Close',
+            width: 600,
+            background: '#fff',
+            customClass: {
+                popup: 'rounded-2xl shadow-xl p-0 overflow-hidden'
+            }
+        });
+    });
+});
+</script>
 @endsection

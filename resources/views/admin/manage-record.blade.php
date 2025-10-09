@@ -115,8 +115,19 @@
                 </td>
                 <td class="py-3 px-4 text-[#660809] font-bold">{{ $note->user->department ?? $note->department }}</td>
                 <td class="py-3 px-4">
-                  <span class="px-3 py-1 rounded-full text-xs font-semibold"
-                    style="background-color:{{ $note->status == 'approved' ? '#d1fae5' : ($note->status == 'pending' ? '#fef3c7' : '#fee2e2') }}; color:{{ $note->status == 'approved' ? '#059669' : ($note->status == 'pending' ? '#d97706' : '#b91c1c') }};">
+                  @php
+                    if ($note->status == 'approved') {
+                      $bgClass = 'bg-green-100';
+                      $textClass = 'text-green-600';
+                    } elseif ($note->status == 'pending') {
+                      $bgClass = 'bg-yellow-100';
+                      $textClass = 'text-yellow-600';
+                    } else {
+                      $bgClass = 'bg-red-100';
+                      $textClass = 'text-red-600';
+                    }
+                  @endphp
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $bgClass }} {{ $textClass }}">
                     {{ ucfirst($note->status) }}
                   </span>
                 </td>

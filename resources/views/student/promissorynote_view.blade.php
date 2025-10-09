@@ -3,12 +3,12 @@
 @section('content')
 <div class="min-h-screen bg-gray-100 flex flex-col items-center">
 
-    {{-- Sticky Header (visible on screen, hidden when printing) --}}
+    {{-- ✅ Sticky Header (hidden when printing) --}}
     <header class="fixed top-0 left-0 w-full z-50 shadow bg-white/95 backdrop-blur-sm print:hidden">
         @include('includes.header')
     </header>
 
-    {{-- Top controls --}}
+    {{-- ✅ Top Controls --}}
     <div class="w-full max-w-5xl px-6 mt-28 mb-4 print:hidden">
         <div class="flex items-center justify-between">
             <a href="{{ route('student.dashboard') }}"
@@ -25,180 +25,204 @@
         </div>
     </div>
 
-    {{-- Printable container --}}
+    {{-- ✅ Printable Page --}}
     <div class="w-full flex justify-center pb-12">
-        <article
-            class="bg-white border border-gray-200 shadow-lg print:shadow-none rounded-none overflow-hidden"
-            style="width: 210mm; min-height: 297mm; max-width: 100%; margin: 0; padding: 0;">
+        <article class="bg-white border border-gray-400 shadow-lg print:shadow-none overflow-hidden"
+                 style="width: 8.5in; min-height: 10.9in; padding: 0.9in; font-family: 'Times New Roman', serif; font-size: 13px; line-height: 1.3;">
 
+            {{-- ✅ Print Styles --}}
             <style>
                 @media print {
-                    @page { 
-                        size: A4; 
-                        margin: 0;
+                    @page {
+                        size: Letter;
+                        margin: 0.65in;
                     }
-
                     html, body {
                         background: white !important;
-                        margin: 0 !important;
-                        padding: 0 !important;
                         -webkit-print-color-adjust: exact;
                         print-color-adjust: exact;
-                        zoom: 0.96;
                     }
-
-                    .min-h-screen,
-                    .bg-gray-100,
-                    .flex,
-                    .items-center,
-                    .pb-12 {
-                        background: white !important;
-                        margin: 0 !important;
-                        padding: 0 !important;
-                    }
-
                     .print\:hidden { display: none !important; }
-                    .shadow-lg { box-shadow: none !important; }
-                    .border { border: 0 !important; }
+                    article {
+                        width: 100%;
+                        height: 100%;
+                        overflow: visible !important;
+                    }
                 }
 
-                .text-xs { font-size: 0.75rem; }
-                .text-sm { font-size: 0.85rem; }
-                .text-base { font-size: 0.95rem; }
+                .section-title {
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    border-top: 2px solid #000;
+                    border-bottom: 2px solid #000;
+                    padding: 4px 0;
+                    text-align: center;
+                    color: #660809;
+                    margin-bottom: 8px;
+                    font-size: 14px;
+                }
+
+                .info-row {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 3px;
+                }
+                .info-col {
+                    display: flex;
+                    width: 48%;
+                    align-items: flex-end;
+                }
+                .info-label {
+                    font-weight: 600;
+                    width: 45%;
+                }
+                .info-value {
+                    flex: 1;
+                    border-bottom: 1px solid #000;
+                    text-align: left;
+                    padding-bottom: 1px;
+                    font-weight: 500;
+                }
+
+                .data-table div {
+                    border-color: #000;
+                }
             </style>
 
-            <div class="text-gray-900 text-sm leading-snug p-0 m-0">
-
-                {{-- Letterhead --}}
-                <header class="text-center mb-4">
-                    <div class="flex items-center justify-center gap-4">
-                        <img src="{{ asset('img/logo.jpg') }}"
-                             alt="School Logo"
-                             class="w-16 h-16 object-contain rounded-full border border-gray-200">
-                        <div class="text-left">
-                            <p class="text-xl font-extrabold text-[#660809] leading-tight">St Peter's College</p>
-                            <p class="text-sm font-medium">042 Sabayle St, Iligan City, 9200 Philippines</p>
-                            <p class="text-xs text-blue-600">Email: OPsecretary@spc.edu.ph</p>
-                        </div>
+            {{-- ✅ Header --}}
+            <header class="text-center mb-4">
+                <div class="flex items-center justify-center gap-3">
+                    <img src="{{ asset('img/logo.jpg') }}" alt="Logo"
+                         class="w-14 h-14 object-contain rounded-full border border-gray-300">
+                    <div class="text-left leading-tight">
+                        <p class="text-lg font-extrabold text-[#660809]">St Peter's College</p>
+                        <p class="text-xs font-medium">042 Sabayle St, Iligan City, 9200 Philippines</p>
+                        <p class="text-[11px] text-blue-700">Email: OPsecretary@spc.edu.ph</p>
                     </div>
-
-                    <h1 class="mt-4 text-base font-bold uppercase text-[#660809]">
-                        Promissory Note Details
-                    </h1>
-                </header>
-
-                {{-- Info section --}}
-                <section class="mb-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
-                        <div class="flex">
-                            <span class="w-44 font-semibold">Date of Application:</span>
-                            <span class="flex-1 border-b border-gray-400">{{ \Carbon\Carbon::parse($note->created_at)->format('F d, Y') }}</span>
-                        </div>
-                        <div class="flex">
-                            <span class="w-44 font-semibold">School ID No.:</span>
-                            <span class="flex-1 border-b border-gray-400">{{ $note->student_id }}</span>
-                        </div>
-                        <div class="flex">
-                            <span class="w-44 font-semibold">Name of Student:</span>
-                            <span class="flex-1 border-b border-gray-400">{{ $note->fullname }}</span>
-                        </div>
-                        <div class="flex">
-                            <span class="w-44 font-semibold">Program & Year:</span>
-                            <span class="flex-1 border-b border-gray-400">{{ $note->course ?? '-' }} {{ $note->year_level ? '- ' . $note->year_level : '' }}</span>
-                        </div>
-                        <div class="flex">
-                            <span class="w-44 font-semibold">Contact No.:</span>
-                            <span class="flex-1 border-b border-gray-400">{{ $note->phone ?? '-' }}</span>
-                        </div>
-                        <div class="flex">
-                            <span class="w-44 font-semibold">Gender:</span>
-                            <span class="flex-1 border-b border-gray-400">{{ $note->gender ?? '-' }}</span>
-                        </div>
-                    </div>
-                </section>
-
-                {{-- Note --}}
-                <div class="bg-yellow-100 border border-yellow-300 text-yellow-800 px-3 py-1 mb-4 text-xs font-semibold">
-                    NOTE: Please ensure that the form is filled out completely.
                 </div>
 
-                {{-- Tuition Section --}}
-                <section class="mb-5">
-                    <h3 class="text-center text-xs font-bold uppercase border-y border-gray-300 py-1 mb-2">
-                        Tuition Fee Status
-                    </h3>
+                <h1 class="mt-3 text-sm font-bold uppercase text-[#660809] border-y border-gray-400 py-1 tracking-wide">
+                    Promissory Note Details
+                </h1>
+            </header>
 
-                    <div class="border border-gray-400 text-xs">
-                        <div class="flex border-b border-gray-400">
-                            <div class="w-1/2 px-2 py-2 font-medium bg-gray-50">Balance (Assessment):</div>
-                            <div class="w-1/2 px-2 py-2">₱{{ number_format($note->amount ?? 0, 2) }}</div>
-                        </div>
-                        <div class="flex border-b border-gray-400">
-                            <div class="w-1/2 px-2 py-2 font-medium bg-gray-50">Partial Payment:</div>
-                            <div class="w-1/2 px-2 py-2">₱{{ number_format($note->down_payment ?? 0, 2) }}</div>
-                        </div>
-                        <div class="flex border-b border-gray-400">
-                            <div class="w-1/2 px-2 py-2 font-medium bg-gray-50">Remaining Balance:</div>
-                            <div class="w-1/2 px-2 py-2">₱{{ number_format((($note->amount ?? 0) - ($note->down_payment ?? 0)), 2) }}</div>
-                        </div>
-                        <div class="flex border-b border-gray-400">
-                            <div class="w-1/2 px-2 py-2 font-medium bg-gray-50">Due Date:</div>
-                            <div class="w-1/2 px-2 py-2">{{ $note->due_date ?? '-' }}</div>
-                        </div>
-                        <div class="flex">
-                            <div class="w-1/2 px-2 py-2 font-medium bg-gray-50">Reason:</div>
-                            <div class="w-1/2 px-2 py-2">
-                                {{ $note->reason }}
-                                @if(strtolower($note->reason ?? '') === 'other' && !empty($note->other_reason))
-                                    - {{ $note->other_reason }}
-                                @endif
-                            </div>
-                        </div>
+            {{-- ✅ Student Info --}}
+            <section class="mb-3 text-[13px]">
+                <div class="info-row">
+                    <div class="info-col">
+                        <span class="info-label">Date of Application:</span>
+                        <span class="info-value">{{ \Carbon\Carbon::parse($note->created_at)->format('F d, Y') }}</span>
                     </div>
-                </section>
-
-                {{-- Attachments --}}
-                <section class="mb-5">
-                    <span class="font-semibold text-xs">Attachments:</span>
-
-                    @if($note->supportingDocuments && $note->supportingDocuments->count())
-                        @php
-                            $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
-                            $images = [];
-                            foreach($note->supportingDocuments as $doc) {
-                                $ext = strtolower(pathinfo($doc->file_name, PATHINFO_EXTENSION));
-                                if(in_array($ext, $imageExts)) { $images[] = $doc; }
-                            }
-                        @endphp
-
-                        @if(count($images) > 0)
-                            <div class="grid grid-cols-3 gap-2 mt-2">
-                                @foreach($images as $img)
-                                    <img src="{{ asset('storage/' . $img->file_path) }}" alt="Attachment"
-                                         class="w-full h-24 object-cover border border-gray-300">
-                                @endforeach
-                            </div>
-                        @endif
-                    @else
-                        <div class="mt-1 text-xs text-gray-500">No attachments</div>
-                    @endif
-                </section>
-
-                {{-- Signatures --}}
-                <section class="mt-6">
-                    <div class="flex justify-between items-center">
-                        <div class="w-1/2 text-center">
-                            <div class="border-t border-gray-600 mt-8 w-4/5 mx-auto"></div>
-                            <p class="mt-1 text-xs font-semibold">Student's Signature</p>
-                        </div>
-                        <div class="w-1/2 text-center">
-                            <div class="border-t border-gray-600 mt-8 w-4/5 mx-auto"></div>
-                            <p class="mt-1 text-xs font-semibold">Admin's Signature</p>
-                        </div>
+                    <div class="info-col">
+                        <span class="info-label">School ID No.:</span>
+                        <span class="info-value">{{ $note->student_id }}</span>
                     </div>
-                </section>
+                </div>
 
+                <div class="info-row">
+                    <div class="info-col">
+                        <span class="info-label">Name of Student:</span>
+                        <span class="info-value">{{ $note->fullname }}</span>
+                    </div>
+                    <div class="info-col">
+                        <span class="info-label">Program & Year:</span>
+                        <span class="info-value">
+                            {{ $note->course ?? '-' }} {{ $note->year_level ? '- ' . $note->year_level : '' }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-col">
+                        <span class="info-label">Contact No.:</span>
+                        <span class="info-value">{{ $note->phone ?? '-' }}</span>
+                    </div>
+                    <div class="info-col">
+                        <span class="info-label">Gender:</span>
+                        <span class="info-value">{{ $note->gender ?? '-' }}</span>
+                    </div>
+                </div>
+            </section>
+
+            {{-- ✅ Note Box --}}
+            <div class="bg-yellow-100 border-l-4 border-yellow-600 px-4 py-2 text-[12px] font-semibold mb-3 rounded-sm">
+                NOTE: Please ensure that all fields are filled out completely before submission.
             </div>
+
+            {{-- ✅ Tuition Fee Status --}}
+            <section class="mb-5 text-[12.5px]">
+                <div class="section-title">Tuition Fee Status</div>
+
+                <div class="border border-black data-table">
+                    <div class="flex border-b">
+                        <div class="w-1/2 px-3 py-1.5 font-semibold bg-gray-100 border-r">Balance (Assessment):</div>
+                        <div class="w-1/2 px-3 py-1.5">₱{{ number_format($note->amount ?? 0, 2) }}</div>
+                    </div>
+                    <div class="flex border-b">
+                        <div class="w-1/2 px-3 py-1.5 font-semibold bg-gray-100 border-r">Partial Payment:</div>
+                        <div class="w-1/2 px-3 py-1.5">₱{{ number_format($note->down_payment ?? 0, 2) }}</div>
+                    </div>
+                    <div class="flex border-b">
+                        <div class="w-1/2 px-3 py-1.5 font-semibold bg-gray-100 border-r">Remaining Balance:</div>
+                        <div class="w-1/2 px-3 py-1.5">₱{{ number_format((($note->amount ?? 0) - ($note->down_payment ?? 0)), 2) }}</div>
+                    </div>
+                    <div class="flex border-b">
+                        <div class="w-1/2 px-3 py-1.5 font-semibold bg-gray-100 border-r">Due Date:</div>
+                        <div class="w-1/2 px-3 py-1.5">{{ $note->due_date ?? '-' }}</div>
+                    </div>
+                    <div class="flex">
+                        <div class="w-1/2 px-3 py-1.5 font-semibold bg-gray-100 border-r">Reason:</div>
+                        <div class="w-1/2 px-3 py-1.5">
+                            {{ $note->reason }}
+                            @if(strtolower($note->reason ?? '') === 'other' && !empty($note->other_reason))
+                                - {{ $note->other_reason }}
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{-- ✅ Attachments --}}
+            <section class="mb-4">
+                <p class="font-semibold text-xs mb-1">Attachments:</p>
+
+                @if($note->supportingDocuments && $note->supportingDocuments->count())
+                    @php
+                        $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
+                        $images = [];
+                        foreach($note->supportingDocuments as $doc) {
+                            $ext = strtolower(pathinfo($doc->file_name, PATHINFO_EXTENSION));
+                            if(in_array($ext, $imageExts)) { $images[] = $doc; }
+                        }
+                    @endphp
+
+                    @if(count($images) > 0)
+                        <div class="grid grid-cols-3 gap-2 mt-1">
+                            @foreach($images as $img)
+                                <img src="{{ asset('storage/' . $img->file_path) }}" alt="Attachment"
+                                     class="w-full h-24 object-cover border border-gray-300 rounded">
+                            @endforeach
+                        </div>
+                    @endif
+                @else
+                    <p class="text-xs text-gray-500">No attachments provided.</p>
+                @endif
+            </section>
+
+            {{-- ✅ Signatures --}}
+            <section class="mt-6">
+                <div class="flex justify-between items-center">
+                    <div class="w-1/2 text-center">
+                        <div class="border-t border-black mt-8 w-4/5 mx-auto"></div>
+                        <p class="mt-1 text-xs font-semibold">Student's Signature</p>
+                    </div>
+                    <div class="w-1/2 text-center">
+                        <div class="border-t border-black mt-8 w-4/5 mx-auto"></div>
+                        <p class="mt-1 text-xs font-semibold">Admin's Signature</p>
+                    </div>
+                </div>
+            </section>
+
         </article>
     </div>
 </div>

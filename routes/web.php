@@ -67,6 +67,7 @@ Route::get('/auth/login', function () {
     Route::post('/admin/promissorynotes-restore/{pn_id}/restore', [ManageRecordsController::class, 'restore'])->name('admin.promissorynotes-restore');
     Route::get('/admin/archived-notes', [ManageRecordsController::class, 'archivedNotes'])->name('admin.archived-notes');
     Route::get('/admin/manage-record', [ManageRecordsController::class, 'manageRecord'])->name('admin.manage-record');
+    
 });
 
 
