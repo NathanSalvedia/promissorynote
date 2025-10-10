@@ -91,7 +91,7 @@
                                 Manage Records
                             </a>
 
-                            <a href="#"
+                              <a href="{{ route('admin.analytics') }}"
                                 class="flex items-center px-3 py-2 text-sm text-gray-800 hover:bg-[#660809] hover:text-white transition">
                                 <iconify-icon icon="mdi:chart-line" class="mr-2"></iconify-icon>
                                 Analytics
