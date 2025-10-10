@@ -14,100 +14,72 @@
         {{-- ✅ Analytics Page Content --}}
         <main class="p-6 max-w-7xl mx-auto w-full mt-24">
 
-            <h2 class="text-2xl font-bold mb-6 text-[#660809]">Analytics Overview</h2>
+            <h2 class="text-2xl font-bold mb-8 text-[#660809]">Analytics Dashboard</h2>
 
-            {{-- ✅ KPI Section --}}
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 mb-10">
-                <div class="bg-[#660809] text-white p-6 rounded-xl shadow text-center">
-                    <p class="text-sm opacity-80">Total Notes</p>
-                    <p class="text-3xl font-bold">245</p>
-                    <div class="w-full bg-red-900 h-2 mt-3 rounded-full">
-                        <div class="bg-white h-2 rounded-full w-[80%]"></div>
-                    </div>
-                </div>
-
-                <div class="bg-[#660809] text-white p-6 rounded-xl shadow text-center">
-                    <p class="text-sm opacity-80">Pending</p>
-                    <p class="text-3xl font-bold">32</p>
-                    <div class="w-full bg-red-900 h-2 mt-3 rounded-full">
-                        <div class="bg-yellow-400 h-2 rounded-full w-[30%]"></div>
-                    </div>
-                </div>
-
-                <div class="bg-[#660809] text-white p-6 rounded-xl shadow text-center">
-                    <p class="text-sm opacity-80">Approved</p>
-                    <p class="text-3xl font-bold">180</p>
-                    <div class="w-full bg-red-900 h-2 mt-3 rounded-full">
-                        <div class="bg-green-400 h-2 rounded-full w-[70%]"></div>
-                    </div>
-                </div>
-
-                <div class="bg-[#660809] text-white p-6 rounded-xl shadow text-center">
-                    <p class="text-sm opacity-80">Rejected</p>
-                    <p class="text-3xl font-bold">33</p>
-                    <div class="w-full bg-red-900 h-2 mt-3 rounded-full">
-                        <div class="bg-red-400 h-2 rounded-full w-[20%]"></div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- ✅ Chart Section --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                {{-- 📊 1. Status Distribution Pie Chart --}}
+            {{-- ========== SECTION 1: Promissory Notes ========== --}}
+            <h3 class="text-xl font-semibold mb-4 text-[#660809]">I. Promissory Notes</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                {{-- Status Distribution --}}
                 <div class="bg-white p-6 rounded-xl shadow border">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Status Distribution</h3>
-                        <button class="text-sm text-[#660809] hover:underline">Refresh</button>
-                    </div>
+                    <h4 class="font-semibold mb-3">Status Distribution</h4>
                     <canvas id="statusChart"></canvas>
                 </div>
 
-                {{-- 📈 2. Monthly Trends Line Chart --}}
+                {{-- Monthly Trends --}}
                 <div class="bg-white p-6 rounded-xl shadow border">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Monthly Submission Trends</h3>
-                        <button class="text-sm text-[#660809] hover:underline">Refresh</button>
-                    </div>
+                    <h4 class="font-semibold mb-3">Monthly Submission Trends</h4>
                     <canvas id="monthlyChart"></canvas>
                 </div>
+            </div>
 
-                {{-- 🏫 3. Department Analysis Bar Chart --}}
-                <div class="bg-white p-6 rounded-xl shadow border md:col-span-2">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Department Analysis</h3>
-                        <button class="text-sm text-[#660809] hover:underline" id="toggleDept">Switch View</button>
+            {{-- ========== SECTION 2: Student Demographics ========== --}}
+            <h3 class="text-xl font-semibold mb-4 text-[#660809]">II. Student Demographics</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                {{-- Department Analysis --}}
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="font-semibold">Department Analysis</h4>
+                        <button id="toggleDept" class="text-sm text-[#660809] hover:underline">Switch View</button>
                     </div>
                     <canvas id="departmentChart"></canvas>
                 </div>
 
-                {{-- 📋 4. Reason Categories Doughnut Chart --}}
+                {{-- Gender Distribution --}}
                 <div class="bg-white p-6 rounded-xl shadow border">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Reason Categories</h3>
-                        <button class="text-sm text-[#660809] hover:underline">Refresh</button>
-                    </div>
-                    <canvas id="reasonChart"></canvas>
+                    <h4 class="font-semibold mb-3">Gender Distribution</h4>
+                    <canvas id="genderChart"></canvas>
                 </div>
 
-                {{-- 💰 5. Payment Progress Chart --}}
+                {{-- Year Level Distribution --}}
                 <div class="bg-white p-6 rounded-xl shadow border">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Payment Progress</h3>
-                        <button class="text-sm text-[#660809] hover:underline">Refresh</button>
-                    </div>
+                    <h4 class="font-semibold mb-3">Year Level Distribution</h4>
+                    <canvas id="yearLevelChart"></canvas>
+                </div>
+            </div>
+
+            {{-- ========== SECTION 3: Downpayment Tracking ========== --}}
+            <h3 class="text-xl font-semibold mb-4 text-[#660809]">III. Downpayment Tracking</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                {{-- Payment Progress --}}
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <h4 class="font-semibold mb-3">Payment Progress</h4>
                     <canvas id="paymentChart"></canvas>
                 </div>
 
-                {{-- 💸 6. Amount Distribution Histogram --}}
-                <div class="bg-white p-6 rounded-xl shadow border md:col-span-2">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Amount Distribution</h3>
-                        <button class="text-sm text-[#660809] hover:underline">Refresh</button>
-                    </div>
+                {{-- Amount Distribution --}}
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <h4 class="font-semibold mb-3">Amount Distribution</h4>
                     <canvas id="amountChart"></canvas>
                 </div>
+            </div>
 
+            {{-- ========== SECTION 4: Reason for Promissory Note ========== --}}
+            <h3 class="text-xl font-semibold mb-4 text-[#660809]">IV. Reason for Promissory Note</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white p-6 rounded-xl shadow border">
+                    <h4 class="font-semibold mb-3">Reason Categories</h4>
+                    <canvas id="reasonChart"></canvas>
+                </div>
             </div>
 
         </main>
@@ -116,10 +88,9 @@
 @endsection
 
 @push('scripts')
-{{-- ✅ Chart.js CDN --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // 1️⃣ Status Pie Chart
+    // 1️⃣ Status Distribution
     new Chart(document.getElementById('statusChart'), {
         type: 'pie',
         data: {
@@ -132,7 +103,7 @@
         options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
     });
 
-    // 2️⃣ Monthly Trends Line Chart
+    // 2️⃣ Monthly Trends
     new Chart(document.getElementById('monthlyChart'), {
         type: 'line',
         data: {
@@ -145,10 +116,9 @@
         options: { responsive: true, tension: 0.3 }
     });
 
-    // 3️⃣ Department Analysis (switchable)
+    // 3️⃣ Department Analysis
     let deptType = 'count';
-    const deptChartCanvas = document.getElementById('departmentChart');
-    const deptChart = new Chart(deptChartCanvas, {
+    const deptChart = new Chart(document.getElementById('departmentChart'), {
         type: 'bar',
         data: {
             labels: ['BSIT', 'BSBA', 'BEED', 'BSED'],
@@ -167,7 +137,34 @@
         deptChart.update();
     });
 
-    // 4️⃣ Reason Categories Doughnut Chart
+    // 4️⃣ Gender Distribution
+    new Chart(document.getElementById('genderChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Male', 'Female'],
+            datasets: [{
+                data: [120, 160],
+                backgroundColor: ['#3B82F6', '#EC4899']
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+
+    // 5️⃣ Year Level Distribution
+    new Chart(document.getElementById('yearLevelChart'), {
+        type: 'bar',
+        data: {
+            labels: ['1st Year', '2nd Year', '3rd Year', '4th Year'],
+            datasets: [{
+                label: 'Students',
+                data: [60, 80, 90, 50],
+                backgroundColor: '#991B1B'
+            }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+
+    // 6️⃣ Reason Categories
     new Chart(document.getElementById('reasonChart'), {
         type: 'doughnut',
         data: {
@@ -180,7 +177,7 @@
         options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
     });
 
-    // 5️⃣ Payment Progress Pie Chart
+    // 7️⃣ Payment Progress
     new Chart(document.getElementById('paymentChart'), {
         type: 'pie',
         data: {
@@ -193,7 +190,7 @@
         options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
     });
 
-    // 6️⃣ Amount Distribution Histogram
+    // 8️⃣ Amount Distribution
     new Chart(document.getElementById('amountChart'), {
         type: 'bar',
         data: {
@@ -201,7 +198,7 @@
             datasets: [{
                 label: 'Number of Applications',
                 data: [30, 100, 80, 35],
-                backgroundColor: '#991b1b'
+                backgroundColor: '#991B1B'
             }]
         },
         options: { responsive: true, scales: { y: { beginAtZero: true } } }

@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="min-h-screen flex items-center justify-center bg-gray-100 bg-cover bg-center bg-fixed relative" 
-    style="background-image: url({{ asset('img/background.jpg') }});">
+    style="background-image: url('{{ asset("img/background.jpg") }}');">
 
     {{-- ✅ Dark overlay --}}
     <div class="absolute inset-0 bg-black opacity-60"></div>
@@ -106,8 +106,8 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
 {{-- ✅ Spinner & Autofill Fix --}}
 <style>
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 .animate-spin {
     animation: spin 1s linear infinite;
