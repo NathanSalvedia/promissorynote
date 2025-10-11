@@ -1,235 +1,112 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 flex">
+@include('includes.header')
 
-    {{-- ✅ Sidebar + Header --}}
-    <div class="flex-1">
-        <header class="fixed top-0 left-0 right-0 z-50 shadow bg-white">
-            @include('includes.admin')
-        </header>
+<div class="min-h-screen bg-gray-50 py-8 px-4">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">Archived Promissory Note Records</h2>
 
-        {{-- ✅ Analytics Content --}}
-        <main class="p-6 max-w-7xl mx-auto w-full mt-24 space-y-10">
-
-            {{-- 📈 KPI Section --}}
-            <section>
-                <h2 class="text-2xl font-bold mb-6 text-[#660809]">Analytics Dashboard</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-6">
-
-                    {{-- Card 1 --}}
-                    <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
-                        <p class="text-sm text-gray-500 mb-1">Total Applications</p>
-                        <h3 class="text-3xl font-bold text-[#660809]">245</h3>
-                        <div class="w-full bg-gray-200 h-2 mt-2 rounded">
-                            <div class="bg-[#660809] h-2 rounded" style="width: 100%;"></div>
-                        </div>
-                    </div>
-
-                    {{-- Card 2 --}}
-                    <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
-                        <p class="text-sm text-gray-500 mb-1">Pending</p>
-                        <h3 class="text-3xl font-bold text-yellow-500">32</h3>
-                        <div class="w-full bg-gray-200 h-2 mt-2 rounded">
-                            <div class="bg-yellow-500 h-2 rounded" style="width: 13%;"></div>
-                        </div>
-                    </div>
-
-                    {{-- Card 3 --}}
-                    <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
-                        <p class="text-sm text-gray-500 mb-1">Approved</p>
-                        <h3 class="text-3xl font-bold text-green-600">180</h3>
-                        <div class="w-full bg-gray-200 h-2 mt-2 rounded">
-                            <div class="bg-green-600 h-2 rounded" style="width: 73%;"></div>
-                        </div>
-                    </div>
-
-                    {{-- Card 4 --}}
-                    <div class="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
-                        <p class="text-sm text-gray-500 mb-1">Rejected</p>
-                        <h3 class="text-3xl font-bold text-red-600">33</h3>
-                        <div class="w-full bg-gray-200 h-2 mt-2 rounded">
-                            <div class="bg-red-600 h-2 rounded" style="width: 14%;"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {{-- 📊 Visual Charts --}}
-            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                {{-- Pie Chart: Status Distribution --}}
-                <div class="bg-white p-6 rounded-xl shadow relative">
-                    <h3 class="text-lg font-semibold mb-3 flex justify-between items-center">
-                        Status Distribution
-                        <button onclick="refreshChart('statusChart')" class="text-sm text-[#660809] hover:underline">⟳ Refresh</button>
-                    </h3>
-                    <canvas id="statusChart"></canvas>
-                </div>
-
-                {{-- Line Chart: Monthly Trends --}}
-                <div class="bg-white p-6 rounded-xl shadow relative">
-                    <h3 class="text-lg font-semibold mb-3 flex justify-between items-center">
-                        Monthly Trends
-                        <button onclick="refreshChart('monthlyChart')" class="text-sm text-[#660809] hover:underline">⟳ Refresh</button>
-                    </h3>
-                    <canvas id="monthlyChart"></canvas>
-                </div>
-
-                {{-- Bar Chart: Department Analysis --}}
-                <div class="bg-white p-6 rounded-xl shadow relative md:col-span-2">
-                    <h3 class="text-lg font-semibold mb-3 flex justify-between items-center">
-                        Department Analysis
-                        <button onclick="toggleDeptChart()" class="text-sm text-[#660809] hover:underline">🔁 Toggle View</button>
-                    </h3>
-                    <canvas id="departmentChart"></canvas>
-                </div>
-
-                {{-- Doughnut Chart: Reason Categories --}}
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-lg font-semibold mb-3">Reason Categories</h3>
-                    <canvas id="reasonChart"></canvas>
-                </div>
-
-                {{-- Payment Progress Chart --}}
-                <div class="bg-white p-6 rounded-xl shadow">
-                    <h3 class="text-lg font-semibold mb-3">Payment Progress</h3>
-                    <canvas id="paymentChart"></canvas>
-                </div>
-
-                {{-- Amount Distribution Histogram --}}
-                <div class="bg-white p-6 rounded-xl shadow md:col-span-2">
-                    <h3 class="text-lg font-semibold mb-3">Amount Distribution</h3>
-                    <canvas id="amountChart"></canvas>
-                </div>
-            </section>
-
-        </main>
+    {{-- 🔙 Back Button --}}
+    <div class="flex items-center mb-4">
+      <a href="{{ route('admin.manage-record') }}" 
+         class="bg-[#800000] hover:bg-[#990000] text-white font-semibold px-5 py-2 rounded-lg flex items-center gap-2 transition duration-200">
+        <span class="iconify" data-icon="mdi:arrow-left" data-width="20" data-height="20"></span>
+        Back to Records
+      </a>
     </div>
+
+    {{-- 📋 Archived Table --}}
+    <div class="bg-white rounded-xl shadow p-6">
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-[#800000]/10 text-[#800000] uppercase text-xs tracking-wide">
+              <th class="py-3 px-4 text-left font-medium">PN ID</th>
+              <th class="py-3 px-4 text-left font-medium">Full Name</th>
+              <th class="py-3 px-4 text-left font-medium">Department</th>
+              <th class="py-3 px-4 text-left font-medium">Status</th>
+              <th class="py-3 px-4 text-left font-medium">Date Created</th>
+              <th class="py-3 px-4 text-left font-medium">Last Modified</th>
+              <th class="py-3 px-4 text-left font-medium">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @foreach($archivedNotes as $note)
+            <tr class="border-b hover:bg-gray-50 transition">
+              <td class="py-3 px-4 font-semibold text-gray-800">{{ $note->pn_id }}</td>
+
+              <td class="py-3 px-4">
+                <div class="font-semibold text-gray-800">{{ $note->user->name ?? $note->fullname }}</div>
+                <div class="text-gray-500 text-xs">{{ $note->user->student_id ?? $note->student_id }}</div>
+              </td>
+
+              <td class="py-3 px-4 text-[#800000] font-bold">
+                {{ $note->user->department ?? $note->department }}
+              </td>
+
+              <td class="py-3 px-4">
+                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-500">
+                  Archived
+                </span>
+              </td>
+
+              <td class="py-3 px-4">{{ $note->created_at ? $note->created_at->format('Y-m-d') : '' }}</td>
+              <td class="py-3 px-4">{{ $note->updated_at ? $note->updated_at->format('Y-m-d') : '' }}</td>
+
+              <td class="py-3 px-4 flex gap-2">
+                {{-- 🔄 Restore Button with SweetAlert --}}
+                <form action="{{ route('admin.promissorynotes-restore', $note->pn_id) }}" 
+                      method="POST" 
+                      class="restore-form inline">
+                  @csrf
+                  <button type="submit" 
+                          class="bg-[#d4a5a5] hover:bg-[#c08585] text-[#800000] p-2 rounded-lg transition duration-200" 
+                          title="Restore">
+                    <span class="iconify" data-icon="mdi:backup-restore" data-width="20" data-height="20"></span>
+                  </button>
+                </form>
+
+                {{-- ⬇ Download Button --}}
+                <button 
+                  class="bg-[#800000] hover:bg-[#990000] text-white p-2 rounded-lg transition duration-200" 
+                  title="Download">
+                  <span class="iconify" data-icon="mdi:download" data-width="20" data-height="20"></span>
+                </button>
+              </td>
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
-@endsection
 
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{-- ✅ SweetAlert2 for Restore Confirmation --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // Chart instances
-    let charts = {};
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".restore-form").forEach(form => {
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
 
-    function createCharts() {
-        // 1️⃣ Status Distribution
-        charts.statusChart = new Chart(document.getElementById('statusChart'), {
-            type: 'pie',
-            data: {
-                labels: ['Pending', 'Approved', 'Rejected'],
-                datasets: [{
-                    data: [32, 180, 33],
-                    backgroundColor: ['#FACC15', '#22C55E', '#EF4444']
-                }]
-            },
-            options: { plugins: { legend: { position: 'bottom' } } }
-        });
-
-        // 2️⃣ Monthly Trends
-        charts.monthlyChart = new Chart(document.getElementById('monthlyChart'), {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [
-                    { label: 'Submissions', data: [15, 25, 30, 50, 40, 60], borderColor: '#660809', tension: 0.3 },
-                    { label: 'Approvals', data: [10, 20, 28, 45, 35, 55], borderColor: '#16A34A', tension: 0.3 }
-                ]
-            },
-            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-        });
-
-        // 3️⃣ Department Analysis
-        charts.departmentChart = new Chart(document.getElementById('departmentChart'), {
-            type: 'bar',
-            data: {
-                labels: ['BSIT', 'BSBA', 'BEED', 'BSED'],
-                datasets: [{
-                    label: 'Count',
-                    data: [80, 60, 55, 50],
-                    backgroundColor: '#660809'
-                }]
-            },
-            options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
-        });
-
-        // 4️⃣ Reason Categories
-        charts.reasonChart = new Chart(document.getElementById('reasonChart'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Tuition', 'Medical', 'Personal', 'Other'],
-                datasets: [{
-                    data: [120, 45, 55, 25],
-                    backgroundColor: ['#DC2626', '#F87171', '#FCA5A5', '#FEE2E2']
-                }]
-            },
-            options: { plugins: { legend: { position: 'bottom' } } }
-        });
-
-        // 5️⃣ Payment Progress
-        charts.paymentChart = new Chart(document.getElementById('paymentChart'), {
-            type: 'pie',
-            data: {
-                labels: ['Paid', 'Partial', 'Unpaid'],
-                datasets: [{
-                    data: [120, 75, 50],
-                    backgroundColor: ['#22C55E', '#FACC15', '#EF4444']
-                }]
-            },
-            options: { plugins: { legend: { position: 'bottom' } } }
-        });
-
-        // 6️⃣ Amount Distribution
-        charts.amountChart = new Chart(document.getElementById('amountChart'), {
-            type: 'bar',
-            data: {
-                labels: ['₱0-1000', '₱1001-3000', '₱3001-5000', '₱5001+'],
-                datasets: [{
-                    label: 'Applications',
-                    data: [40, 80, 70, 55],
-                    backgroundColor: '#660809'
-                }]
-            },
-            options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
-        });
-    }
-
-    // 🔁 Refresh button function
-    function refreshChart(id) {
-        if (charts[id]) {
-            charts[id].destroy();
-            createCharts();
+      Swal.fire({
+        title: "Restore this record?",
+        text: "This will move the record back to active records.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#800000",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Yes, restore it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.submit();
         }
-    }
-
-    // 🔁 Toggle Department View (Count ↔ Amount)
-    let deptMode = 'count';
-    function toggleDeptChart() {
-        charts.departmentChart.destroy();
-        const newData = deptMode === 'count'
-            ? [50000, 42000, 35000, 30000]
-            : [80, 60, 55, 50];
-        const newLabel = deptMode === 'count' ? 'Amount (₱)' : 'Count';
-        deptMode = deptMode === 'count' ? 'amount' : 'count';
-
-        charts.departmentChart = new Chart(document.getElementById('departmentChart'), {
-            type: 'bar',
-            data: {
-                labels: ['BSIT', 'BSBA', 'BEED', 'BSED'],
-                datasets: [{
-                    label: newLabel,
-                    data: newData,
-                    backgroundColor: '#660809'
-                }]
-            },
-            options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: true, position: 'bottom' } } }
-        });
-    }
-
-    // Initialize all charts on load
-    createCharts();
+      });
+    });
+  });
+});
 </script>
-@endpush
+@endsection
