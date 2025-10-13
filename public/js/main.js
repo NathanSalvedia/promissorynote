@@ -274,7 +274,51 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    btn.closest('form').submit();
+                    const form = btn.closest('form');
+                    const row = btn.closest('tr');
+
+                    if (row) {
+                        // Prepare a smooth collapse + fade + slide animation before submit
+                        row.style.transition = 'transform 600ms ease, opacity 600ms ease, height 600ms ease, margin 600ms ease, padding 600ms ease';
+                        row.style.transformOrigin = 'left center';
+
+                        // Fix current height so we can animate to 0
+                        const startHeight = row.getBoundingClientRect().height;
+                        row.style.height = startHeight + 'px';
+                        row.style.boxSizing = 'border-box';
+
+                        // Force reflow to ensure transition starts
+                        void row.offsetHeight;
+
+                        // Apply end styles
+                        row.style.opacity = '0';
+                        row.style.transform = 'translateX(30px) scale(0.98)';
+                        row.style.height = '0px';
+                        row.style.margin = '0px';
+                        row.style.paddingTop = '0px';
+                        row.style.paddingBottom = '0px';
+
+                        // After animation completes, submit the form
+                        const onTransitionEnd = function(e) {
+                            // ensure we only handle the height/opacity transition end
+                            if (e.propertyName === 'height' || e.propertyName === 'opacity') {
+                                row.removeEventListener('transitionend', onTransitionEnd);
+                                // small delay to ensure visual completion
+                                setTimeout(() => form.submit(), 80);
+                            }
+                        };
+                        row.addEventListener('transitionend', onTransitionEnd);
+
+                        // Fallback: if transitionend doesn't fire, submit after timeout
+                        setTimeout(() => {
+                            if (!form._submittedByAnimation) {
+                                form._submittedByAnimation = true;
+                                form.submit();
+                            }
+                        }, 900);
+                    } else {
+                        form.submit();
+                    }
                 }
             });
         });

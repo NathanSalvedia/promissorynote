@@ -33,7 +33,14 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.password.request');
         });
 
+       Fortify::resetPasswordView(function () {
+            return view('auth.password.edit');
+        });
 
+
+        Fortify::verifyEmailView(function () {
+            return view('auth.verify-email');
+        });
     }
 
     /**

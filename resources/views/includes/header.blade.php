@@ -1,5 +1,3 @@
-
-
 <header class="w-full">
     {{-- Top black strip with scrolling text --}}
     <div class="bg-black text-white text-[11px] md:text-xs py-0.5">
@@ -43,6 +41,22 @@
                          class="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg z-50 text-sm">
                         <div class="p-3 border-b font-semibold">Notifications</div>
                         <ul>
+                            {{-- Email verification notification --}}
+                            @if (!auth()->user()->hasVerifiedEmail())
+                                <li class="px-3 py-2 border-b font-bold flex items-start gap-2">
+                                    <iconify-icon icon="mdi:email-alert-outline" class="text-xl text-yellow-500 mt-0.5"></iconify-icon>
+                                    <div>
+                                        Please verify your email address.
+                                        <form method="POST" action="{{ route('verification.send') }}" class="inline">
+                                            @csrf
+                                            <button type="submit" class="text-blue-600 underline hover:text-blue-800 font-semibold">Resend Verification Email</button>
+                                        </form>
+                                        <br>
+                                        <span class="text-xs text-gray-500">{{ now()->diffForHumans() }}</span>
+                                    </div>
+                                </li>
+                            @endif
+                            {{-- Other notifications --}}
                             @forelse($notifications->take(5) as $notification)
                                 <li class="px-3 py-2 border-b {{ $notification->is_read ? 'opacity-60' : 'font-bold' }}">
                                     {{ $notification->content }}
@@ -79,11 +93,6 @@
                         x-transition:leave-end="opacity-0 transform scale-95 -translate-y-1"
                         class="absolute right-0 mt-1 w-40 rounded-md shadow-lg bg-white z-50 origin-top-right">
                         <div class="py-1">
-                          <!--  <a href="{{ route('student.payment-history') }}"
-                                class="block w-full px-3 py-1.5 text-sm bg-white text-black hover:bg-[#660809] hover:text-white text-left rounded-md transition">
-                                <iconify-icon icon="mdi:history" class="mr-1"></iconify-icon>
-                                Payment History
-                            </a> -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                     <button type="submit"

@@ -37,10 +37,12 @@ class Kernel extends HttpKernel
      *
      * @var array<string, class-string>
      */
-    //protected $routeMiddleware = [
+    protected $routeMiddleware = [
        // 'admin' => \App\Http\Middleware\AdminMiddleware::class,
         // ...other route middleware...
-    //];
+
+     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    ];
 
 
 }

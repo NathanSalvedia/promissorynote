@@ -16,10 +16,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-    @vite('resources/css/app.css')
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-
 
 <body class="bg-gray-100 font-sans">
     @yield('content')
@@ -27,6 +25,9 @@
    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
    <script src="{{ asset('js/main.js') }}"></script>
    <script src="{{ asset('js/reuse.js') }}"></script>
+  {{-- apexcharts is bundled via Vite (resources/js/app.js) --}}
+  <script src="{{ asset('js/apexcharts.js') }}"></script>
+  <script src="{{  asset('js/analytics.js') }}"></script>
     @yield('scripts')
 
 </body>

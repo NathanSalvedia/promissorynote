@@ -67,31 +67,32 @@
     <div class="px-6 py-4 bg-[#660809] border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <h3 class="text-xl font-bold text-[#ffffff]">Pending Requests</h3>
 
-                    <!-- Polished Search & Filter -->
-                    <form method="GET" action="{{ route('admin.dashboard') }}"
-                        class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white px-4 py-3 rounded-xl shadow border">
+                                         <form method="GET" action="{{ route('admin.dashboard') }}"
+                        class="flex flex-col sm:flex-row sm:items-center gap-4  px-4 py-3 rounded-xl">
 
                         <!-- Search -->
-                        <div class="relative flex-1">
+                        <div class="relative flex-1 bg-white rounded-lg">
                             <input type="text" id="search" name="search" value="{{ request('search') }}"
-                                class="w-full border-2 border-[#660809] rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2 text-sm outline-none"
-                                placeholder="Search by Course">
+                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2 text-sm"
+                                placeholder="Search by Name or ID">
                             <iconify-icon icon="mdi:magnify"
-                                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
+                                class="absolute left-3 top-7 transform -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
                         </div>
 
                         <!-- Department Filter -->
-                        <div>
+                        <div class="bg-white rounded-lg">
                             <select id="department" name="department"
-                                class="w-full border-2 border-[#660809] rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-2 px-3 text-sm outline-none"
-                                onchange="this.form.submit()">
+                                class="text-gray-400 w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-2 px-3 text-sm">
                                 <option value="">All Departments</option>
                                 @foreach($departments as $dept)
                                     <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
                                 @endforeach
                             </select>
                         </div>
+
+
                     </form>
+
                 </div>
 
                 {{-- Table --}}
@@ -118,7 +119,19 @@
                             @endphp
                             @forelse($notes as $note)
                                 <tr class="border-b hover:bg-gray-50">
-                                    <td class="px-6 py-4 font-medium">PN-{{ $note->pn_id }}</td>
+                                    <td class="px-6 py-4 font-medium">
+                                        PN-{{ $note->pn_id }}
+                                        @if($note->is_new)
+                                            <span id="new-label-pn{{ $note->pn_id }}" class="ml-2 inline-block bg-green-200 text-green-800 text-xs px-2 py-1 rounded-full font-bold">New</span>
+                                        @endif
+                                        @if($note->parent_pn_id)
+                                            <span class="ml-2 inline-flex items-center gap-1 px-3 py-2 rounded-full font-bold text-xs"
+                                                  style="background: linear-gradient(90deg, #f7c948 0%, #f7b32b 100%); color: #7c4700;">
+                                                <iconify-icon icon="mdi:refresh" class="text-base mr-1"></iconify-icon>
+                                                Resubmission
+                                            </span>
+                                        @endif
+                                    </td>
                                     <td class="px-6 py-4">
                                         <div class="font-semibold">{{ $note->user->fullname ?? 'N/A' }}</div>
                                         <div class="text-gray-500 text-xs">Student ID: {{ $note->user->student_id ?? 'N/A' }}</div>
@@ -177,3 +190,7 @@
     </div>
 </div>
 @endsection
+
+@if($notes->where('is_new', true)->count())
+    <script src="{{ asset('js/reuse.js') }}"></script>
+@endif

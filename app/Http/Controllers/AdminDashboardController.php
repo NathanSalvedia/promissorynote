@@ -12,6 +12,9 @@ use App\Models\User;
 use App\Models\AccountSubledger;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Contracts\Mail\Mailable;
+use App\Mail\PromissoryNoteApproved;
 
 class AdminDashboardController extends Controller
 {
@@ -20,10 +23,9 @@ class AdminDashboardController extends Controller
      */
     public function index(Request $request)
     {
-
         $departments = PromissoryNote::select('department')->distinct()->pluck('department');
 
-        $query = PromissoryNote::with('user')->orderBy('created_at', 'desc');
+        $query = PromissoryNote::with('user');
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -38,13 +40,27 @@ class AdminDashboardController extends Controller
 
         $notes = $query->get();
 
+
+        $notes = $notes->sortBy(function($note) {
+            return $note->pn_id;
+        })->values();
+
+        foreach ($notes as $note) {
+            $note->is_new = false;
+            if (
+                Carbon::parse($note->created_at)->diffInMinutes(now()) < 3
+            ) {
+                $note->is_new = true;
+            }
+        }
+
         $totalNotes = $notes->count();
         $pendingNotes = $notes->where('status', 'pending')->count();
         $approvedNotes = $notes->where('status', 'approved')->count();
         $rejectedNotes = $notes->where('status', 'rejected')->count();
 
 
-        // Fetch notifications for the logged-in admin only
+
         $adminId = Auth::id();
 
         $notifications = Notification::where('user_id', $adminId)
@@ -71,10 +87,29 @@ class AdminDashboardController extends Controller
     /**
      * Show specific promissory note.
      */
-    public function show(string $id)
+    public function show($pn_id)
     {
-        $note = PromissoryNote::findOrFail($id);
-        return view('admin.promissorynote-detail', compact('note'));
+        $note = PromissoryNote::with('supportingDocuments', 'user')->where('pn_id', $pn_id)->firstOrFail();
+
+
+        $set1Entries = AccountSubledger::where('user_id', $note->user_id)
+            ->where('school_year', $note->academic_year)
+            ->where('semester', '1')
+            ->orderBy('date')
+            ->orderBy('subledger_id')
+            ->get();
+
+
+        $assessmentBalance = isset($set1Entries[3]) ? (float)str_replace(',', '', $set1Entries[3]->balance) : 0;
+        $partialPayment = $note->amount ?? 0;
+        $remainingBalance = max(0, $assessmentBalance - $partialPayment);
+
+        return view('admin.promissorynote-detail', [
+            'note' => $note,
+            'assessmentBalance' => $assessmentBalance,
+            'partialPayment' => $partialPayment,
+            'remainingBalance' => $remainingBalance
+        ]);
     }
 
     /**
@@ -83,35 +118,24 @@ class AdminDashboardController extends Controller
     public function approve($pn_id)
     {
         $note = PromissoryNote::findOrFail($pn_id);
-        if (Approve::where('pn_id', $note->pn_id)->exists()) {
-            return redirect()->back()->with('error', 'This promissorynote is already approved.');
-        }
-
         $note->status = 'approved';
         $note->save();
 
-        Evaluation::create([
-            'pn_id' => $note->pn_id,
-            'evaluation_status' => 'approved',
-            'evaluated_date' => Carbon::now(),
-            'approved_by_admin' => true,
-            'approved_at' => Carbon::now(),
-        ]);
-
-        Approve::create([
-            'pn_id' => $note->pn_id,
-            'approval_date' => Carbon::now(),
-        ]);
-
+        // Create in-app notification for the user
         Notification::create([
             'user_id' => $note->user_id,
-            'pn_id' => $note->pn_id,
-            'content' => "Your promissory note #{$note->pn_id} has been approved.",
+            'pn_id'   => $note->pn_id,
+            'content' => 'Your promissory note has been approved.',
             'sent_at' => now(),
             'is_read' => false,
         ]);
 
-        return redirect()->back()->with('success', 'Promissorynote approved and evaluation recorded.');
+        // Send email notification
+        if ($note->user && $note->user->email) {
+            Mail::to($note->user->email)->send(new PromissoryNoteApproved($note));
+        }
+
+        return redirect()->route('admin.dashboard')->with('success', 'Promissory Note approved.');
     }
 
     /**
@@ -177,6 +201,28 @@ class AdminDashboardController extends Controller
     return $pdf->download('PN-'.$note->pn_id.'.pdf');
   }
 
+  public function deny(Request $request, $pn_id)
+{
+    $request->validate([
+        'denial_reason' => 'required|string|max:1000',
+    ]);
 
+    $note = PromissoryNote::findOrFail($pn_id);
+    $note->status = 'rejected';
+    $note->denial_reason = $request->denial_reason;
+    $note->denied_by = Auth::id();
+    $note->denied_at = now();
+    $note->save();
 
+    Notification::create([
+        'user_id' => $note->user_id,
+        'pn_id'   => $note->pn_id,
+        'content' => "Your promissory note #{$note->pn_id} was rejected. Reason: {$request->denial_reason}",
+        'sent_at' => now(),
+        'is_read' => false,
+    ]);
+
+    return redirect()->route('admin.promissorynote-detail', $note->pn_id)
+        ->with('success', 'Request denied and notification sent.');
+}
 }

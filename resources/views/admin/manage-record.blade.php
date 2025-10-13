@@ -18,7 +18,9 @@
       <h2 class="text-2xl font-bold mb-6 text-gray-800 mt-4">Centralized Record Management</h2>
 
       {{-- 📊 Dashboard Cards --}}
-      <div class="flex flex-wrap gap-6 mb-8">
+       <div class="flex flex-wrap gap-6 mb-8 items-center">
+
+        {{-- 🧾 Total Records --}}
         <div class="flex-1 min-w-[220px] bg-[#660809] rounded-xl shadow p-6 flex items-center gap-4">
           <div class="bg-blue-100 text-blue-600 rounded-full p-3">
             <span class="iconify" data-icon="mdi:database" data-width="28" data-height="28"></span>
@@ -29,6 +31,7 @@
           </div>
         </div>
 
+        {{-- 📂 Archived Count --}}
         <div class="flex-1 min-w-[220px] bg-[#660809] rounded-xl shadow p-6 flex items-center gap-4">
           <div class="bg-green-100 text-green-600 rounded-full p-3">
             <span class="iconify" data-icon="mdi:file-document-box" data-width="28" data-height="28"></span>
@@ -39,6 +42,7 @@
           </div>
         </div>
 
+        {{-- 🕒 Recent Activity --}}
         <div class="flex-1 min-w-[220px] bg-[#660809] rounded-xl shadow p-6 flex items-center gap-4">
           <div class="bg-orange-100 text-orange-600 rounded-full p-3">
             <span class="iconify" data-icon="mdi:clock-outline" data-width="28" data-height="28"></span>
@@ -49,13 +53,16 @@
           </div>
         </div>
 
-        <div class="flex items-center ml-auto">
-          <a href="{{ route('admin.archived-notes') }}"
-            class="ml-4 text-green-600 hover:text-green-800 flex items-center gap-1 font-semibold">
-              <span class="iconify" data-icon="mdi:archive" data-width="20" data-height="20"></span>
-              Archived Records
-          </a>
-        </div>
+        {{-- 🗃️ Small Archived Records Box --}}
+        <a href="{{ route('admin.archived-notes') }}"
+          class="flex items-center justify-center bg-white border border-gray-300 hover:border-[#660809] hover:bg-gray-50 transition-all rounded-xl shadow-md p-4 w-[100px] h-[100px] ml-auto group">
+          <div class="text-center">
+            <div class="bg-[#660809]/10 text-[#660809] rounded-full p-3 mx-auto group-hover:bg-[#660809] group-hover:text-white transition">
+              <span class="iconify" data-icon="mdi:archive" data-width="28" data-height="28"></span>
+            </div>
+            <div class="text-xs text-gray-700 mt-2 font-semibold">Archived</div>
+          </div>
+        </a>
       </div>
 
       {{-- 📋 Records Table --}}
@@ -113,7 +120,7 @@
                 <th class="py-3 px-4 text-left font-medium">PN ID</th>
                 <th class="py-3 px-4 text-left font-medium">Full Name</th>
                 <th class="py-3 px-4 text-left font-medium">Department</th>
-                <th class="py-3 px-4 text-left font-medium">Course</th> <!-- Added Course column -->
+                <th class="py-3 px-4 text-left font-medium">Course</th>
                 <th class="py-3 px-4 text-left font-medium">Status</th>
                 <th class="py-3 px-4 text-left font-medium">Remarks</th>
                 <th class="py-3 px-4 text-left font-medium">Due Date</th>

@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="bg-white p-10 rounded-xl shadow-lg w-full max-w-lg">
+    <div class="bg-gray-100 p-10 rounded-xl shadow-lg w-full max-w-lg">
         <h2 class="text-3xl font-bold mb-8 text-gray-800 text-center">Register</h2>
         <form action="{{ route('register') }}" method="POST">
             @csrf

@@ -1,5 +1,4 @@
-
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
         const cards = document.getElementById('popup-cards');
         setTimeout(() => {
             cards.classList.remove('opacity-0', 'translate-x-10');
@@ -17,4 +16,13 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     setTimeout(() => {
         this.submit();
     }, 2000);
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        document.querySelectorAll('[id^="new-label-pn"]').forEach(function(label) {
+            label.style.display = 'none';
+        });
+    }, 180000);
 });

@@ -46,6 +46,14 @@
                 <span class="text-red-300 text-xs mt-1 block">{{ $message }}</span>
             @enderror
 
+            {{-- Remember Me & Forgot Password --}}
+            <div class="flex items-center justify-between mt-2 mb-2">
+                <div class="flex items-center">
+                    <input type="checkbox" class="form-checkbox h-4 w-4 text-[#660809] rounded" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                    <label for="remember" class="ml-2 text-sm text-gray-200">Remember me</label>
+                </div>
+            </div>
+
             {{-- Sign In Button --}}
             <button type="submit"
                 class="bg-[#660809] hover:bg-black text-white font-bold py-3 px-6 rounded-xl w-full transition-all duration-300 shadow-lg shadow-[#660809]/60 transform hover:scale-[1.03]">
@@ -64,7 +72,7 @@
 
             <p class="text-gray-300">
                 Forgot Password? Email
-                <a href="mailto:spcportal@spc.edu.ph" class="text-white hover:text-gray-300 hover:underline transition">
+                <a href="{{ route('password.request') }}" class="text-white hover:text-gray-300 hover:underline transition">
                     spcportal@spc.edu.ph
                 </a>
             </p>

@@ -18,7 +18,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SubledgerShowController;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\SubledgerCreateController;
-
+use App\Http\Controllers\AdminUserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,6 +48,7 @@ Route::get('/auth/login', function () {
     Route::get('/student/promissorynote/view/{id}', [PromissoryNoteController::class, 'view'])->name('student.promissorynote.view');
     Route::get('/student/notification-view', [NotificationController::class, 'index'])->name('student.notification-view');
    Route::get('/student/notification-view', [NotificationController::class, 'view'])->name('student.notification-view');
+   Route::get('/student/promissorynote/{pn_id}/resubmit', [PromissoryNoteController::class, 'resubmit'])->name('student.promissorynote.resubmit');
 
  });
 
@@ -80,8 +81,20 @@ Route::get('/auth/login', function () {
     Route::post('/admin/promissorynotes/{pn_id}/record-payment', [PromissoryNoteController::class, 'recordPayment'])->name('admin.promissorynotes.recordPayment');
     Route::get('/admin/subledger-create', [SubledgerCreateController::class, 'index'])->name('admin.subledger-create');
     Route::post('/admin/subledger-create', [SubledgerCreateController::class, 'store'])->name('admin.subledger.create');
+    Route::get('/admin/users/{id}', [AdminUserController::class, 'show'])->name('admin.users.show');
+    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+Route::post('/admin/promissorynote/{pn_id}/deny', [AdminDashboardController::class, 'deny'])->name('admin.promissorynote.deny');
+
 });
 
+
+Route::get('/auth/verify-email', function () {
+    return view('auth.verify-email');
+})->name('auth.verify-email');
+
+Route::get('/password/edit', function () {
+    return view('auth.password.edit');
+})->name('auth.password.edit');
 
 
 //Route::get('/test-mail', function () {

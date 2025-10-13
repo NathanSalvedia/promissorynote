@@ -22,6 +22,11 @@
         <div class="bg-white p-6 rounded-lg shadow">
             <h2 class="text-xl font-bold mb-6">Submit New Promissory Note</h2>
 
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-900 px-6 py-3 mb-8 rounded-lg font-semibold">
+                NOTE: Please ensure that the form is filled out completely.
+            </div>
+
             <form id="promissoryForm"
                   action="{{ route('promissorynotes.store') }}"
                   method="POST"

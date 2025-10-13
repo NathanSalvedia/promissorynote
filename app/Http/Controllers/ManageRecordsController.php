@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PromissoryNote;
 use App\Models\User;
+use App\Models\AccountSubledger;
 use Carbon\Carbon;
 
 class ManageRecordsController extends Controller
@@ -74,15 +75,49 @@ class ManageRecordsController extends Controller
 
     public function show($pn_id)
     {
-        $note = PromissoryNote::with('user')->where('pn_id', $pn_id)->firstOrFail();
-        return view('admin.promissorynote-show', compact('note'));
+        $note = PromissoryNote::with('supportingDocuments', 'user')->where('pn_id', $pn_id)->firstOrFail();
+
+
+        $set1Entries = AccountSubledger::where('user_id', $note->user_id)
+            ->where('school_year', $note->academic_year)
+            ->where('semester', '1')
+            ->orderBy('date')
+            ->orderBy('subledger_id')
+            ->get();
+
+
+        $assessmentBalance = isset($set1Entries[3]) ? (float)str_replace(',', '', $set1Entries[3]->balance) : 0;
+        $partialPayment = $note->amount ?? 0;
+        $remainingBalance = max(0, $assessmentBalance - $partialPayment);
+
+        return view('admin.promissorynote-show', [
+            'note' => $note,
+            'assessmentBalance' => $assessmentBalance,
+            'partialPayment' => $partialPayment,
+            'remainingBalance' => $remainingBalance
+        ]);
     }
 
     public function archivedNotes()
     {
-        $archivedNotes = PromissoryNote::where('archived', true)->get();
+        $archivedNotes = PromissoryNote::with('supportingDocuments', 'user')
+            ->where('archived', true)
+            ->get();
 
         foreach ($archivedNotes as $note) {
+
+            $assessmentBalance = AccountSubledger::where('user_id', $note->user_id)
+                ->where('school_year', $note->academic_year)
+                ->where('semester', $note->semester == '1st Semester' ? '1' : '2')
+                ->where('reference', 'Billing')
+                ->orderByDesc('date')
+                ->orderByDesc('subledger_id')
+                ->value('debit');
+
+            $note->assessmentBalance = $assessmentBalance ? (float)str_replace(',', '', $assessmentBalance) : 0;
+            $note->partialPayment = $note->amount ?? 0;
+            $note->remainingBalance = max(0, $note->assessmentBalance - $note->partialPayment);
+
             $due = $note->due_date ?? null;
             $today = Carbon::today();
 
@@ -140,13 +175,23 @@ class ManageRecordsController extends Controller
             $query->where('department', $department);
         }
 
-
         if ($request->filled('status_sort')) {
             $status = $request->input('status_sort');
             $query->where('status', $status);
         }
 
         $promissoryNotes = $query->orderBy('created_at', 'desc')->get();
+
+        $promissoryNotes = $promissoryNotes->sortBy(function($note) {
+            return $note->pn_id;
+        })->values();
+
+        foreach ($promissoryNotes as $note) {
+            $note->is_new = false;
+            if (Carbon::parse($note->created_at)->diffInMinutes(now()) < 3) {
+                $note->is_new = true;
+            }
+        }
 
         foreach ($promissoryNotes as $note) {
             $due = $note->due_date ?? null;
@@ -182,6 +227,4 @@ class ManageRecordsController extends Controller
             'archivedNotesCount'
         ));
     }
-
-
 }
