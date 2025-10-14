@@ -220,11 +220,21 @@ class ManageRecordsController extends Controller
         $totalNotes = $promissoryNotes->count();
         $archivedNotesCount = PromissoryNote::where('archived', true)->count();
 
+
+        $resubmissions = PromissoryNote::with('user')
+            ->where('archived', false)
+            ->whereNotNull('parent_pn_id')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        $resubmissionCount = $resubmissions->count();
+
         return view('admin.manage-record', compact(
             'promissoryNotes',
             'departments',
             'totalNotes',
-            'archivedNotesCount'
+            'archivedNotesCount',
+            'resubmissions',
+            'resubmissionCount'
         ));
     }
 }

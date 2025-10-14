@@ -7,7 +7,7 @@
         @include('includes.admin')
     </header>
 
-    <main class="p-6 mt-24 w-full max-w-6xl mx-auto">
+    <main class="p-6 mt-24 w-full">
         <div class="bg-white rounded-2xl shadow border overflow-hidden">
 
             <div class="px-6 py-4 bg-[#660809] border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">

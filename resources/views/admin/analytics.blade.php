@@ -12,7 +12,7 @@
         </header>
 
         {{-- ✅ Analytics Page Content --}}
-        <main class="p-6 max-w-7xl mx-auto w-full mt-24">
+        <main class="p-6 w-full mt-24">
 
             <h2 class="text-2xl font-bold mb-8 text-[#660809]">Analytics Dashboard</h2>
 

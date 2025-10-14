@@ -2,68 +2,65 @@
 
 @section('content')
 @include('includes.admin')
- <div class="max-w-5xl mx-auto bg-white rounded-xl shadow p-6 mt-6">
+ <div class="bg-white rounded-xl shadow p-6 mt-6 w-full">
 
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">Payment Tracking</h2>
         <div class="flex gap-2">
-            <a href="#" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2">
-                <iconify-icon icon="mdi:plus" class="w-5 h-5"></iconify-icon>
-                Record Payment
-            </a>
-
-            <a href="{{ route('admin.dashboard')}}" class="text-gray-600 hover:text-gray-900 flex items-center gap-1">
-                <iconify-icon icon="mdi:arrow-left" class="w-5 h-5"></iconify-icon>
-                Back
-            </a>
         </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div class="bg-green-50 border-l-4 border-green-400 rounded-lg p-4 flex items-center gap-4">
-            <div class="text-green-600">
-                <iconify-icon icon="mdi:cash" class="w-8 h-8"></iconify-icon>
+        <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-green-100">
+                <iconify-icon icon="mdi:cash" class="text-green-600 text-2xl"></iconify-icon>
             </div>
             <div>
-                <div class="text-sm text-gray-500">Total Collected</div>
-                <div class="text-2xl font-bold text-green-700">₱{{ number_format($totalCollected, 2) }}</div>
+                <div class="text-sm text-white">Total Collected</div>
+                <div class="text-2xl font-bold text-white">₱{{ number_format($totalCollected, 2) }}</div>
             </div>
         </div>
-        <div class="bg-blue-50 border-l-4 border-blue-400 rounded-lg p-4 flex items-center gap-4">
-            <div class="text-blue-600">
-                <iconify-icon icon="mdi:percent" class="w-8 h-8"></iconify-icon>
+
+        <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100">
+                <iconify-icon icon="mdi:percent" class="text-blue-600 text-2xl"></iconify-icon>
             </div>
             <div>
-                <div class="text-sm text-gray-500">Avg Down Payment</div>
-                <div class="text-2xl font-bold text-blue-700">₱{{ number_format($avgDownPayment, 2) }}</div>
+                <div class="text-sm text-white">Avg Down Payment</div>
+                <div class="text-2xl font-bold text-white">₱{{ number_format($avgDownPayment, 2) }}</div>
             </div>
         </div>
-        <div class="bg-orange-50 border-l-4 border-orange-400 rounded-lg p-4 flex items-center gap-4">
-            <div class="text-orange-600">
-                <iconify-icon icon="mdi:clock-outline" class="w-8 h-8"></iconify-icon>
+
+        <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-orange-100">
+                <iconify-icon icon="mdi:clock-outline" class="text-orange-600 text-2xl"></iconify-icon>
             </div>
+
             <div>
-                <div class="text-sm text-gray-500">Pending Payments</div>
-                <div class="text-2xl font-bold text-orange-700">{{ $pendingPayments }}</div>
+                <div class="text-sm text-white">Pending Payments</div>
+                <div class="text-2xl font-bold text-white">{{ $pendingPayments }}</div>
             </div>
         </div>
-        <div class="bg-red-50 border-l-4 border-red-400 rounded-lg p-4 flex items-center gap-4">
-            <div class="text-red-600">
-                <iconify-icon icon="mdi:alert" class="w-8 h-8"></iconify-icon>
+        <div class="bg-[#660809] text-white p-6 rounded-xl shadow flex items-center gap-4">
+            <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-100">
+                <iconify-icon icon="mdi:alert" class="text-red-600 text-2xl"></iconify-icon>
             </div>
             <div>
-                <div class="text-sm text-gray-500">Overdue</div>
-                <div class="text-2xl font-bold text-red-700">{{ $overdue }}</div>
+                <div class="text-sm text-white">Overdue</div>
+                <div class="text-2xl font-bold text-white">{{ $overdue }}</div>
             </div>
         </div>
     </div>
 
-    <div class="bg-gray-50 rounded-xl p-4">
-        <h3 class="text-lg font-semibold mb-4">Payment Compliance Monitoring</h3>
+    <div class="bg-white rounded-2xl shadow border overflow-hidden">
+        <div class="px-6 py-4 bg-[#660809] border-b">
+         <h3 class="text-xl font-bold text-white">Payment Tracking</h3>
+        </div>
+
         <div class="overflow-x-auto">
-            <table class="min-w-full text-sm">
-                <thead>
-                    <tr class="bg-gray-100 text-gray-700">
+            <table class="min-w-full text-lg">
+                <thead class="bg-gray-50 text-gray-700">
+                    <tr>
                         <th class="px-4 py-2 font-semibold text-left">PN ID</th>
                         <th class="px-4 py-2 font-semibold text-left">Full Name</th>
                         <th class="px-4 py-2 font-semibold text-left">Amount</th>
@@ -81,7 +78,16 @@
                             $isOverdue = $note->due_date <= now()->toDateString() && $remaining > 0;
                         @endphp
                         <tr class="border-b {{ $note->is_settled ? 'bg-green-50' : ($isOverdue ? 'bg-red-50' : 'bg-white') }}">
-                            <td class="px-4 py-2">PN-{{ $note->pn_id }}</td>
+                            <td class="px-4 py-2">
+                                PN-{{ $note->pn_id }}
+                                @if($note->parent_pn_id)
+                                    <span class="ml-2 inline-flex items-center gap-1 px-3 py-2 rounded-full font-bold text-xs"
+                                          style="background: linear-gradient(90deg, #f7c948 0%, #f7b32b 100%); color: #7c4700;">
+                                        <iconify-icon icon="mdi:refresh" class="text-base mr-1"></iconify-icon>
+                                        Resubmission
+                                    </span>
+                                @endif
+                            </td>
                             <td class="px-4 py-2">
                                 <div class="font-semibold">{{ $note->user->fullname ?? 'N/A' }}</div>
                                 <div class="text-xs text-gray-500">Student ID: {{ $note->user->student_id ?? 'N/A' }}</div>
@@ -123,4 +129,5 @@
             </table>
         </div>
     </div>
- @endsection
+</div>
+@endsection

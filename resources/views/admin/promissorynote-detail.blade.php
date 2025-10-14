@@ -154,13 +154,27 @@
 
 
                 @if($note->status !== 'approved')
+                    <div class="flex items-center justify-between gap-4 mt-4">
+                        <div>
+                            <a href="#"
+                               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white hover:text-white font-semibold underline rounded-lg px-4 py-2 shadow transition print:hidden border"
+                               onclick="document.getElementById('rejectModal').classList.remove('hidden'); return false;">
+                                <iconify-icon icon="mdi:close-circle"></iconify-icon>
+                                Reject Request
+                            </a>
+                        </div>
 
-                    <a href="#"
-                       class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white hover:text-white font-semibold underline rounded-lg px-4 py-2 shadow transition print:hidden border "
-                       onclick="document.getElementById('rejectModal').classList.remove('hidden'); return false;">
-                        <iconify-icon icon="mdi:close-circle"></iconify-icon>
-                        Reject Request
-                    </a>
+
+                        @if($note->status === 'rejected' && !empty($note->denial_reason))
+                            <div>
+                                <a href="#" onclick="document.getElementById('adminReasonModal').classList.remove('hidden'); return false;"
+                                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white hover:text-white font-semibold underline rounded-lg px-4 py-2 shadow transition">
+                                    <iconify-icon icon="mdi:close-circle"></iconify-icon>
+                                    View Rejection Reason
+                                </a>
+                            </div>
+                        @endif
+                    </div>
 
                     {{-- Modal --}}
                     <div id="rejectModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
@@ -191,6 +205,18 @@
                     </div>
                 @endif
 
+                @if($note->status === 'rejected' && !empty($note->denial_reason))
+                    <div id="adminReasonModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+                        <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
+                            <button type="button" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 flex items-center gap-1"
+                                    onclick="document.getElementById('adminReasonModal').classList.add('hidden');">
+                                <span class="text-md font-semibold bg-[#660809] hover:bg-black text-white px-2 py-1 rounded">Close</span>
+                            </button>
+                            <h3 class="text-lg font-semibold text-[#660809] mb-4">Admin's Rejection Reason</h3>
+                            <div class="w-full border border-[#660809] rounded-lg p-2 mb-4">{{ $note->denial_reason }}</div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </article>
     </div>

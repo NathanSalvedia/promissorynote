@@ -2,7 +2,7 @@
 
 @section('content')
  @include('includes.admin')
-<div class="max-w-3xl mx-auto mt-10 bg-white p-6 rounded shadow">
+<div class="w-full mt-10 bg-white p-6 rounded shadow">
 
     <!-- Back Button -->
     <a href="{{  route('admin.manage-users') }}" class="inline-flex items-center mb-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">

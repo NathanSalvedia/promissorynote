@@ -12,7 +12,7 @@
     </header>
 
     {{-- ✅ Dashboard Content (adjusted top padding) --}}
-    <main class="p-6 mt-24 max-w-6xl mx-auto">
+    <main class="p-6 mt-24 w-full">
       <h2 class="text-2xl font-bold mb-6 text-gray-800">Archived Promissory Note Records</h2>
 
       {{-- ✅ Back + Export --}}
@@ -51,9 +51,9 @@
             <tbody>
               @foreach($archivedNotes as $note)
               <tr class="border-b hover:bg-gray-50 transition">
-                <td class="py-3 px-4 font-semibold">{{ $note->pn_id }}</td>
+                <td class="py-3 px-4 font-semibold">PN -{{ $note->pn_id }}</td>
                 <td class="py-3 px-4">
-                  <div class="font-semibold text-gray-800">{{ $note->user->name ?? $note->fullname }}</div>
+                   <div class="font-semibold text-gray-800">{{ $note->user->fullname ?? $note->fullname }}</div>
                   <div class="text-gray-500 text-xs">{{ $note->user->student_id ?? $note->student_id }}</div>
                 </td>
                 <td class="py-3 px-4 text-[#660809] font-bold">{{ $note->user->department ?? $note->department }}</td>

@@ -7,7 +7,7 @@
     @include('includes.header')
 
     <!-- Move Alpine.js state to main for global access -->
-    <main class="p-6 max-w-7xl mx-auto w-full" x-data="{ guidelinesOpen: false }">
+    <main class="p-6 w-full" x-data="{ guidelinesOpen: false }">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
             <h2 class="text-2xl font-bold text-[#660809]">Student Dashboard</h2>

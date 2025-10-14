@@ -12,7 +12,7 @@
         </header>
 
       {{-- ✅ Dashboard Content --}}
-<main class="p-6 max-w-7xl mx-auto w-full mt-24">
+<main class="p-6 w-full mt-24">
     <h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
 
     {{-- Stats Cards --}}
@@ -62,8 +62,8 @@
         </div>
     </div>
 
-            {{-- Table Section --}}
-            <div class="bg-white rounded-2xl shadow border overflow-hidden">
+    {{-- Table Section --}}
+    <div class="bg-white rounded-2xl shadow border overflow-hidden">
     <div class="px-6 py-4 bg-[#660809] border-b flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     <h3 class="text-xl font-bold text-[#ffffff]">Pending Requests</h3>
 
@@ -97,7 +97,7 @@
 
                 {{-- Table --}}
                 <div class="overflow-x-auto">
-                    <table class="min-w-full table-auto">
+                    <table class="min-w-full table-auto text-lg">
                         <thead class="bg-gray-50 text-gray-700">
                             <tr>
                                 <th class="px-6 py-3 text-left font-semibold">PN ID</th>
@@ -131,6 +131,13 @@
                                                 Resubmission
                                             </span>
                                         @endif
+                                        @if($note->status == 'rejected')
+                                            <span class="ml-2 inline-flex items-center gap-1 px-3 py-2 rounded-full font-bold text-xs"
+                                                  style="background: linear-gradient(90deg, #f87171 0%, #ef4444 100%); color: #7f1d1d;">
+                                                <iconify-icon icon="mdi:close-circle" class="text-base mr-1"></iconify-icon>
+                                                Rejected
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="font-semibold">{{ $note->user->fullname ?? 'N/A' }}</div>
@@ -141,11 +148,11 @@
                                             {{ $note->department }}
                                         </span>
                                     </td>
-                                     <td class="px-6 py-4">
-                                     <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full font-semibold">
-                                    {{ $note->course ?? 'N/A' }}
+                                     <td class="px-6 py-4 align-middle">
+                                      <span class="inline-block bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full font-semibold whitespace-nowrap w-full text-center">
+                                       {{ $note->course ?? 'N/A' }}
                                        </span>
-                                      </td>
+                                    </td>
                                     <td class="px-6 py-4 font-semibold">₱{{ number_format($note->amount, 2) }}</td>
                                     <td class="px-6 py-4">
                                         <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold {{ $statusColors[$note->status] ?? 'bg-gray-100 text-gray-800' }}">

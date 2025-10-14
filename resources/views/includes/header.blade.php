@@ -1,7 +1,7 @@
 <header class="w-full">
     {{-- Top black strip with scrolling text --}}
     <div class="bg-black text-white text-[11px] md:text-xs py-0.5">
-        <div class="max-w-7xl mx-auto px-4">
+        <div class="w-full px-4">
             <div class="marquee">
                 <span>  DATA-DRIVEN PROMISSORY NOTE MANAGEMENT SYSTEM WITH INTEGRATED NOTIFICATION AND ANALYTICS SOLUTION
  </span>
@@ -11,12 +11,12 @@
 
     {{-- Maroon strip --}}
     <div class="bg-[#660809] text-white">
-        <div class="max-w-7xl mx-auto px-4 py-1 text-[11px] md:text-xs flex justify-end gap-6"></div>
+        <div class="w-full px-4 py-1 text-[11px] md:text-xs flex justify-end gap-6"></div>
     </div>
 
     {{-- White navbar --}}
     <div class="bg-white shadow">
-        <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+        <div class="w-full flex justify-between items-center px-6 py-3">
             <div class="flex items-center gap-3">
                 <img src="/img/spc-wordmark.png" alt="SPC" class="h-10 md:h-12 object-contain">
             </div>

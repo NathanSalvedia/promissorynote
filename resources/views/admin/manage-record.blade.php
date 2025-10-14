@@ -1,7 +1,11 @@
 @extends('layouts.layout')
 
+@php
+    use Carbon\Carbon;
+@endphp
+
 @section('content')
-<div class="flex min-h-screen bg-gray-50">
+<div class="flex min-h-screen bg-white">
 
   {{-- ✅ Main Content --}}
   <div class="flex-1">
@@ -11,14 +15,13 @@
       @include('includes.admin')
     </header>
 
-    {{-- ✅ Page Content (with padding top to avoid header overlap) --}}
-    <main class="p-6 mt-24 max-w-6xl mx-auto">
-
+    {{-- ✅ Page Content --}}
+    <main class="p-6 mt-24 w-full">
       {{-- Title --}}
       <h2 class="text-2xl font-bold mb-6 text-gray-800 mt-4">Centralized Record Management</h2>
 
       {{-- 📊 Dashboard Cards --}}
-       <div class="flex flex-wrap gap-6 mb-8 items-center">
+      <div class="flex flex-wrap gap-6 mb-8 items-center">
 
         {{-- 🧾 Total Records --}}
         <div class="flex-1 min-w-[220px] bg-[#660809] rounded-xl shadow p-6 flex items-center gap-4">
@@ -42,16 +45,17 @@
           </div>
         </div>
 
-        {{-- 🕒 Recent Activity --}}
+        {{-- 🔄 Resubmission Count --}}
         <div class="flex-1 min-w-[220px] bg-[#660809] rounded-xl shadow p-6 flex items-center gap-4">
-          <div class="bg-orange-100 text-orange-600 rounded-full p-3">
-            <span class="iconify" data-icon="mdi:clock-outline" data-width="28" data-height="28"></span>
+          <div class="bg-yellow-100 text-yellow-600 rounded-full p-3">
+            <span class="iconify" data-icon="mdi:refresh" data-width="28" data-height="28"></span>
           </div>
           <div>
-            <div class="text-gray-200 text-sm">Recent Activity</div>
-            <div class="text-white text-2xl font-bold"></div>
+            <div class="text-gray-200 text-sm">Resubmissions</div>
+            <div class="text-white text-2xl font-bold">{{ $resubmissionCount ?? 0 }}</div>
           </div>
         </div>
+
 
         {{-- 🗃️ Small Archived Records Box --}}
         <a href="{{ route('admin.archived-notes') }}"
@@ -76,19 +80,17 @@
 
             <!-- Search -->
             <div class="relative flex-1 sm:w-64">
-                <input type="text" id="search" name="search" value="{{ request('search') }}"
-
-                    class="w-full border-2 border-[#660809] rounded-lg shadow-sm focus:ring-2 focus:ring-[#660809] focus:border-[#660809] py-2 pl-10 pr-3 text-sm outline-none transition-all duration-150"
-                    placeholder="Search by Course or Name...">
-                <iconify-icon icon="mdi:magnify"
-                    class="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#660809] text-xl pointer-events-none"></iconify-icon>
+              <input type="text" id="search" name="search" value="{{ request('search') }}"
+                class="w-full border-gray-300 rounded-full shadow-lg focus:ring-[#660809] focus:border-[#660809] pl-10 pr-3 py-1.5 text-sm"
+                placeholder="Search by Course or Name...">
+              <iconify-icon icon="mdi:magnify"
+                class="absolute left-3 top-7 transform -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
             </div>
 
             <!-- Department Filter -->
             <div>
               <select id="department" name="department"
-                class="w-full border-2 border-[#660809] rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-1.5 px-3 text-sm outline-none"
-                onchange="this.form.submit()">
+                class="text-gray-400 w-full border-gray-300 rounded-full shadow-lg focus:ring-[#660809] focus:border-[#660809] py-1.5 px-3 text-sm">
                 <option value="">All Departments</option>
                 @foreach($departments as $dept)
                   <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>
@@ -98,10 +100,10 @@
               </select>
             </div>
 
-            <!-- Status Sort -->
-            <div>
+
+              <div>
               <select id="status_sort" name="status_sort"
-                class="w-full border-2 border-[#660809] rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] py-1.5 px-3 text-sm outline-none"
+                class="text-gray-400 w-full border-gray-300 rounded-full shadow-lg focus:ring-[#660809] focus:border-[#660809] py-1.5 px-3 text-sm"
                 onchange="this.form.submit()">
                 <option value="">Sort by Status</option>
                 <option value="approved" {{ request('status_sort') == 'approved' ? 'selected' : '' }}>Approved</option>
@@ -109,18 +111,19 @@
                 <option value="rejected" {{ request('status_sort') == 'rejected' ? 'selected' : '' }}>Rejected</option>
               </select>
             </div>
+
+
           </form>
         </div>
 
         {{-- Table --}}
         <div class="overflow-x-auto">
-          <table class="min-w-full text-sm">
+          <table class="min-w-full text-lg border border-gray-200 rounded-lg overflow-hidden">
             <thead>
-              <tr class="bg-gray-100 text-gray-600">
+              <tr class="bg-[#660809] text-white">
                 <th class="py-3 px-4 text-left font-medium">PN ID</th>
                 <th class="py-3 px-4 text-left font-medium">Full Name</th>
                 <th class="py-3 px-4 text-left font-medium">Department</th>
-                <th class="py-3 px-4 text-left font-medium">Course</th>
                 <th class="py-3 px-4 text-left font-medium">Status</th>
                 <th class="py-3 px-4 text-left font-medium">Remarks</th>
                 <th class="py-3 px-4 text-left font-medium">Due Date</th>
@@ -129,43 +132,71 @@
             </thead>
             <tbody>
               @foreach($promissoryNotes as $note)
-              <tr class="border-b">
-                <td class="py-3 px-4 font-semibold">PN-{{ $note->pn_id }}</td>
+              <tr class="border-b hover:bg-gray-50 transition">
+                <td class="px-6 py-4 font-medium">
+                                        PN-{{ $note->pn_id }}
+                                        @if($note->is_new)
+                                            <span id="new-label-pn{{ $note->pn_id }}" class="ml-2 inline-block bg-green-200 text-green-800 text-xs px-2 py-1 rounded-full font-bold">New</span>
+                                        @endif
+                                        @if($note->parent_pn_id)
+                                            <span class="ml-2 inline-flex items-center gap-1 px-3 py-2 rounded-full font-bold text-xs"
+                                                  style="background: linear-gradient(90deg, #f7c948 0%, #f7b32b 100%); color: #7c4700;">
+                                                <iconify-icon icon="mdi:refresh" class="text-base mr-1"></iconify-icon>
+                                                Resubmission
+                                            </span>
+                                        @endif
+                                        @if($note->status == 'rejected')
+                                            <span class="ml-2 inline-flex items-center gap-1 px-3 py-2 rounded-full font-bold text-xs"
+                                                  style="background: linear-gradient(90deg, #f87171 0%, #ef4444 100%); color: #7f1d1d;">
+                                                <iconify-icon icon="mdi:close-circle" class="text-base mr-1"></iconify-icon>
+                                                Rejected
+                                            </span>
+                                        @endif
+                                    </td>
                 <td class="py-3 px-4">
                   <div class="font-semibold text-gray-800">{{ $note->user->fullname ?? $note->fullname }}</div>
                   <div class="text-gray-500 text-xs">{{ $note->user->student_id ?? $note->student_id }}</div>
                 </td>
-                <td class="py-3 px-4 text-green-600 font-bold">{{ $note->user->department ?? $note->department }}</td>
+                <td class="py-3 px-4 text-[#660809] font-bold">{{ $note->user->department ?? $note->department }}</td>
                 <td class="py-3 px-4">
-                  <span class="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap truncate" style="max-width:180px;">
-                    {{ $note->course ?? 'N/A' }}
-                  </span>
-                </td>
-                <td class="py-3 px-4">
-                  <span class="px-3 py-1 rounded-full text-xs font-semibold"
-                    style="background-color:{{ $note->status == 'approved' ? '#d1fae5' : ($note->status == 'pending' ? '#fef3c7' : '#fee2e2') }}; color:{{ $note->status == 'approved' ? '#059669' : ($note->status == 'pending' ? '#d97706' : '#b91c1c') }};">
+                  @php
+                    if ($note->status == 'approved') {
+                      $bgClass = 'bg-green-100';
+                      $textClass = 'text-green-600';
+                    } elseif ($note->status == 'pending') {
+                      $bgClass = 'bg-yellow-100';
+                      $textClass = 'text-yellow-600';
+                    } else {
+                      $bgClass = 'bg-red-100';
+                      $textClass = 'text-red-600';
+                    }
+                  @endphp
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $bgClass }} {{ $textClass }}">
                     {{ ucfirst($note->status) }}
                   </span>
                 </td>
                 <td class="py-3 px-4">
-                  @if(isset($note->is_settled) && $note->is_settled)
-                      <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap truncate" style="max-width:120px;">Settled</span>
-                  @elseif($note->remarks == 'Not overdue yet')
-                      <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap truncate" style="max-width:120px;">{{ $note->remarks }}</span>
-                  @elseif($note->remarks == 'Not settled')
-                      <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap truncate" style="max-width:120px;">{{ $note->remarks }}</span>
-                  @elseif($note->remarks == 'Overdue')
-                      <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap truncate" style="max-width:120px;">{{ $note->remarks }}</span>
-                  @elseif($note->remarks == 'No due date')
-                      <span class="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap truncate" style="max-width:120px;">{{ $note->remarks }}</span>
-                  @else
-                      <span class="whitespace-nowrap truncate" style="max-width:120px; display:inline-block;">{{ $note->remarks }}</span>
-                  @endif
-                </td>
-                <td class="py-3 px-4">
-                  <span class="whitespace-nowrap truncate" style="max-width:120px; display:inline-block;">
-                    {{ $note->due_date_formatted }}
+                  @php
+                    if ($note->remarks == 'Settled') {
+                      $remarksBgClass = 'bg-green-100';
+                      $remarksTextClass = 'text-green-600';
+                    } elseif ($note->remarks == 'Overdue') {
+                      $remarksBgClass = 'bg-red-100';
+                      $remarksTextClass = 'text-red-600';
+                    } elseif ($note->remarks == 'Not Settled') {
+                      $remarksBgClass = 'bg-red-100';
+                      $remarksTextClass = 'text-red-500';
+                    } else {
+                      $remarksBgClass = 'bg-yellow-100';
+                      $remarksTextClass = 'text-yellow-600';
+                    }
+                  @endphp
+                  <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $remarksBgClass }} {{ $remarksTextClass }} whitespace-nowrap truncate">
+                    {{ $note->remarks }}
                   </span>
+                </td>
+                <td class="py-3 px-4 whitespace-nowrap truncate">
+                  {{ $note->due_date ? Carbon::parse($note->due_date)->format('Y-m-d') : 'No due date' }}
                 </td>
                 <td class="py-3 px-4 flex gap-2">
                   {{-- View --}}
@@ -174,12 +205,15 @@
                     <span class="iconify" data-icon="mdi:eye" data-width="20" data-height="20"></span>
                   </a>
                   {{-- Archive --}}
-                  <form action="{{ route('admin.promissorynotes-archive', $note->pn_id) }}" method="POST"  class="archive-form" style="display:inline;">
-                    @csrf
-                    <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-lg archive-btn" title="Archive">
-                        <span class="iconify" data-icon="mdi:archive" data-width="20" data-height="20"></span>
-                    </button>
-                </form>
+                  <form action="{{ route('admin.promissorynotes-archive', $note->pn_id) }}"
+                        method="POST" class="archive-form" style="display:inline;">
+                      @csrf
+                      <button type="submit"
+                              class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-lg"
+                              title="Archive">
+                          <span class="iconify" data-icon="mdi:archive" data-width="20" data-height="20"></span>
+                      </button>
+                  </form>
                 </td>
               </tr>
               @endforeach
@@ -190,6 +224,4 @@
     </main>
   </div>
 </div>
-
-
 @endsection
