@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AccountSubledger;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
+
 
 class PaymentHistoryController extends Controller
 {

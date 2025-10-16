@@ -4,18 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\PromissoryNote;
-
+use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
 
 class PaymentTrackingController extends Controller
 {
     public function index()
     {
-        $notes = PromissoryNote::with(['payments', 'user'])->get();
+        $notes = PromissoryNote::with(['payments', 'user'])
+            ->where('status', 'approved')
+            ->get();
 
         $pendingPayments = 0;
         $overdue = 0;
         $totalCollected = 0;
         $downPayments = [];
+
+
 
         foreach ($notes as $note) {
             $paid = $note->payments->sum('amount') + $note->down_payment;
@@ -33,6 +38,20 @@ class PaymentTrackingController extends Controller
             }
         }
 
+
+
+        $adminId = Auth::id();
+
+        $notifications = Notification::where('user_id', $adminId)
+            ->orderBy('sent_at', 'desc')
+            ->take(10)
+            ->get();
+
+        $unreadCount = Notification::where('user_id', $adminId)
+            ->where('is_read', false)
+            ->count();
+
+
         $avgDownPayment = count($downPayments) ? array_sum($downPayments) / count($downPayments) : 0;
 
         return view('admin.payment-tracking', compact(
@@ -40,9 +59,10 @@ class PaymentTrackingController extends Controller
             'totalCollected',
             'avgDownPayment',
             'pendingPayments',
-            'overdue'
+            'overdue',
+            'notifications',
+            'unreadCount'
         ));
-
     }
 
 

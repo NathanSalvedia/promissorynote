@@ -170,7 +170,7 @@ class PromissoryNoteController extends Controller
         }
 
         // Send email notification to the user
-        Mail::to($user->email)->send(new PromissoryNoteSubmitted($promissoryNote));
+       // Mail::to($user->email)->send(new PromissoryNoteSubmitted($promissoryNote));
 
         return redirect()->route('student.dashboard')
             ->with('success', 'Promissory Note submitted successfully. An email notification has been sent.');

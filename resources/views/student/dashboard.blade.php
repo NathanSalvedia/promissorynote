@@ -54,7 +54,7 @@
                 >
                     <span class="text-sm font-semibold">Close</span>
                 </button>
-                <h4 class="text-lg font-bold text-[#660809] mb-4">Promissory Note Guidelines</h4>
+                <h4 class="text-lg text-center font-bold text-[#660809] mb-4">Promissory Note Guidelines</h4>
                 <ul class="list-disc pl-5 text-gray-700 space-y-2">
                     <li>Only students with outstanding balances may apply.</li>
                     <li>Provide a valid reason for your request.</li>

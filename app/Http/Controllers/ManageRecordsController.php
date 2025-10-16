@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PromissoryNote;
 use App\Models\User;
+use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
 use App\Models\AccountSubledger;
 use Carbon\Carbon;
 
@@ -220,6 +222,15 @@ class ManageRecordsController extends Controller
         $totalNotes = $promissoryNotes->count();
         $archivedNotesCount = PromissoryNote::where('archived', true)->count();
 
+         $adminId = Auth::id();
+         $notifications = Notification::where('user_id', $adminId)
+            ->orderBy('sent_at', 'desc')
+            ->take(10)
+            ->get();
+
+             $unreadCount = Notification::where('user_id', $adminId)
+            ->where('is_read', false)
+            ->count();
 
         $resubmissions = PromissoryNote::with('user')
             ->where('archived', false)
@@ -234,6 +245,8 @@ class ManageRecordsController extends Controller
             'totalNotes',
             'archivedNotesCount',
             'resubmissions',
+            'notifications',
+            'unreadCount',
             'resubmissionCount'
         ));
     }

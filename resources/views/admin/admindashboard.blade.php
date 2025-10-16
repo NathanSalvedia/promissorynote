@@ -74,7 +74,7 @@
                         <div class="relative flex-1 bg-white rounded-lg">
                             <input type="text" id="search" name="search" value="{{ request('search') }}"
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-[#660809] focus:border-[#660809] pl-10 pr-4 py-2 text-sm"
-                                placeholder="Search by Name or ID">
+                                placeholder="Search by Course">
                             <iconify-icon icon="mdi:magnify"
                                 class="absolute left-3 top-7 transform -translate-y-1/2 text-gray-400 text-lg"></iconify-icon>
                         </div>

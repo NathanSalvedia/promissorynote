@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PromissoryNote;
 use Illuminate\Support\Facades\DB;
+use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class AnalyticsController extends Controller
@@ -13,11 +15,31 @@ class AnalyticsController extends Controller
     {
         $today = Carbon::today();
 
-        // 1) Status counts
-        $statusCounts = PromissoryNote::select('status', DB::raw('count(*) as cnt'))
-            ->groupBy('status')
-            ->pluck('cnt', 'status')
-            ->toArray();
+                // 5) Separate main reasons and "Other" reasons
+        $reasonData = PromissoryNote::select('reason', 'other_reason')->get();
+
+        $mainReasons = [];
+        $otherReasons = [];
+
+        foreach ($reasonData as $r) {
+            if (strtolower($r->reason) === 'other' && !empty($r->other_reason)) {
+                $label = ucfirst(trim($r->other_reason));
+                $otherReasons[$label] = ($otherReasons[$label] ?? 0) + 1;
+            } else {
+                $label = ucfirst(trim($r->reason));
+                $mainReasons[$label] = ($mainReasons[$label] ?? 0) + 1;
+            }
+        }
+
+        // Sort alphabetically for neater charts
+        ksort($mainReasons);
+        ksort($otherReasons);
+
+                // 1) Status counts
+                $statusCounts = PromissoryNote::select('status', DB::raw('count(*) as cnt'))
+                    ->groupBy('status')
+                    ->pluck('cnt', 'status')
+                    ->toArray();
 
         // 1b) Total notes
         $totalNotes = PromissoryNote::count();
@@ -64,6 +86,12 @@ class AnalyticsController extends Controller
             ->pluck('cnt', 'college')
             ->toArray();
 
+        // $perTerm = PromissoryNote::select('academic_term', DB::raw('count(*) as cnt'))
+        // ->groupBy('academic_term')
+        // ->orderBy('academic_term')
+        // ->pluck('cnt', 'academic_term')
+        // ->toArray();
+
         $gender = PromissoryNote::select('gender', DB::raw('count(*) as cnt'))
             ->groupBy('gender')
             ->pluck('cnt', 'gender')
@@ -90,6 +118,39 @@ class AnalyticsController extends Controller
             END as bucket, COUNT(*) as cnt
         ")->groupBy('bucket')->pluck('cnt', 'bucket')->toArray();
 
+        // 7b) Partial Payment Amount Distribution
+$partialPayments = PromissoryNote::whereNotNull('down_payment')
+    ->whereColumn('down_payment', '<', 'amount')
+    ->where('down_payment', '>', 0)
+    ->selectRaw("
+        CASE
+            WHEN down_payment BETWEEN 0 AND 1000 THEN '0–1k'
+            WHEN down_payment BETWEEN 1001 AND 5000 THEN '1k–5k'
+            WHEN down_payment BETWEEN 5001 AND 10000 THEN '5k–10k'
+            ELSE '10k+'
+        END as bucket, COUNT(*) as cnt
+    ")
+    ->groupBy('bucket')
+    ->pluck('cnt', 'bucket')
+    ->toArray();
+
+
+
+// 7c) Downpayment Amount Distribution (all records with a down_payment value)
+$downpaymentBuckets = PromissoryNote::whereNotNull('down_payment')
+    ->where('down_payment', '>', 0)
+    ->selectRaw("
+        CASE
+            WHEN down_payment BETWEEN 0 AND 1000 THEN '0–1k'
+            WHEN down_payment BETWEEN 1001 AND 5000 THEN '1k–5k'
+            WHEN down_payment BETWEEN 5001 AND 10000 THEN '5k–10k'
+            ELSE '10k+'
+        END as bucket, COUNT(*) as cnt
+    ")
+    ->groupBy('bucket')
+    ->pluck('cnt', 'bucket')
+    ->toArray();
+
         // 7) Downpayment / Payment compliance
         // Use is_settled OR compare down_payment against amount for fully paid detection
         $fullyPaid = PromissoryNote::where(function($q){
@@ -113,10 +174,28 @@ class AnalyticsController extends Controller
 
         $avgDownPayment = PromissoryNote::whereNotNull('down_payment')->avg('down_payment') ?? 0;
 
+                // 4b) College Courses (from users table)
+        $courseList = DB::table('users')
+            ->select('course', DB::raw('count(*) as cnt'))
+            ->whereNotNull('course')
+            ->groupBy('course')
+            ->orderBy('course')
+            ->pluck('cnt', 'course')
+            ->toArray();
+
         // 8) Overdue count (due_date < today and not settled)
         $overdue = PromissoryNote::whereNotNull('due_date')
             ->whereDate('due_date', '<', $today)
             ->where(function($q){ $q->where('is_settled', false)->orWhereNull('is_settled'); })
+            ->count();
+         $adminId = Auth::id();
+         $notifications = Notification::where('user_id', $adminId)
+            ->orderBy('sent_at', 'desc')
+            ->take(10)
+            ->get();
+
+             $unreadCount = Notification::where('user_id', $adminId)
+            ->where('is_read', false)
             ->count();
 
         // prepare payload
@@ -129,10 +208,18 @@ class AnalyticsController extends Controller
             'department' => ['labels' => $deptLabels, 'counts' => $deptCounts, 'amounts' => $deptAmounts],
             'course' => $courseCounts,
             'college' => $collegeCounts,
+            'collegeCourses' => $courseList,
             'gender' => $gender,
             'yearLevel' => $year,
             'reason' => $reason,
+            'notifications',
+            'unreadCount',
+            'partialPaymentBuckets' => $partialPayments,
+            'downpaymentBuckets' => $downpaymentBuckets,
             'amountBuckets' => $amountBuckets,
+            'mainReasons' => $mainReasons,
+            'otherReasons' => $otherReasons,
+            // 'perTerm' => $perTerm,
             'payments' => [
                 'fullyPaid' => $fullyPaid,
                 'partial' => $partial,

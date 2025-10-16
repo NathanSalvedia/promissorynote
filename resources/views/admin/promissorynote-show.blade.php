@@ -109,6 +109,13 @@
                             <span class="tuition-label">Partial Payment:</span>
                             <span class="tuition-value">₱{{ number_format($partialPayment ?? 0, 2) }}</span>
                         </div>
+                        {{-- Downpayment (added) --}}
+                        <div class="tuition-row">
+                            <span class="tuition-label">Downpayment:</span>
+                            <span class="tuition-value">
+                                ₱{{ number_format($note->downpayment ?? $note->down_payment ?? $note->down_payment_amount ?? 0, 2) }}
+                            </span>
+                        </div>
                         <div class="tuition-row">
                             <span class="tuition-label">Remaining Balance:</span>
                             <span class="tuition-value">₱{{ number_format($remainingBalance ?? 0, 2) }}</span>

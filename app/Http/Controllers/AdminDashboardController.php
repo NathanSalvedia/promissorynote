@@ -131,9 +131,9 @@ class AdminDashboardController extends Controller
         ]);
 
         // Send email notification
-        if ($note->user && $note->user->email) {
-            Mail::to($note->user->email)->send(new PromissoryNoteApproved($note));
-        }
+        //if ($note->user && $note->user->email) {
+           // Mail::to($note->user->email)->send(new PromissoryNoteApproved($note));
+       // }
 
         return redirect()->route('admin.dashboard')->with('success', 'Promissory Note approved.');
     }

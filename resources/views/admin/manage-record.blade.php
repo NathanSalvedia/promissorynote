@@ -118,7 +118,7 @@
 
         {{-- Table --}}
         <div class="overflow-x-auto">
-          <table class="min-w-full text-lg border border-gray-200 rounded-lg overflow-hidden">
+          <table class="min-w-full text-md border border-gray-200 rounded-lg overflow-hidden">
             <thead>
               <tr class="bg-[#660809] text-white">
                 <th class="py-3 px-4 text-left font-medium">PN ID</th>

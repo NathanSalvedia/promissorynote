@@ -37,8 +37,9 @@ class DatabaseSeeder extends Seeder
 
        User::all()->each(function ($user) use ($faker) {
 
-        // Generate initial 4 Set 1 entries if not already present
+      AccountSubledger::where('user_id', $user->id)->delete();
 
+        // Generate initial 4 Set 1 entries if not already present
         $set1Count = AccountSubledger::where('user_id', $user->id)
             ->where('school_year', '2025-2026')
             ->where('semester', '1')
@@ -89,9 +90,10 @@ class DatabaseSeeder extends Seeder
             AccountSubledger::insert($entries);
         }
 
+
         //======================================================//
 
-        /*
+            /*\\
         $promissoryNote = PromissoryNote::where('user_id', $user->id)->first();
 
         if ($promissoryNote) {
@@ -173,7 +175,68 @@ class DatabaseSeeder extends Seeder
             }
         }
             */
-            //======================================================//
+
+   //======================================================//
+    /*
+   $set1Table5Entry = AccountSubledger::where('user_id', $user->id)
+       ->where('school_year', '2025-2026')
+       ->where('semester', '1')
+       ->orderByDesc('date')
+       ->first();
+
+
+   $nextYearStart = 2026;
+   $nextYearEnd = 2027;
+   $nextYear = $nextYearStart . '-' . $nextYearEnd;
+
+
+   $table2Set2DownpaymentEntry = AccountSubledger::where('user_id', $user->id)
+       ->where('school_year', $nextYear)
+       ->where('semester', '2')
+       ->orderBy('date', 'asc')
+       ->skip(1)
+       ->first();
+
+
+   $set2Entry3Exists = AccountSubledger::where('user_id', $user->id)
+       ->where('school_year', $nextYear)
+       ->where('semester', '2')
+       ->orderBy('date', 'asc')
+       ->skip(2)
+       ->first();
+
+   if ($set1Table5Entry && $table2Set2DownpaymentEntry && !$set2Entry3Exists) {
+       $set1Balance = (float)str_replace(',', '', $set1Table5Entry->balance);
+       $table2Set2DownpaymentBalance = (float)str_replace(',', '', $table2Set2DownpaymentEntry->balance);
+
+
+       $resultBalance = $table2Set2DownpaymentBalance - $set1Balance;
+
+       $entryDate = $faker->dateTimeBetween('2026-05-12', '2026-12-31')->format('Y-m-d');
+       $reference = (string)$faker->numberBetween(10000, 99999);
+
+       // Extra check for duplicate entry for this user
+       $alreadyExists = AccountSubledger::where('user_id', $user->id)
+           ->where('school_year', $nextYear)
+           ->where('semester', '2')
+           ->where('reference', $reference)
+           ->exists();
+
+       if (!$alreadyExists) {
+           AccountSubledger::create([
+               'user_id' => $user->id,
+               'school_year' => $nextYear,
+               'semester' => '2',
+               'date' => $entryDate,
+               'reference' => $reference,
+               'debit' => '0.00',
+               'credit' => number_format($set1Balance, 2, '.', ''),
+               'balance' => number_format($resultBalance, 2, '.', ''),
+           ]);
+       }
+   }
+
+    */
       });
 
     }

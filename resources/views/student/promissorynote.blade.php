@@ -9,7 +9,7 @@
     </header>
 
     <!-- Main content -->
-    <main class="p-6 w-full mt-24">
+    <main class="p-6 max-w-5xl mx-auto w-full mt-28">
     <div class="mb-6 flex justify-between items-center">
         <a href="{{ route('student.dashboard') }}"
            class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white px-4 py-2 rounded-lg shadow transition">
