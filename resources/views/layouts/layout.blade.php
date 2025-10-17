@@ -22,7 +22,7 @@
 <body class="bg-gray-100 font-sans">
     @yield('content')
 
-   <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+   <!-- Removed duplicate Iconify script -->
    <script src="{{ asset('js/main.js') }}"></script>
    <script src="{{ asset('js/reuse.js') }}"></script>
   {{-- apexcharts is bundled via Vite (resources/js/app.js) --}}

@@ -225,4 +225,17 @@ class AdminDashboardController extends Controller
     return redirect()->route('admin.promissorynote-detail', $note->pn_id)
         ->with('success', 'Request denied and notification sent.');
 }
+
+    /**
+     * Display all notifications for the admin.
+     */
+    public function notificationsView()
+    {
+        $adminId = Auth::id();
+        $notifications = Notification::where('user_id', $adminId)
+            ->orderBy('sent_at', 'desc')
+            ->get();
+
+        return view('admin.admin-notfication-view', compact('notifications'));
+    }
 }

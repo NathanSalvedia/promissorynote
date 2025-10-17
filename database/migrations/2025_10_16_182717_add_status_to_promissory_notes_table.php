@@ -12,17 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('promissory_notes', function (Blueprint $table) {
-            $table->boolean('archived')->default(false);
+            $table->string('status')->default('pending')->after('due_date');
         });
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
     {
         Schema::table('promissory_notes', function (Blueprint $table) {
-            $table->dropColumn('archived');
+            if (Schema::hasColumn('promissory_notes', 'status')) {
+                $table->dropColumn('status');
+            }
         });
     }
 };

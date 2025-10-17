@@ -1,18 +1,19 @@
 @php
     use Carbon\Carbon;
 @endphp
+
 @extends('layouts.layout')
 
 @section('content')
-    @include('includes.header')
+  @include('includes.admin')
 
-    <div class="w-full mt-8">
+   <div class="w-full mt-8">
 
         <div class="w-full mt-8">
 
             <div class="bg-white shadow rounded-lg p-6">
                  <div class="flex items-center justify-between mb-5">
-                <a href="{{ route('student.dashboard') }}"
+                <a href="{{ route('admin.dashboard') }}"
                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#4a0708] text-white px-4 py-2 rounded-lg shadow transition">
                     <iconify-icon icon="mdi:arrow-left"></iconify-icon>
                     Back to Dashboard
@@ -37,7 +38,7 @@
                                     </span>
                                 </div>
                                 <span class="ml-4 text-xl text-white">
-                                    <iconify-icon icon="mdi:chevron-right"></iconify-icon>
+                                     <iconify-icon icon="mdi:chevron-right"></iconify-icon>
                                 </span>
                             </a>
                         </li>
@@ -48,4 +49,5 @@
             </div>
         </div>
     </div>
+
 @endsection

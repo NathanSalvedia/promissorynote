@@ -212,8 +212,7 @@ $downpaymentBuckets = PromissoryNote::whereNotNull('down_payment')
             'gender' => $gender,
             'yearLevel' => $year,
             'reason' => $reason,
-            'notifications',
-            'unreadCount',
+
             'partialPaymentBuckets' => $partialPayments,
             'downpaymentBuckets' => $downpaymentBuckets,
             'amountBuckets' => $amountBuckets,
@@ -229,6 +228,7 @@ $downpaymentBuckets = PromissoryNote::whereNotNull('down_payment')
             ],
         ];
 
-        return view('admin.analytics', compact('analyticsData'));
+        return view('admin.analytics', compact('analyticsData', 'notifications',
+            'unreadCount'));
     }
 }

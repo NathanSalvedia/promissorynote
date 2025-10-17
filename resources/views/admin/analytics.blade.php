@@ -2,19 +2,13 @@
 
 @section('content')
 <div class="min-h-screen bg-white flex">
-
-    {{-- ✅ Main Content --}}
     <div class="flex-1">
-
-        {{-- ✅ Header/Navbar --}}
         <header class="fixed top-0 left-0 right-0 z-50 shadow bg-white">
             @include('includes.admin')
         </header>
-
-        {{-- ✅ Analytics Page Content --}}
         <main class="p-6 w-full mt-24">
-
             <h2 class="text-2xl font-bold mb-8 text-[#660809]">Analytics Dashboard</h2>
+
 
             {{-- ========== SECTION 1: Promissory Notes ========== --}}
             <h3 class="text-xl font-semibold mb-4 text-[#660809]">I. Promissory Notes</h3>
@@ -128,9 +122,11 @@
 @endsection
 
 @section('scripts')
+
 <script>
-    window.analyticsData = {!! json_encode($analyticsData, JSON_HEX_TAG) !!};
+window.analyticsData = {!! json_encode($analyticsData, JSON_HEX_TAG) !!};
 </script>
+
 @endsection
 
 

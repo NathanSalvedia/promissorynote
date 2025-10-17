@@ -12,7 +12,7 @@ class AddDenialFieldsToPromissoryNotesTable extends Migration
     public function up(): void
     {
         Schema::table('promissory_notes', function (Blueprint $table) {
-            $table->text('denial_reason')->nullable()->after('status');
+            $table->text('denial_reason')->nullable();
             $table->unsignedBigInteger('denied_by')->nullable()->after('denial_reason');
             $table->timestamp('denied_at')->nullable()->after('denied_by');
         });

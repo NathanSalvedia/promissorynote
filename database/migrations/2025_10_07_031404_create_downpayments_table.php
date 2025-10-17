@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('downpayment_id');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('school_year');
+            $table->string('academic_year');
             $table->decimal('downpayment', 10, 2);
             $table->timestamp('allocated_at')->nullable();
             $table->timestamps();

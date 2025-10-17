@@ -25,6 +25,6 @@ class NotificationController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('student.notification-view', compact('notifications'));
+        return view('student.notification-view', compact('notifications' ));
     }
 }

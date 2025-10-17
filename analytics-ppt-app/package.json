@@ -1,0 +1,19 @@
+{
+  "name": "analytics-ppt-app",
+  "version": "1.0.0",
+  "description": "A project to import analytics data and generate PowerPoint presentations.",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "typescript": "^4.5.0",
+    "pptxgenjs": "^3.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

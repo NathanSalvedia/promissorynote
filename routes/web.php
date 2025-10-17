@@ -19,6 +19,7 @@ use App\Http\Controllers\SubledgerShowController;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\SubledgerCreateController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\DownpaymentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,6 +50,7 @@ Route::get('/auth/login', function () {
     Route::get('/student/notification-view', [NotificationController::class, 'index'])->name('student.notification-view');
    Route::get('/student/notification-view', [NotificationController::class, 'view'])->name('student.notification-view');
    Route::get('/student/promissorynote/{pn_id}/resubmit', [PromissoryNoteController::class, 'resubmit'])->name('student.promissorynote.resubmit');
+
 
  });
 
@@ -84,6 +86,10 @@ Route::get('/auth/login', function () {
     Route::get('/admin/users/{id}', [AdminUserController::class, 'show'])->name('admin.users.show');
     Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
 Route::post('/admin/promissorynote/{pn_id}/deny', [AdminDashboardController::class, 'deny'])->name('admin.promissorynote.deny');
+Route::get('/admin/notifications', [AdminDashboardController::class, 'notificationsView'])->name('admin.notifications');
+Route::get('/admin/admin-notification-view', [NotificationController::class, 'index'])->name('admin.notification-view');
+Route::post('/payment-tracking/{pn_id}/record-payment', [PaymentTrackingController::class, 'recordPayment'])->name('payment-tracking.recordPayment');
+
 
 });
 
