@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="min-h-screen flex items-center justify-center bg-gray-100 bg-cover bg-center bg-fixed relative" 
-    style="background-image: url('{{ asset("img/background.jpg") }}');">
+    style="background-image: url('{{ asset("img/background3.jpg") }}');">
 
     {{-- ✅ Dark overlay --}}
     <div class="absolute inset-0 bg-black opacity-60"></div>
