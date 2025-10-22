@@ -156,7 +156,7 @@ class AdminDashboardController extends Controller
     /**
      * Reject a promissory note → keep as unsettled.
      */
-    public function reject(Request $request, $pn_id)
+    public function reject(Request $request, $pn_id, \App\Services\SmsService $smsService)
     {
         $request->validate([
             'denial_reason' => 'required|string|max:1000',
@@ -178,6 +178,14 @@ class AdminDashboardController extends Controller
         // Send email notification if user has email
         if ($note->user && $note->user->email) {
             Mail::to($note->user->email)->send(new PromissoryNoteRejected($note));
+        }
+
+        // Send SMS notification using phone from promissory note
+        if ($note->phone) {
+            $smsService->send(
+                $note->phone,
+                "Good day! This is from St. Peter's College. Your promissory form has been rejected. Reason: {$note->denial_reason}"
+            );
         }
 
         return redirect()->back()->with('success', 'Promissory note rejected successfully.');
@@ -226,35 +234,43 @@ class AdminDashboardController extends Controller
     return $pdf->download('PN-'.$note->pn_id.'.pdf');
   }
 
-  public function deny(Request $request, $pn_id)
-{
-    $request->validate([
-        'denial_reason' => 'required|string|max:1000',
-    ]);
+  public function deny(Request $request, $pn_id, \App\Services\SmsService $smsService)
+  {
+      $request->validate([
+          'denial_reason' => 'required|string|max:1000',
+      ]);
 
-    $note = PromissoryNote::findOrFail($pn_id);
-    $note->status = 'rejected';
-    $note->denial_reason = $request->denial_reason;
-    $note->denied_by = Auth::id();
-    $note->denied_at = now();
-    $note->save();
+      $note = PromissoryNote::findOrFail($pn_id);
+      $note->status = 'rejected';
+      $note->denial_reason = $request->denial_reason;
+      $note->denied_by = Auth::id();
+      $note->denied_at = now();
+      $note->save();
 
-    Notification::create([
-        'user_id' => $note->user_id,
-        'pn_id'   => $note->pn_id,
-        'content' => "Your promissory note #{$note->pn_id} was rejected. Reason: {$request->denial_reason}",
-        'sent_at' => now(),
-        'is_read' => false,
-    ]);
+      Notification::create([
+          'user_id' => $note->user_id,
+          'pn_id'   => $note->pn_id,
+          'content' => "Your promissory note #{$note->pn_id} was rejected. Reason: {$request->denial_reason}",
+          'sent_at' => now(),
+          'is_read' => false,
+      ]);
 
-    // Send email notification if user has email
-    if ($note->user && $note->user->email) {
-        Mail::to($note->user->email)->send(new PromissoryNoteRejected($note));
-    }
+      // Send email notification if user has email
+      if ($note->user && $note->user->email) {
+          Mail::to($note->user->email)->send(new PromissoryNoteRejected($note));
+      }
 
-    return redirect()->route('admin.promissorynote-detail', $note->pn_id)
-        ->with('success', 'Request denied and notification sent.');
-}
+      // Send SMS notification using phone from promissory note
+      if ($note->phone) {
+          $smsService->send(
+              $note->phone,
+              "Good day! This is from St. Peter's College. Your promissory form has been rejected. Reason: {$note->denial_reason}"
+          );
+      }
+
+      return redirect()->route('admin.promissorynote-detail', $note->pn_id)
+          ->with('success', 'Request denied and notification sent.');
+  }
 
     /**
      * Display all notifications for the admin.

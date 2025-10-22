@@ -9,20 +9,20 @@
     </header>
 
     <!-- Main content -->
-    <main class="p-6 max-w-5xl mx-auto w-full mt-24">
-        <div class="mb-6 flex justify-between items-center">
+    <main class="p-2 sm:p-6 max-w-5xl mx-auto w-full mt-24 px-2">
+        <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
             <a href="{{ route('student.dashboard') }}"
-               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white px-4 py-2 rounded-lg shadow transition">
+               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white px-4 py-2 rounded-lg shadow transition w-full sm:w-auto justify-center">
                 <iconify-icon icon="mdi:arrow-left"></iconify-icon>
                 Back to Dashboard
             </a>
         </div>
         <!-- Card -->
-        <div class="bg-white p-6 rounded-lg shadow">
+        <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
 
             <h2 class="text-xl font-bold mb-6">Resubmit Promissory Note</h2>
 
-            <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-900 px-6 py-3 mb-8 rounded-lg font-semibold">
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-900 px-4 sm:px-6 py-3 mb-8 rounded-lg font-semibold">
                 NOTE: Please ensure that the form is filled out completely.
             </div>
 
@@ -36,7 +36,7 @@
 
                 <input type="hidden" name="parent_pn_id" value="{{ $note->pn_id }}">
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
                     <div>
                         <label for="course" class="@error('course') text-red-600 @enderror block text-sm font-medium mb-1">Course</label>
@@ -203,7 +203,7 @@
                 </div>
 
                 {{-- Attachments and Signature side by side --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     <div>
                         <label class="block text-sm font-medium mb-1">Upload Supporting Documents</label>
                         <input type="file" name="attachments[]" multiple accept="image/*"
@@ -214,7 +214,7 @@
                         @enderror
                     </div>
 
-                    <div>
+                    <div class="overflow-x-auto">
                         <label class="block text-sm font-medium mb-1">Electronic Signature</label>
                         @php
                             use Illuminate\Support\Str;
@@ -229,7 +229,10 @@
                         @endphp
                         <input type="hidden" id="prev-signature" value="{{ $prevSignature }}">
                         <div class="border border-gray-300 rounded-md p-2 bg-gray-50">
-                            <canvas id="signature-pad" width="300" height="120" class="border rounded bg-white"></canvas>
+                            <canvas id="signature-pad"
+                                class="border rounded bg-white w-full max-w-xs md:max-w-full"
+                                style="width:100%;max-width:300px;height:120px;"
+                                width="300" height="120"></canvas>
                             <div class="mt-2 flex gap-2">
                                 <button type="button" onclick="clearSignature()" class="mt-3 px-4 py-1.5 bg-[#660809] hover:bg-black text-white rounded-lg text-sm font-medium shadow transition">Clear Signature</button>
                             </div>
@@ -242,13 +245,11 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div class="pt-4">
-                        <button type="button" onclick="reviewApplication()"
-                                class="bg-[#660809] hover:bg-[#000000] text-white px-6 py-2 rounded-lg shadow ">
-                            Review Application
-                        </button>
-                    </div>
+                <div class="pt-4">
+                    <button type="button" onclick="reviewApplication()"
+                            class="bg-[#660809] hover:bg-[#000000] text-white px-6 py-2 rounded-lg shadow w-full sm:w-auto">
+                        Review Application
+                    </button>
                 </div>
             </form>
         </div>
@@ -330,6 +331,16 @@ document.getElementById('promissoryForm').addEventListener('submit', function() 
     updateSignatureInput();
 });
 </script>
+
+<style>
+@media (max-width: 640px) {
+    #signature-pad {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100px !important;
+    }
+}
+</style>
 @endsection
 
 

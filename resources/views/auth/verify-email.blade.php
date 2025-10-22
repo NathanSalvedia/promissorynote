@@ -1,8 +1,8 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-    <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-2">
+    <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-8 w-full max-w-md">
         <div class="flex flex-col items-center mb-6">
             <!-- Iconify Email Icon -->
             <span class="iconify bg-blue-100 text-[#660809] rounded-full p-3 mb-3" data-icon="mdi:email-check-outline" data-width="65" data-height="65"></span>
@@ -35,5 +35,4 @@
         </div>
     </div>
 </div>
-
 @endsection

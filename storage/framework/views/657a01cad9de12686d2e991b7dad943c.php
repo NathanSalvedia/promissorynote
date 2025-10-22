@@ -17,17 +17,17 @@
 
     
     <div class="bg-white shadow">
-        <div class="max-w-10xl mx-auto grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 px-5 py-1.5">
+        <div class="max-w-10xl mx-auto flex flex-col md:grid md:grid-cols-[auto_1fr_auto] items-center gap-2 md:gap-8 px-3 sm:px-5 py-1.5">
             <div class="flex items-center gap-2 md:gap-3">
-                <img src="/img/spc-wordmark.png" alt="SPC Wordmark" class="h-12 md:h-16 object-contain">
+                <img src="/img/spc-wordmark.png" alt="SPC Wordmark" class="h-10 sm:h-12 md:h-16 object-contain">
             </div>
 
-            <nav class="hidden md:flex items-center gap-5 font-semibold text-[12px]"></nav>
+            <nav class="hidden md:flex items-center gap-5 font-semibold text-xs"></nav>
 
             
             <a href="<?php echo e(route('auth.login')); ?>"
                id="login-btn"
-               class="justify-self-end bg-[#660809] text-white px-3 py-1.5 rounded-md shadow hover:bg-black flex items-center gap-1 text-[12px] relative z-30">
+               class="mt-2 md:mt-0 bg-[#660809] text-white px-3 py-1.5 rounded-md shadow hover:bg-black flex items-center gap-1 text-xs relative z-30">
                 <iconify-icon icon="mdi:login" class="text-sm"></iconify-icon>
                 Login
             </a>
@@ -49,9 +49,9 @@
     <div class="absolute inset-0 bg-black/60 z-10"></div>
 
     
-    <div class="relative z-20 flex justify-end h-full pr-8">
+    <div class="relative z-20 flex justify-end sm:pr-8 h-full">
         <div id="popup-cards"
-             class="opacity-0 translate-x-10 transition-all duration-1000 ease-out flex flex-col gap-5 max-w-sm w-full sm:w-[350px] mt-24 mb-10">
+             class="opacity-0 translate-x-10 transition-all duration-1000 ease-out flex flex-col gap-5 w-full max-w-xs sm:max-w-sm md:w-[350px] mt-10 sm:mt-24 mb-6 sm:mb-10 mx-2 sm:mx-0">
 
             
             <a href="#"
@@ -212,6 +212,13 @@ window.addEventListener('load', () => {
 }
 .animate-fadeIn {
     animation: fadeIn 0.4s ease-out;
+}
+
+@media (max-width: 640px) {
+    #popup-cards {
+        margin-top: 2rem !important;
+        margin-bottom: 2rem !important;
+    }
 }
 </style>
 

@@ -19,6 +19,7 @@ use Illuminate\Validation\Rule;
 use App\Models\Downpayment;
 use Illuminate\Support\Facades\Log;
 
+
 class PromissoryNoteController extends Controller
 {
     public function index()
@@ -123,7 +124,8 @@ class PromissoryNoteController extends Controller
             $file = $request->file('signature_image');
             $fileName = 'signature_' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = 'signatures/' . $fileName;
-            $file->storeAs('signatures', $fileName, 'public');
+
+            $file->storeAs('signatures', $fileName);
             $promissoryNote->signature_path = $filePath;
             $promissoryNote->save();
         } elseif ($request->filled('signature')) {
@@ -134,7 +136,7 @@ class PromissoryNoteController extends Controller
                 $signatureData = base64_decode($signatureData);
                 $fileName = 'signature_' . time() . '.' . $type;
                 $filePath = 'signatures/' . $fileName;
-                Storage::disk('public')->put($filePath, $signatureData);
+                Storage::put($filePath, $signatureData);
                 $promissoryNote->signature_path = $filePath;
                 $promissoryNote->save();
             }
@@ -181,11 +183,12 @@ class PromissoryNoteController extends Controller
             ]);
         }
 
-      if ($request->hasFile('attachments')) {
+        // Store attachments privately
+        if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
                 if ($file) {
                     $fileName = time() . '_' . $file->getClientOriginalName();
-                    $filePath = $file->storeAs('supporting_documents', $fileName, 'public');
+                    $filePath = $file->storeAs('supporting_documents', $fileName); // private by default
 
                     SupportingDocument::create([
                         'pn_id'         => $promissoryNote->pn_id,
@@ -283,7 +286,83 @@ class PromissoryNoteController extends Controller
         return view('student.promissorynote_resubmit', compact('note'));
     }
 
+    public function downloadAttachment($id)
+    {
+        $document = SupportingDocument::findOrFail($id);
 
+        $disk = Storage::disk('private');
+        $path = $document->file_path;
+
+        if (!$disk->exists($path)) {
+            abort(404);
+        }
+
+
+        $mime = $disk->mimeType($path);
+
+        // If the file is an image, display inline for <img src="">
+        if (str_starts_with($mime, 'image/')) {
+            return response(
+                $disk->get($path),
+                200,
+                [
+                    'Content-Type' => $mime,
+                    'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
+                ]
+            );
+        }
+
+        // Otherwise, force download (use storage_path for compatibility)
+        return response()->download(
+            storage_path('app/private/' . $path),
+            $document->file_name,
+            ['Content-Type' => $mime]
+        );
+    }
+
+    public function viewSignature($pn_id)
+    {
+        $note = PromissoryNote::findOrFail($pn_id);
+        $path = $note->signature_path;
+
+        $disk = Storage::disk('private');
+        if (!$path || !$disk->exists($path)) {
+            abort(404);
+        }
+
+        $mime = $disk->mimeType($path);
+
+        return response(
+            $disk->get($path),
+            200,
+            [
+                'Content-Type' => $mime,
+                'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
+            ]
+        );
+    }
+
+    public function adminViewSignature($pn_id)
+    {
+        $note = PromissoryNote::findOrFail($pn_id);
+        $path = $note->signature_path;
+
+        $disk = Storage::disk('private');
+        if (!$path || !$disk->exists($path)) {
+            abort(404);
+        }
+
+        $mime = $disk->mimeType($path);
+
+        return response(
+            $disk->get($path),
+            200,
+            [
+                'Content-Type' => $mime,
+                'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
+            ]
+        );
+    }
 }
 
 

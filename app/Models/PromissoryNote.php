@@ -36,9 +36,10 @@ class PromissoryNote extends Model
     return $this->hasOne(Approve::class, 'pn_id', );
   }
 
-  public function supportingDocuments() {
-    return $this->hasMany(SupportingDocument::class, 'pn_id', 'pn_id');
-}
+  public function supportingDocuments()
+  {
+      return $this->hasMany(SupportingDocument::class, 'pn_id', 'pn_id');
+  }
 
   public function payments()
   {

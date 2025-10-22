@@ -16,13 +16,13 @@
 
     {{-- White navbar --}}
     <div class="bg-white shadow">
-        <div class="w-full flex justify-between items-center px-6 py-3">
-            <div class="flex items-center gap-3">
-                <img src="/img/spc-wordmark.png" alt="SPC" class="h-10 md:h-12 object-contain">
+        <div class="w-full flex flex-col sm:flex-row justify-between items-center px-3 sm:px-6 py-2 sm:py-3 gap-2">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <img src="/img/spc-wordmark.png" alt="SPC" class="h-10 sm:h-12 object-contain">
             </div>
 
-            <div class="flex items-center gap-6">
-
+            <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 mt-2 sm:mt-0">
+                {{-- Notification Bell --}}
                 <div x-data="{ open: false }" class="relative">
                     <button
                         @click="
@@ -85,7 +85,7 @@
                         </div>
                     </div>
                 </div>
-
+                {{-- User Dropdown --}}
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open"
                         :class="open ? 'bg-green-600 text-white' : 'bg-[#660809] text-white hover:bg-green-600'"
@@ -121,4 +121,17 @@
         </div>
     </div>
 </header>
+
+<style>
+/* Responsive marquee for mobile */
+.marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: marquee 18s linear infinite;
+}
+@keyframes marquee {
+    0% { transform: translateX(100%);}
+    100% { transform: translateX(-100%);}
+}
+</style>
 

@@ -1,4 +1,3 @@
-
 @php
     use Carbon\Carbon;
 @endphp
@@ -6,7 +5,7 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="min-h-screen bg-gray-100 flex flex-col items-center">
+<div class="min-h-screen bg-gray-100 flex flex-col items-center px-2">
 
 
     <header class="fixed top-0 left-0 w-full z-50 shadow bg-white/95 backdrop-blur-sm print:hidden">
@@ -22,7 +21,7 @@
                 Back to Dashboard
             </a>
             <button onclick="window.print()"
-                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#4a0708] text-white px-4 py-2 rounded-lg shadow transition">
+                    class="no-print inline-flex items-center gap-2 bg-[#660809] hover:bg-[#4a0708] text-white px-4 py-2 rounded-lg shadow transition">
                 <iconify-icon icon="mdi:printer"></iconify-icon>
                 Print Form
             </button>
@@ -30,11 +29,11 @@
     </div>
 
     {{-- Printable container --}}
-    <div class="w-full flex justify-center pb-12">
+    <div class="w-full flex justify-center pb-12 overflow-x-auto">
         <article
             class="bg-white rounded-2xl shadow-xl print:shadow-none border border-gray-200"
             style="width: 210mm; min-height: 297mm; max-width: 100%; margin: 0; padding: 0;">
-            <div class="text-gray-900 text-base leading-normal p-10">
+            <div class="text-gray-900 text-base leading-normal p-4 sm:p-10 print-page">
 
                 {{-- Letterhead --}}
                 <header class="text-center mb-10">
@@ -141,29 +140,53 @@
                 {{-- Attachments --}}
                 <section class="card-section">
                     <span class="font-semibold text-lg mb-4 block text-gray-700">Attachments:</span>
-                    @if($note->supportingDocuments && $note->supportingDocuments->count())
-                        @php
-                            $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
-                            $images = [];
-                            foreach($note->supportingDocuments as $doc) {
-                                $ext = strtolower(pathinfo($doc->file_name, PATHINFO_EXTENSION));
-                                if(in_array($ext, $imageExts)) { $images[] = $doc; }
-                            }
-                        @endphp
-                        @if(count($images) > 0)
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
-                                @foreach($images as $img)
+                    @php
+                        $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
+                        $images = [];
+                        foreach($note->supportingDocuments as $doc) {
+                            $ext = strtolower(pathinfo($doc->file_name, PATHINFO_EXTENSION));
+                            if(in_array($ext, $imageExts)) { $images[] = $doc; }
+                        }
+                    @endphp
+
+                    @if(count($images) > 0)
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+                            @foreach($images as $img)
+                                @if(!empty($img->document_id))
                                     <div class="w-full h-56 overflow-hidden rounded-lg border border-gray-300 shadow-sm bg-gray-100 flex items-center justify-center">
-                                        <img src="{{ asset('storage/' . $img->file_path) }}" alt="Attachment"
-                                             class="max-w-full max-h-full object-contain" />
+                                        <img
+                                            src="{{ route('student.attachments.download', $img->document_id) }}"
+                                            alt="Attachment"
+                                            class="max-w-full max-h-full object-contain"
+                                            style="cursor:pointer"
+                                            onclick="window.open('{{ route('student.attachments.download', $img->document_id) }}', '_blank')"
+                                        />
                                     </div>
-                                @endforeach
-                            </div>
-                        @endif
+                                @endif
+                            @endforeach
+                        </div>
                     @else
                         <div class="mt-2 text-base text-gray-500">No attachments</div>
                     @endif
                 </section>
+
+                {{-- Signature --}}
+                @if(!empty($note->signature_path))
+                    {{-- Debug: Show the actual signature path for troubleshooting --}}
+
+                    <section class="card-section mt-6">
+                        <span class="font-semibold text-lg mb-4 block text-gray-700">Signature:</span>
+                        <div class="w-64 h-40 flex items-center justify-center border border-gray-300 rounded bg-gray-50">
+                            <img
+                                src="{{ route('student.signature.view', $note->pn_id) }}"
+                                alt="Signature"
+                                class="max-w-full max-h-full object-contain"
+                                style="background: #fff;"
+                                onerror="this.onerror=null;this.src='{{ asset('img/no-signature.png') }}';"
+                            />
+                        </div>
+                    </section>
+                @endif
 
                 @if($note->status === 'rejected' && !empty($note->denial_reason))
                     <div class="mt-8" x-data="{ showDenialReason: false }">
@@ -174,7 +197,7 @@
                                 View Rejection Reason
                             </a>
                             <a href="{{ route('student.promissorynote.resubmit', $note->pn_id) }}"
-                               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white hover:text-white   rounded-lg px-4 py-2 shadow transition font-semibold">
+                               class="no-print inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white hover:text-white   rounded-lg px-4 py-2 shadow transition font-semibold">
                                 <iconify-icon icon="mdi:refresh"></iconify-icon>
                                 Resubmit Promissory Note
                             </a>
@@ -195,3 +218,15 @@
     </div>
 </div>
 @endsection
+
+<style>
+@media print {
+  .print-page {
+    page-break-before: always;
+    margin-top: 30px;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+</style>

@@ -7,7 +7,7 @@
     <div class="absolute inset-0 bg-black opacity-60"></div>
 
     
-    <div class="relative z-10 bg-white/10 rounded-2xl shadow-2xl p-8 sm:p-10 w-full max-w-md text-center backdrop-blur-md border border-white/20">
+    <div class="relative z-10 bg-white/10 rounded-2xl shadow-2xl p-4 sm:p-10 w-full max-w-md text-center backdrop-blur-md border border-white/20">
 
         
         <img src="<?php echo e(asset('img/logo.jpg')); ?>"
@@ -19,7 +19,7 @@
         <p class="text-gray-200 text-sm mb-8">Access your Promissory Note Portal</p>
 
         
-        <form id="loginForm" action="<?php echo e(route('login')); ?>" method="POST" class="space-y-6 text-left w-full max-w-sm mx-auto px-4">
+        <form id="loginForm" action="<?php echo e(route('login')); ?>" method="POST" class="space-y-6 text-left w-full max-w-xs sm:max-w-sm mx-auto px-2 sm:px-4">
             <?php echo csrf_field(); ?>
 
             

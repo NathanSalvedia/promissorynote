@@ -8,7 +8,7 @@
 
     <div class="w-full mt-8">
         <div class="w-full mt-8">
-            <div class="bg-white shadow rounded-lg p-6 ml-10 mr-10">
+            <div class="bg-white shadow rounded-lg p-4 sm:p-6 mx-2 sm:mx-10">
                 <div class="flex items-center justify-between mb-5">
                     <a href="{{ route('student.dashboard') }}"
                        class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#4a0708] text-white px-4 py-2 rounded-lg shadow transition">
@@ -17,7 +17,7 @@
                     </a>
                 </div>
 
-                <h2 class="text-2xl font-semibold mb-4 text-gray-800">Notifications</h2>
+                <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-gray-800">Notifications</h2>
                 <ul class="space-y-4">
                     @if(!auth()->user()->hasVerifiedEmail())
                         <li>

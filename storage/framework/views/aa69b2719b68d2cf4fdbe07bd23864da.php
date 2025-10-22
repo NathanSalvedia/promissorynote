@@ -22,7 +22,7 @@
             </a>
 
             <button onclick="window.print()"
-                    class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#4a0708] text-white px-4 py-2 rounded-lg shadow transition">
+                    class="no-print inline-flex items-center gap-2 bg-[#660809] hover:bg-[#4a0708] text-white px-4 py-2 rounded-lg shadow transition">
                 <iconify-icon icon="mdi:printer"></iconify-icon>
                 Print Form
             </button>
@@ -142,86 +142,59 @@
                 
                 <section class="card-section">
                     <span class="font-semibold text-lg mb-4 block text-gray-700">Attachments:</span>
-                    <?php if($note->supportingDocuments && $note->supportingDocuments->count()): ?>
-                        <?php
-                            $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
-                            $images = [];
-                            $otherDocs = [];
-                            foreach($note->supportingDocuments as $doc) {
-                                $ext = strtolower(pathinfo($doc->file_name, PATHINFO_EXTENSION));
-                                if(in_array($ext, $imageExts)) {
-                                    $images[] = $doc;
-                                } else {
-                                    $otherDocs[] = $doc;
-                                }
-                            }
-                        ?>
-                        <?php if(count($images) > 0): ?>
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
-                                <?php $__currentLoopData = $images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <?php if(isset($img->document_id)): ?>
-                                        <div class="w-full h-56 overflow-hidden rounded-lg border border-gray-300 shadow-sm bg-gray-100 flex items-center justify-center">
-                                            <a href="<?php echo e(route('attachments.download', $img->document_id)); ?>" target="_blank" title="Download/View Attachment">
-                                                <img src="<?php echo e(route('attachments.inline', $img->document_id)); ?>" alt="Attachment"
-                                                     class="max-w-full max-h-full object-contain" />
-                                            </a>
-                                        </div>
-                                    <?php else: ?>
-                                        <div class="text-red-600">Attachment missing ID</div>
-                                    <?php endif; ?>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </div>
-                        <?php endif; ?>
-                        <?php if(count($otherDocs) > 0): ?>
-                            <div class="mt-4">
-                                <h4 class="font-semibold text-gray-700 mb-2">Other Attachments:</h4>
-                                <ul class="list-disc pl-5">
-                                    <?php $__currentLoopData = $otherDocs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $doc): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <?php if(isset($doc->document_id)): ?>
-                                            <li>
-                                                <a href="<?php echo e(route('attachments.download', $doc->document_id)); ?>"
-                                                   class="text-blue-600 underline"
-                                                   target="_blank">
-                                                    <?php echo e($doc->file_name); ?>
 
-                                                </a>
-                                            </li>
-                                        <?php else: ?>
-                                            <li class="text-red-600">Attachment missing ID</li>
-                                        <?php endif; ?>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                </ul>
-                            </div>
-                        <?php endif; ?>
-                    <?php else: ?>
+                    <?php
+                        $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
+                        $images = [];
+                        foreach($note->supportingDocuments as $doc) {
+                            $ext = strtolower(pathinfo($doc->file_name, PATHINFO_EXTENSION));
+                            if(in_array($ext, $imageExts)) { $images[] = $doc; }
+                        }
+                    ?>
+
+                    <?php if(count($images) > 0): ?>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+                            <?php $__currentLoopData = $images; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $img): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php if(!empty($img->document_id)): ?>
+                                    <div class="w-full h-56 overflow-hidden rounded-lg border border-gray-300 shadow-sm bg-gray-100 flex items-center justify-center">
+                                        <img
+                                            src="<?php echo e(route('admin.attachments.download', $img->document_id)); ?>"
+                                            alt="Attachment"
+                                            class="max-w-full max-h-full object-contain"
+                                            style="cursor:pointer"
+                                            onclick="window.open('<?php echo e(route('admin.attachments.download', $img->document_id)); ?>', '_blank')"
+                                        />
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </div>
                         <div class="mt-2 text-base text-gray-500">No attachments</div>
                     <?php endif; ?>
                 </section>
 
-               <section class="mt-6 mb-10 px-10">
-                <div class="flex justify-between items-center">
-                    <div class="w-1/2 text-center">
-                        <?php if($note->signature_path): ?>
+                   
+                <?php if(!empty($note->signature_path)): ?>
+
+                    <section class="card-section mt-6">
+                        <span class="font-semibold text-lg mb-4 block text-gray-700">Signature:</span>
+                        <div class="w-64 h-40 flex items-center justify-center border border-gray-300 rounded bg-gray-50">
                             <img
-                                src="<?php echo e(asset('storage/' . $note->signature_path)); ?>"
-                                alt="Electronic Signature"
-                                class="mx-auto mb-2 max-h-24 max-w-xs object-contain border-b border-gray-300"
+                                src="<?php echo e(route('admin.signature.view', $note->pn_id)); ?>"
+                                alt="Signature"
+                                class="max-w-full max-h-full object-contain"
                                 style="background: #fff;"
+                                onerror="this.onerror=null;this.src='<?php echo e(asset('img/no-signature.png')); ?>';"
                             />
-                        <?php endif; ?>
-                        <div class="border-t border-black  w-4/5 mx-auto"></div>
-                        <p class="mt-1 text-xs font-semibold">Student's Signature</p>
-                    </div>
-                </div>
-            </section>
+                        </div>
+                    </section>
+                <?php endif; ?>
 
                 <?php if($note->status !== 'approved'): ?>
                     <div class="flex items-center justify-between gap-4 mt-4">
-
                         <?php if($note->status === 'rejected' && !empty($note->denial_reason)): ?>
                             <div>
                                 <a href="#" onclick="document.getElementById('adminReasonModal').classList.remove('hidden'); return false;"
-                                   class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white hover:text-white font-semibold underline rounded-lg px-4 py-2 shadow transition">
+                                   class="no-print inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white hover:text-white font-semibold underline rounded-lg px-4 py-2 shadow transition">
                                     <iconify-icon icon="mdi:close-circle"></iconify-icon>
                                     View Rejection Reason
                                 </a>
@@ -242,10 +215,20 @@
                         </div>
                     </div>
                 <?php endif; ?>
+
+
             </div>
         </article>
     </div>
 </div>
 <?php $__env->stopSection(); ?>
+
+<style>
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+</style>
 
 <?php echo $__env->make('layouts.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\promissorynote-app\resources\views/admin/promissorynote-show.blade.php ENDPATH**/ ?>

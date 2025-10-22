@@ -1,8 +1,8 @@
 @extends('layouts.layout')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200">
-    <div class="w-full max-w-md bg-white/90 rounded-2xl shadow-2xl p-8 sm:p-10 backdrop-blur-md border border-gray-200">
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200 px-2">
+    <div class="w-full max-w-md bg-white/90 rounded-2xl shadow-2xl p-4 sm:p-10 backdrop-blur-md border border-gray-200">
         <div class="flex flex-col items-center mb-6">
             <div class="bg-blue-100 rounded-full p-3 mb-3">
                 <iconify-icon icon="mdi:lock-reset" class="text-blue-600 text-3xl"></iconify-icon>
@@ -43,7 +43,7 @@
             </button>
         </form>
         <div class="mt-8 text-center">
-            <a href="{{ route('login') }}" class="text-green-700  font-semibold hover:text-blue-800 hover:underline text-md transition flex items-center justify-center gap-1">
+            <a href="{{ route('login') }}" class="text-green-700 font-semibold hover:text-blue-800 hover:underline text-md transition flex items-center justify-center gap-1">
                 <iconify-icon icon="mdi:arrow-left" class="text-green-700 text-base"></iconify-icon>
                 Back to Sign In
             </a>

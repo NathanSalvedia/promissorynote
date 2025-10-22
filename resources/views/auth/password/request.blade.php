@@ -2,8 +2,8 @@
 
 @section('content')
 
-<div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-300">
-    <div class="w-full max-w-md bg-white/90 rounded-2xl shadow-2xl p-8 sm:p-10 backdrop-blur-md border border-gray-200">
+<div class="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-300 px-2">
+    <div class="w-full max-w-md bg-white/90 rounded-2xl shadow-2xl p-4 sm:p-10 backdrop-blur-md border border-gray-200">
         <div class="flex flex-col items-center mb-6">
             <div class="bg-green-100 rounded-full p-3 mb-3">
                 <iconify-icon icon="mdi:lock-reset" class="text-green-600 text-3xl"></iconify-icon>

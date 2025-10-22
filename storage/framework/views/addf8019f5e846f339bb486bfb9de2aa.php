@@ -7,33 +7,28 @@
     </header>
 
     <!-- Main content -->
-    <main class="p-6 max-w-5xl mx-auto w-full mt-28">
-    <div class="mb-6 flex justify-between items-center">
+    <main class="p-2 sm:p-6 max-w-5xl mx-auto w-full mt-28 px-2">
+    <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
         <a href="<?php echo e(route('student.dashboard')); ?>"
-           class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white px-4 py-2 rounded-lg shadow transition">
+           class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white px-4 py-2 rounded-lg shadow transition w-full sm:w-auto justify-center">
             <iconify-icon icon="mdi:arrow-left"></iconify-icon>
             Back to Dashboard
         </a>
     </div>
-
-        <!-- Card -->
-        <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-bold mb-6">Submit New Promissory Note</h2>
-
-
-            <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-900 px-6 py-3 mb-8 rounded-lg font-semibold">
-                NOTE: Please ensure that the form is filled out completely.
-            </div>
-
-            <form id="promissoryForm"
-                  action="<?php echo e(route('promissorynotes.store')); ?>"
-                  method="POST"
-                  enctype="multipart/form-data"
-                  class="space-y-6"
-                  data-check-status-url="<?php echo e(route('promissorynote.checkStatus')); ?>">
-                <?php echo csrf_field(); ?>
-
-             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Card -->
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow">
+        <h2 class="text-xl font-bold mb-6">Submit New Promissory Note</h2>
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-900 px-4 sm:px-6 py-3 mb-8 rounded-lg font-semibold">
+            NOTE: Please ensure that the form is filled out completely.
+        </div>
+        <form id="promissoryForm"
+              action="<?php echo e(route('promissorynotes.store')); ?>"
+              method="POST"
+              enctype="multipart/form-data"
+              class="space-y-6"
+              data-check-status-url="<?php echo e(route('promissorynote.checkStatus')); ?>">
+            <?php echo csrf_field(); ?>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
 
              <div>
@@ -400,7 +395,7 @@ unset($__errorArgs, $__bag); ?>
              </div>
 
              <!-- Place supporting documents and signature side by side -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-6">
             <div>
                  <label class="block text-sm font-medium mb-1">Upload Supporting Documents</label>
                  <input type="file" name="attachments[]" multiple accept="image/*"
@@ -426,19 +421,21 @@ unset($__errorArgs, $__bag); ?>
             </div>
 
 
-    <div class="bg-gray-50 rounded-xl shadow-inner p-6 mb-4">
+    <div class="bg-gray-50 rounded-xl shadow-inner p-4 sm:p-6 mb-4 overflow-x-auto">
     <label class="block text-base font-semibold text-gray-700 mb-3">Electronic Signature</label>
-    <div class="flex flex-col md:flex-row gap-6 items-start">
+    <div class="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
 
         <div class="flex flex-col items-center w-full md:w-auto">
-            <canvas id="signature-pad" width="400" height="150"
-                class="border-2 border-dashed border-gray-300 rounded-lg bg-white shadow-sm transition focus:ring-2 focus:ring-[#660809]"></canvas>
+            <canvas id="signature-pad"
+                class="border-2 border-dashed border-gray-300 rounded-lg bg-white shadow-sm transition focus:ring-2 focus:ring-[#660809] w-full max-w-xs md:max-w-full"
+                style="width:100%;max-width:400px;height:150px;"
+                width="400" height="150"></canvas>
             <input type="hidden" name="signature" id="signature">
             <button type="button" onclick="clearSignature()"
                 class="mt-3 px-4 py-1.5 bg-[#660809] hover:bg-black text-white rounded-lg text-sm font-medium shadow transition">
                 Clear Signature
             </button>
-                 <?php $__errorArgs = ['signature_image'];
+            <?php $__errorArgs = ['signature_image'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -467,7 +464,7 @@ unset($__errorArgs, $__bag); ?>
  </div>
  <div class="pt-4">
         <button type="button" onclick="reviewApplication()"
-                class="bg-[#660809] hover:bg-[#000000] text-white px-6 py-2 rounded-lg shadow ">
+                class="bg-[#660809] hover:bg-[#000000] text-white px-6 py-2 rounded-lg shadow w-full sm:w-auto">
             Review Application
         </button>
     </div>
@@ -561,6 +558,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <?php $__env->stopSection(); ?>
+
+<style>
+@media (max-width: 640px) {
+    #signature-pad {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 120px !important;
+    }
+}
+</style>
 
 
 

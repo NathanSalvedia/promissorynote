@@ -5,7 +5,7 @@
     <?php echo $__env->make('includes.header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     <!-- Move Alpine.js state to main for global access -->
-    <main class="p-6 w-full" x-data="{ guidelinesOpen: false }">
+    <main class="p-2 sm:p-6 w-full" x-data="{ guidelinesOpen: false }">
 
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
             <h2 class="text-2xl font-bold text-[#660809]">Student Dashboard</h2>
@@ -108,7 +108,7 @@
 
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto">
-                    <thead class="bg-gray-50 text-gray-700">
+                    <thead class="bg-gray-50 text-gray-700 hidden sm:table-header-group">
                         <tr>
                             <th class="px-6 py-3 text-left font-semibold">PN ID</th>
                             <th class="px-6 py-3 text-left font-semibold">Amount</th>
@@ -126,8 +126,9 @@
                             ];
                         ?>
                         <?php $__empty_1 = true; $__currentLoopData = $notes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $note): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                            <tr class="border-b hover:bg-gray-50 transition">
-                                <td class="px-6 py-4 font-medium">
+                            <tr class="border-b hover:bg-gray-50 transition sm:table-row block mb-4 sm:mb-0 rounded-lg sm:rounded-none shadow-sm sm:shadow-none bg-white sm:bg-transparent">
+                                <td class="px-6 py-4 font-medium text-xs sm:text-base block sm:table-cell">
+                                    <span class="font-semibold sm:hidden">PN ID: </span>
                                     PN-<?php echo e($note->pn_id); ?>
 
                                     <?php if($note->parent_pn_id): ?>
@@ -138,15 +139,25 @@
                                         </span>
                                     <?php endif; ?>
                                 </td>
-                                <td class="px-6 py-4 font-semibold">₱<?php echo e(number_format($note->amount, 2)); ?></td>
-                                <td class="px-6 py-4"><?php echo e($note->reason); ?></td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 font-semibold text-xs sm:text-base block sm:table-cell">
+                                    <span class="font-semibold sm:hidden">Amount: </span>
+                                    ₱<?php echo e(number_format($note->amount, 2)); ?>
+
+                                </td>
+                                <td class="px-6 py-4 text-xs sm:text-base block sm:table-cell">
+                                    <span class="font-semibold sm:hidden">Reason: </span>
+                                    <?php echo e($note->reason); ?>
+
+                                </td>
+                                <td class="px-6 py-4 text-xs sm:text-base block sm:table-cell">
+                                    <span class="font-semibold sm:hidden">Status: </span>
                                     <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold <?php echo e($statusColors[$note->status] ?? 'bg-gray-100 text-gray-800'); ?>">
                                         <?php echo e(ucfirst($note->status)); ?>
 
                                     </span>
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 text-xs sm:text-base block sm:table-cell">
+                                    <span class="font-semibold sm:hidden">Actions: </span>
                                     <a href="<?php echo e(route('student.promissorynote.view', $note->pn_id)); ?>"
                                        class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-[#660809] hover:bg-black text-white transition"
                                        title="View">
@@ -156,11 +167,12 @@
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <tr>
-                                <td colspan="6" class="px-6 py-8 text-center text-gray-500">No promissory notes found.</td>
+                                <td colspan="6" class="px-6 py-8 text-center text-gray-500 text-xs sm:text-base">No promissory notes found.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
+                <div class="sm:hidden text-center text-gray-400 text-xs py-2">Swipe left/right to see more &rarr;</div>
             </div>
         </div>
     </main>

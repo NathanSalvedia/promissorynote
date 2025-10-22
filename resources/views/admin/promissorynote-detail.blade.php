@@ -132,33 +132,56 @@
                 </section>
 
                 {{-- Attachments --}}
-                 <section class="card-section">
+                <section class="card-section">
                     <span class="font-semibold text-lg mb-4 block text-gray-700">Attachments:</span>
-                    @if($note->supportingDocuments && $note->supportingDocuments->count())
-                        @php
-                            $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
-                            $images = [];
-                            foreach($note->supportingDocuments as $doc) {
-                                $ext = strtolower(pathinfo($doc->file_name, PATHINFO_EXTENSION));
-                                if(in_array($ext, $imageExts)) { $images[] = $doc; }
-                            }
-                        @endphp
-                        @if(count($images) > 0)
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
-                                @foreach($images as $img)
+
+
+
+                    @php
+                        $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
+                        $images = [];
+                        foreach($note->supportingDocuments as $doc) {
+                            $ext = strtolower(pathinfo($doc->file_name, PATHINFO_EXTENSION));
+                            if(in_array($ext, $imageExts)) { $images[] = $doc; }
+                        }
+                    @endphp
+
+                    @if(count($images) > 0)
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+                            @foreach($images as $img)
+                                @if(!empty($img->document_id))
                                     <div class="w-full h-56 overflow-hidden rounded-lg border border-gray-300 shadow-sm bg-gray-100 flex items-center justify-center">
-                                        <img src="{{ asset('storage/' . $img->file_path) }}" alt="Attachment"
-                                             class="max-w-full max-h-full object-contain" />
+                                        <img
+                                            src="{{ route('admin.attachments.download', $img->document_id) }}"
+                                            alt="Attachment"
+                                            class="max-w-full max-h-full object-contain"
+                                            style="cursor:pointer"
+                                            onclick="window.open('{{ route('admin.attachments.download', $img->document_id) }}', '_blank')"
+                                        />
                                     </div>
-                                @endforeach
-                            </div>
-                        @endif
-                    @else
+                                @endif
+                            @endforeach
+                        </div>
                         <div class="mt-2 text-base text-gray-500">No attachments</div>
                     @endif
                 </section>
 
+                     {{-- Signature --}}
+                @if(!empty($note->signature_path))
 
+                    <section class="card-section mt-6">
+                        <span class="font-semibold text-lg mb-4 block text-gray-700">Signature:</span>
+                        <div class="w-64 h-40 flex items-center justify-center border border-gray-300 rounded bg-gray-50">
+                            <img
+                                src="{{ route('admin.signature.view', $note->pn_id) }}"
+                                alt="Signature"
+                                class="max-w-full max-h-full object-contain"
+                                style="background: #fff;"
+                                onerror="this.onerror=null;this.src='{{ asset('img/no-signature.png') }}';"
+                            />
+                        </div>
+                    </section>
+                @endif
 
                 @if($note->status !== 'approved')
                     <div class="flex items-center justify-between gap-4 mt-4">
@@ -224,6 +247,8 @@
                         </div>
                     </div>
                 @endif
+
+
             </div>
         </article>
     </div>
