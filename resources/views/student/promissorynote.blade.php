@@ -167,6 +167,20 @@
 
 
              <div>
+              <label class="block text-sm font-medium mb-1">Term</label>
+              <select name="term" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('term') @enderror">
+                  <option value="">Select Term</option>
+                  <option value="Prelim" {{ old('term') == 'Prelim' ? 'selected' : '' }}>Prelim</option>
+                  <option value="Midterm" {{ old('term') == 'Midterm' ? 'selected' : '' }}>Midterm</option>
+                   <option value="Pre-Finals" {{ old('term') == 'Pre-Finals' ? 'selected' : '' }}>Pre-Finals</option>
+                  <option value="Finals" {{ old('term') == 'Finals' ? 'selected' : '' }}>Finals</option>
+              </select>
+              @error('term')
+                  <span class="text-red-600 text-xs">{{ $message }}</span>
+              @enderror
+             </div>
+
+             <div>
               <label class="block text-sm font-medium mb-1">Academic Year</label>
               <input type="text" name="academic_year" value="{{ old('academic_year') }}"
                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('academic_year') @enderror">
@@ -198,30 +212,141 @@
              </div>
              </div>
 
-             <div>
-               <label class="block text-sm font-medium mb-1">Upload Supporting Documents</label>
-               <input type="file" name="attachments[]" multiple accept="image/*"
-                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('attachments.*') @enderror">
+             <!-- Place supporting documents and signature side by side -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div>
+                 <label class="block text-sm font-medium mb-1">Upload Supporting Documents</label>
+                 <input type="file" name="attachments[]" multiple accept="image/*"
+                 class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('attachments.*') @enderror">
                 <p class="text-xs text-gray-500 mt-1">Attach ID, proof of hardship, etc.</p>
-                @error('attachments.*')
-                  <span class="text-red-600 text-xs">{{ $message }}</span>
-                @enderror
-              </div>
+              @error('attachments.*')
+                <span class="text-red-600 text-xs">{{ $message }}</span>
+             @enderror
+            </div>
 
 
-              <div class="grid grid-cols-2 gap-4 mb-4">
+    <div class="bg-gray-50 rounded-xl shadow-inner p-6 mb-4">
+    <label class="block text-base font-semibold text-gray-700 mb-3">Electronic Signature</label>
+    <div class="flex flex-col md:flex-row gap-6 items-start">
 
-                <div class="pt-4">
-                    <button type="button" onclick="reviewApplication()"
-                            class="bg-[#660809] hover:bg-[#000000] text-white px-6 py-2 rounded-lg shadow ">
-                        Review Application
-                    </button>
-                </div>
-            </form>
+        <div class="flex flex-col items-center w-full md:w-auto">
+            <canvas id="signature-pad" width="400" height="150"
+                class="border-2 border-dashed border-gray-300 rounded-lg bg-white shadow-sm transition focus:ring-2 focus:ring-[#660809]"></canvas>
+            <input type="hidden" name="signature" id="signature">
+            <button type="button" onclick="clearSignature()"
+                class="mt-3 px-4 py-1.5 bg-[#660809] hover:bg-black text-white rounded-lg text-sm font-medium shadow transition">
+                Clear Signature
+            </button>
+                 @error('signature_image')
+                <span class="text-red-600 text-xs">{{ $message }}</span>
+            @enderror
         </div>
-    </main>
+
+
+    </div>
+    @error('signature')
+        <span class="text-red-600 text-xs mt-2 block">{{ $message }}</span>
+    @enderror
+    <p class="text-xs text-gray-400 mt-4">Draw your signature above or upload an image. This will serve as your electronic signature for this application.</p>
+ </div>
+ </div>
+ <div class="pt-4">
+        <button type="button" onclick="reviewApplication()"
+                class="bg-[#660809] hover:bg-[#000000] text-white px-6 py-2 rounded-lg shadow ">
+            Review Application
+        </button>
+    </div>
+</div>
+</form>
+</div>
+</main>
 </div>
 @endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let canvas = document.getElementById('signature-pad');
+    let signatureInput = document.getElementById('signature');
+    if (!canvas) return;
+    let ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    function getPosition(e) {
+        let rect = canvas.getBoundingClientRect();
+        if (e.touches) {
+            return {
+                x: e.touches[0].clientX - rect.left,
+                y: e.touches[0].clientY - rect.top
+            };
+        } else {
+            return {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+        }
+    }
+
+    canvas.addEventListener('mousedown', function(e) {
+        drawing = true;
+        let pos = getPosition(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    });
+
+    canvas.addEventListener('mouseup', function(e) {
+        drawing = false;
+        signatureInput.value = canvas.toDataURL();
+    });
+
+    canvas.addEventListener('mousemove', function(e) {
+        if (!drawing) return;
+        let pos = getPosition(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+    });
+
+    canvas.addEventListener('mouseout', function(e) {
+        drawing = false;
+    });
+
+
+    canvas.addEventListener('touchstart', function(e) {
+        drawing = true;
+        let pos = getPosition(e);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+    });
+
+    canvas.addEventListener('touchend', function(e) {
+        drawing = false;
+        signatureInput.value = canvas.toDataURL();
+    });
+
+    canvas.addEventListener('touchmove', function(e) {
+        if (!drawing) return;
+        let pos = getPosition(e);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        e.preventDefault();
+    });
+
+    canvas.addEventListener('touchcancel', function(e) {
+        drawing = false;
+    });
+
+    window.clearSignature = function() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        signatureInput.value = '';
+    }
+
+    document.getElementById('promissoryForm').addEventListener('submit', function() {
+        signatureInput.value = canvas.toDataURL();
+    });
+});
+</script>
+@endsection
+
 
 
 

@@ -56,11 +56,16 @@
                 </button>
                 <h4 class="text-lg text-center font-bold text-[#660809] mb-4">Promissory Note Guidelines</h4>
                 <ul class="list-disc pl-5 text-gray-700 space-y-2">
-                    <li>Only students with outstanding balances may apply.</li>
-                    <li>Provide a valid reason for your request.</li>
-                    <li>Approval is subject to review by the finance office.</li>
-                    <li>Check your email for status updates.</li>
-                    <!-- Add more guidelines as needed -->
+                    <li class="font-bold">Fill out the Promissory Note Form </li>
+                      <ul>
+                            <li>Complete the promissory Note Form Completely.</li>
+                            <li>Attach the following documents for Submission :</li>
+                            <li>Student ID</li>
+                            <li>Parent/Guardians's ID</li>
+                            <li>Employee ID or Certificate of Employment (only for working students)</li>
+                        </ul>
+                    <li class="font-bold">Approval is subject to review by the Secretary's Office.</li>
+                    <li class="font-bold">Check your email and sms for status updates.</li>
                 </ul>
             </div>
         </div>
@@ -122,7 +127,7 @@
                                 'rejected' => 'bg-red-100 text-red-800',
                             ];
                         @endphp
-                        @forelse($promissoryNotes as $note)
+                        @forelse($notes as $note)
                             <tr class="border-b hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 font-medium">
                                     PN-{{ $note->pn_id }}

@@ -10,7 +10,7 @@
 
     <!-- Main content -->
     <main class="p-6 max-w-5xl mx-auto w-full mt-24">
-           <div class="mb-6 flex justify-between items-center">
+        <div class="mb-6 flex justify-between items-center">
             <a href="{{ route('student.dashboard') }}"
                class="inline-flex items-center gap-2 bg-[#660809] hover:bg-black text-white px-4 py-2 rounded-lg shadow transition">
                 <iconify-icon icon="mdi:arrow-left"></iconify-icon>
@@ -187,16 +187,59 @@
                             <span class="text-red-600 text-xs">{{ $message }}</span>
                         @enderror
                     </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Term</label>
+                        <select name="term" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('term') @enderror">
+                            <option value="">Select Term</option>
+                            <option value="Prelim" {{ old('term', $note->term ?? '') == 'Prelim' ? 'selected' : '' }}>Prelim</option>
+                            <option value="Midterm" {{ old('term', $note->term ?? '') == 'Midterm' ? 'selected' : '' }}>Midterm</option>
+                            <option value="Finals" {{ old('term', $note->term ?? '') == 'Finals' ? 'selected' : '' }}>Finals</option>
+                        </select>
+                        @error('term')
+                            <span class="text-red-600 text-xs">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium mb-1">Upload Supporting Documents</label>
-                    <input type="file" name="attachments[]" multiple accept="image/*"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('attachments.*') @enderror">
-                    <p class="text-xs text-gray-500 mt-1">Attach ID, proof of hardship, etc.</p>
-                    @error('attachments.*')
-                        <span class="text-red-600 text-xs">{{ $message }}</span>
-                    @enderror
+                {{-- Attachments and Signature side by side --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Upload Supporting Documents</label>
+                        <input type="file" name="attachments[]" multiple accept="image/*"
+                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('attachments.*') @enderror">
+                        <p class="text-xs text-gray-500 mt-1">Attach ID, proof of hardship, etc.</p>
+                        @error('attachments.*')
+                            <span class="text-red-600 text-xs">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Electronic Signature</label>
+                        @php
+                            use Illuminate\Support\Str;
+                            $prevSignature = '';
+                            if (!empty($note->signature_path)) {
+                                if (Str::startsWith($note->signature_path, 'data:image')) {
+                                    $prevSignature = $note->signature_path;
+                                } else {
+                                    $prevSignature = asset('storage/' . ltrim($note->signature_path, '/'));
+                                }
+                            }
+                        @endphp
+                        <input type="hidden" id="prev-signature" value="{{ $prevSignature }}">
+                        <div class="border border-gray-300 rounded-md p-2 bg-gray-50">
+                            <canvas id="signature-pad" width="300" height="120" class="border rounded bg-white"></canvas>
+                            <div class="mt-2 flex gap-2">
+                                <button type="button" onclick="clearSignature()" class="mt-3 px-4 py-1.5 bg-[#660809] hover:bg-black text-white rounded-lg text-sm font-medium shadow transition">Clear Signature</button>
+                            </div>
+                            <input type="hidden" name="signature" id="signature-input">
+                            @error('signature')
+                                <span class="text-red-600 text-xs">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Sign above using your mouse or touch.</p>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
@@ -211,6 +254,82 @@
         </div>
     </main>
 </div>
+
+{{-- Signature Pad Script --}}
+<script>
+let canvas = document.getElementById('signature-pad');
+let signaturePad = canvas.getContext('2d');
+let drawing = false;
+
+// Load previous signature if exists
+let prevSignature = document.getElementById('prev-signature').value;
+if (prevSignature) {
+    let img = new Image();
+    img.onload = function() {
+        signaturePad.clearRect(0, 0, canvas.width, canvas.height);
+        signaturePad.drawImage(img, 0, 0, canvas.width, canvas.height);
+        updateSignatureInput();
+    };
+    img.src = prevSignature;
+}
+
+canvas.addEventListener('mousedown', function(e) {
+    drawing = true;
+    signaturePad.beginPath();
+    signaturePad.moveTo(e.offsetX, e.offsetY);
+});
+canvas.addEventListener('mousemove', function(e) {
+    if (drawing) {
+        signaturePad.lineTo(e.offsetX, e.offsetY);
+        signaturePad.stroke();
+    }
+});
+canvas.addEventListener('mouseup', function() {
+    drawing = false;
+    updateSignatureInput();
+});
+canvas.addEventListener('mouseleave', function() {
+    drawing = false;
+    updateSignatureInput();
+});
+
+// Touch events for mobile
+canvas.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    drawing = true;
+    let rect = canvas.getBoundingClientRect();
+    let touch = e.touches[0];
+    signaturePad.beginPath();
+    signaturePad.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+});
+canvas.addEventListener('touchmove', function(e) {
+    e.preventDefault();
+    if (drawing) {
+        let rect = canvas.getBoundingClientRect();
+        let touch = e.touches[0];
+        signaturePad.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+        signaturePad.stroke();
+    }
+});
+canvas.addEventListener('touchend', function() {
+    drawing = false;
+    updateSignatureInput();
+});
+
+function clearSignature() {
+    signaturePad.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById('signature-input').value = '';
+}
+
+function updateSignatureInput() {
+    document.getElementById('signature-input').value = canvas.toDataURL('image/png');
+}
+
+// On form submit, update the signature input
+document.getElementById('promissoryForm').addEventListener('submit', function() {
+    updateSignatureInput();
+});
+</script>
 @endsection
 
 

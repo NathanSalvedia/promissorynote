@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Contracts\Mail\Mailable;
 use App\Mail\PromissoryNoteApproved;
+use App\Mail\PromissoryNoteRejected;
+use App\Services\SmsService;
 
 class AdminDashboardController extends Controller
 {
@@ -38,8 +40,11 @@ class AdminDashboardController extends Controller
             $query->where('department', $request->input('department'));
         }
 
-        $notes = $query->get();
+        // Get all notes including resubmissions
+        $notes = $query->orderByDesc('created_at')->get();
 
+        // Optionally, you can get resubmissions separately if you want to highlight them
+        $resubmissions = $notes->whereNotNull('parent_pn_id');
 
         $notes = $notes->sortBy(function($note) {
             return $note->pn_id;
@@ -72,6 +77,7 @@ class AdminDashboardController extends Controller
             ->where('is_read', false)
             ->count();
 
+        // Pass $resubmissions to the view if you want to display them separately
         return view('admin.admindashboard', compact(
             'notes',
             'totalNotes',
@@ -80,7 +86,8 @@ class AdminDashboardController extends Controller
             'rejectedNotes',
             'departments',
             'notifications',
-            'unreadCount'
+            'unreadCount',
+            'resubmissions'
         ));
     }
 
@@ -115,7 +122,7 @@ class AdminDashboardController extends Controller
     /**
      * Approve a promissory note → also mark as settled.
      */
-    public function approve($pn_id)
+    public function approve($pn_id, \App\Services\SmsService $smsService)
     {
         $note = PromissoryNote::findOrFail($pn_id);
         $note->status = 'approved';
@@ -131,9 +138,17 @@ class AdminDashboardController extends Controller
         ]);
 
         // Send email notification
-        //if ($note->user && $note->user->email) {
-           // Mail::to($note->user->email)->send(new PromissoryNoteApproved($note));
-       // }
+        if ($note->user && $note->user->email) {
+            Mail::to($note->user->email)->send(new PromissoryNoteApproved($note));
+        }
+
+        // Send SMS notification using phone from promissory note
+        if ($note->phone) {
+            $smsService->send(
+                $note->phone,
+                "Good day! This is from St. Peter's College. I would like to inform you that your promissory form is approved. Kindly proceed to Accounting Window 3 for further assistance and processing. Thank you!"
+            );
+        }
 
         return redirect()->route('admin.dashboard')->with('success', 'Promissory Note approved.');
     }
@@ -141,10 +156,15 @@ class AdminDashboardController extends Controller
     /**
      * Reject a promissory note → keep as unsettled.
      */
-    public function reject($pn_id)
+    public function reject(Request $request, $pn_id)
     {
+        $request->validate([
+            'denial_reason' => 'required|string|max:1000',
+        ]);
+
         $note = PromissoryNote::findOrFail($pn_id);
         $note->status = 'rejected';
+        $note->denial_reason = $request->denial_reason;
         $note->save();
 
         Notification::create([
@@ -155,7 +175,12 @@ class AdminDashboardController extends Controller
             'is_read' => false,
         ]);
 
-        return redirect()->back()->with('success', 'Promissorynote rejected successfully.');
+        // Send email notification if user has email
+        if ($note->user && $note->user->email) {
+            Mail::to($note->user->email)->send(new PromissoryNoteRejected($note));
+        }
+
+        return redirect()->back()->with('success', 'Promissory note rejected successfully.');
     }
 
     /**
@@ -222,6 +247,11 @@ class AdminDashboardController extends Controller
         'is_read' => false,
     ]);
 
+    // Send email notification if user has email
+    if ($note->user && $note->user->email) {
+        Mail::to($note->user->email)->send(new PromissoryNoteRejected($note));
+    }
+
     return redirect()->route('admin.promissorynote-detail', $note->pn_id)
         ->with('success', 'Request denied and notification sent.');
 }
@@ -237,5 +267,22 @@ class AdminDashboardController extends Controller
             ->get();
 
         return view('admin.admin-notfication-view', compact('notifications'));
+    }
+
+    public function markNotificationsRead(Request $request)
+    {
+        $adminId = Auth::id();
+        Notification::where('user_id', $adminId)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+        return response()->json(['success' => true]);
+    }
+
+    public function markSingleNotificationRead($id)
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->is_read = true;
+        $notification->save();
+        return response()->json(['success' => true]);
     }
 }

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\SupportingDocument;
+use App\Models\User;
+use App\Models\PromissoryNote;
 
 class Notification extends Model
 {
@@ -28,9 +30,8 @@ class Notification extends Model
         return $this->belongsTo(PromissoryNote::class, 'pn_id', 'pn_id');
     }
 
-
-     public function supportingDocuments()
-{
-    return $this->hasMany(SupportingDocument::class, 'pn_id', 'pn_id');
-}
+    public function supportingDocuments()
+    {
+        return $this->hasMany(SupportingDocument::class, 'pn_id', 'pn_id');
+    }
 }

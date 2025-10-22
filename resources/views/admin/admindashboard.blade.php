@@ -168,12 +168,6 @@
                                                         <iconify-icon icon="mdi:check"></iconify-icon>
                                                     </button>
                                                 </form>
-                                                <form method="POST" action="{{ route('admin.promissory.reject', $note->pn_id) }}" style="display:inline-block;">
-                                                    @csrf
-                                                    <button type="submit" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-red-600 hover:bg-red-700 text-white" title="Reject">
-                                                        <iconify-icon icon="mdi:close"></iconify-icon>
-                                                    </button>
-                                                </form>
                                             @endif
                                             <a href="{{ route('admin.promissorynote-detail', $note->pn_id) }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-blue-600 hover:bg-blue-700 text-white" title="View">
                                                 <iconify-icon icon="mdi:eye-outline"></iconify-icon>

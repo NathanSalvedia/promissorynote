@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('student_account_subledger', function (Blueprint $table) {
         $table->bigIncrements('subledger_id');
        $table->unsignedBigInteger('user_id');
-        $table->foreign('user_id')->references('id')->on('users');
+
         $table->string('school_year');
         $table->string('semester');
         $table->date('date');
@@ -23,6 +23,9 @@ return new class extends Migration
         $table->decimal('credit', 10, 2)->default(0);
         $table->decimal('balance', 10, 2)->default(0);
         $table->timestamps();
+
+
+          $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

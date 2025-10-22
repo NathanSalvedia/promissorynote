@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('promissory_notes', function (Blueprint $table) {
-            $table->string('status')->default('pending')->after('due_date');
+            if (!Schema::hasColumn('promissory_notes', 'status')) {
+                $table->string('status')->default('pending')->after('due_date');
+            }
         });
     }
 

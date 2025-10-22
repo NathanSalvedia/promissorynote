@@ -24,7 +24,20 @@
             <div class="flex items-center gap-6">
 
                 <div x-data="{ open: false }" class="relative">
-                    <button @click="open = !open" class="relative text-[#660809] hover:text-[#000000]">
+                    <button
+                        @click="
+                            open = !open;
+                            if(open) {
+                                fetch('{{ route('student.notifications.markRead') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        'Accept': 'application/json'
+                                    }
+                                });
+                            }
+                        "
+                        class="relative text-[#660809] hover:text-[#000000]">
                         <iconify-icon icon="mdi:bell-outline" class="text-2xl"></iconify-icon>
                         @if(isset($unreadCount) && $unreadCount > 0)
                             <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs px-1.5 rounded-full">{{ $unreadCount }}</span>
@@ -49,7 +62,7 @@
                                         Please verify your email address.
                                         <form method="POST" action="{{ route('verification.send') }}" class="inline">
                                             @csrf
-                                            <button type="submit" class="text-blue-600 underline hover:text-blue-800 font-semibold">Resend Verification Email</button>
+                                            <button type="submit" class="text-[#660809] underline hover:text-black font-semibold">Resend Verification Email</button>
                                         </form>
                                         <br>
                                         <span class="text-xs text-gray-500">{{ now()->diffForHumans() }}</span>

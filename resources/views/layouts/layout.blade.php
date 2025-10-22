@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://code.iconify.design/2/2.2.1/iconify.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
@@ -22,7 +23,7 @@
 <body class="bg-gray-100 font-sans">
     @yield('content')
 
-   <!-- Removed duplicate Iconify script -->
+   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
    <script src="{{ asset('js/main.js') }}"></script>
    <script src="{{ asset('js/reuse.js') }}"></script>
   {{-- apexcharts is bundled via Vite (resources/js/app.js) --}}

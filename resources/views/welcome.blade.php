@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'My.SPC')
+@section('title', 'SPC Promissorynote')
 
 @section('content')
 
@@ -25,8 +25,10 @@
 
             <nav class="hidden md:flex items-center gap-5 font-semibold text-[12px]"></nav>
 
+            {{-- ✅ Login button --}}
             <a href="{{ route('auth.login') }}"
-               class="justify-self-end bg-[#660809] text-white px-3 py-1.5 rounded-md shadow hover:bg-black flex items-center gap-1 text-[12px]">
+               id="login-btn"
+               class="justify-self-end bg-[#660809] text-white px-3 py-1.5 rounded-md shadow hover:bg-black flex items-center gap-1 text-[12px] relative z-30">
                 <iconify-icon icon="mdi:login" class="text-sm"></iconify-icon>
                 Login
             </a>
@@ -35,24 +37,29 @@
 </header>
 
 {{-- ✅ Hero Section --}}
-<div class="relative min-h-[calc(100vh-120px)]">
-    {{-- Background image --}}
-    <img src="{{ asset('img/background.jpg') }}"
-        alt="Background"
-        class="absolute inset-0 w-full h-full object-cover">
-    <div class="absolute inset-0 bg-black/60"></div>
+<div class="relative min-h-[calc(100vh-120px)] overflow-hidden">
 
-    {{-- ✅ Popup Cards Container (moved down a bit) --}}
-    <div class="relative z-10 flex justify-end h-full pr-8">
+    {{-- ✅ Slideshow --}}
+    <div id="slideshow" class="absolute inset-0 w-full h-full z-0">
+        <img src="{{ asset('img/background1.jpg') }}" class="slide active" alt="Slide 1">
+        <img src="{{ asset('img/background2.jpg') }}" class="slide" alt="Slide 2">
+        <img src="{{ asset('img/background3.jpg') }}" class="slide" alt="Slide 3">
+    </div>
+
+    {{-- ✅ Overlay --}}
+    <div class="absolute inset-0 bg-black/60 z-10"></div>
+
+    {{-- ✅ Popup Cards --}}
+    <div class="relative z-20 flex justify-end h-full pr-8">
         <div id="popup-cards"
              class="opacity-0 translate-x-10 transition-all duration-1000 ease-out flex flex-col gap-5 max-w-sm w-full sm:w-[350px] mt-24 mb-10">
 
-            {{-- Student Portal Card --}}
+            {{-- Student Portal --}}
             <a href="#"
                class="block bg-white/15 text-white backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-white/20
                       hover:bg-white/25 hover:scale-[1.03] transition duration-300 ease-in-out group">
                 <div class="flex items-start gap-4">
-                    <iconify-icon icon="mdi:school-outline" class="text-4xl text-white/90 group-hover:text-yellow-300 transition"></iconify-icon>
+                    <iconify-icon icon="mdi:school-outline" class="text-4xl text-white/90 group-hover:text-[#660809] transition"></iconify-icon>
                     <div>
                         <h3 class="font-extrabold text-lg">Student Portal</h3>
                         <p class="text-sm opacity-80 mt-1">Submit promissory notes, track status, and manage payments.</p>
@@ -60,12 +67,12 @@
                 </div>
             </a>
 
-            {{-- Admin Dashboard Card --}}
+            {{-- Admin Dashboard --}}
             <a href="#"
                class="block bg-white/15 text-white backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-white/20
                       hover:bg-white/25 hover:scale-[1.03] transition duration-300 ease-in-out group">
                 <div class="flex items-start gap-4">
-                    <iconify-icon icon="mdi:shield-account-outline" class="text-4xl text-white/90 group-hover:text-yellow-300 transition"></iconify-icon>
+                    <iconify-icon icon="mdi:shield-account-outline" class="text-4xl text-white/90 group-hover:text-[#660809] transition"></iconify-icon>
                     <div>
                         <h3 class="font-extrabold text-lg">Admin Dashboard</h3>
                         <p class="text-sm opacity-80 mt-1">Manage records, approve requests, and handle user accounts.</p>
@@ -73,12 +80,12 @@
                 </div>
             </a>
 
-            {{-- Analytics & Reports Card --}}
+            {{-- Analytics & Reports --}}
             <a href="#"
                class="block bg-white/15 text-white backdrop-blur-lg p-6 rounded-2xl shadow-2xl border border-white/20
                       hover:bg-white/25 hover:scale-[1.03] transition duration-300 ease-in-out group">
                 <div class="flex items-start gap-4">
-                    <iconify-icon icon="mdi:chart-line" class="text-4xl text-white/90 group-hover:text-yellow-300 transition"></iconify-icon>
+                    <iconify-icon icon="mdi:chart-line" class="text-4xl text-white/90 group-hover:text-[#660809] transition"></iconify-icon>
                     <div>
                         <h3 class="font-extrabold text-lg">Analytics & Reports</h3>
                         <p class="text-sm opacity-80 mt-1">Track trends, demographics, and generate reports.</p>
@@ -87,5 +94,126 @@
             </a>
         </div>
     </div>
+
+    {{-- ✅ Dots --}}
+    <div id="dots" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
 </div>
+
+{{-- ✅ Transparent Loading Box with SPC Logo --}}
+<div id="loading-overlay" class="fixed inset-0 bg-black/40 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 z-50">
+    <div class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-6 rounded-2xl shadow-2xl flex flex-col items-center animate-fadeIn">
+        <img src="/img/logo.png" alt="SPC Logo" class="spc-logo mb-3 w-28 animate-bounce">
+        <p class="text-[#660809] font-semibold text-sm tracking-wide animate-pulse">Loading...</p>
+    </div>
+</div>
+
+<script>
+window.addEventListener('load', () => {
+    const cards = document.getElementById('popup-cards');
+    setTimeout(() => {
+        cards.classList.remove('opacity-0', 'translate-x-10');
+        cards.classList.add('opacity-100', 'translate-x-0');
+    }, 500);
+
+    const slides = document.querySelectorAll('#slideshow .slide');
+    const dots = document.querySelectorAll('#dots .dot');
+    let index = 0;
+
+    function showSlide(i) {
+        slides.forEach((slide, idx) => {
+            slide.classList.toggle('active', idx === i);
+            dots[idx].classList.toggle('active', idx === i);
+        });
+    }
+
+    setInterval(() => {
+        index = (index + 1) % slides.length;
+        showSlide(index);
+    }, 5000);
+
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+            index = i;
+            showSlide(index);
+        });
+    });
+
+    // ✅ Login SPC Logo Loading Animation
+    const loginBtn = document.getElementById('login-btn');
+    const overlay = document.getElementById('loading-overlay');
+    loginBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        overlay.classList.add('opacity-100');
+
+        setTimeout(() => {
+            window.location.href = loginBtn.getAttribute('href');
+        }, 2000);
+    });
+});
+</script>
+
+<style>
+#slideshow {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+#slideshow .slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0;
+    transform: scale(1);
+    transition: opacity 1.5s ease-in-out, transform 6s ease-in-out;
+}
+#slideshow .slide.active {
+    opacity: 1;
+    transform: scale(1.08);
+}
+
+/* ✅ Dots */
+#dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 9999px;
+    background-color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+#dots .dot.active {
+    background-color: #660809;
+    transform: scale(1.3);
+}
+#dots .dot:hover {
+    background-color: black;
+}
+
+/* ✅ SPC Logo Animation */
+.spc-logo {
+    animation: floatLogo 1.5s ease-in-out infinite;
+}
+@keyframes floatLogo {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+/* ✅ Fade In */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+.animate-fadeIn {
+    animation: fadeIn 0.4s ease-out;
+}
+</style>
+
 @endsection

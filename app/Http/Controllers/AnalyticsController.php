@@ -11,6 +11,40 @@ use Carbon\Carbon;
 
 class AnalyticsController extends Controller
 {
+    // Add this function to extract keywords
+    private function extractKeywords($text)
+    {
+        $text = trim($text);
+
+        // 1. Try to extract after common triggers
+        $triggers = ['because', 'due to', 'caused by', 'as', 'since', 'after', 'when'];
+        foreach ($triggers as $trigger) {
+            $pos = stripos($text, $trigger);
+            if ($pos !== false) {
+
+                $phrase = substr($text, $pos);
+
+                $words = preg_split('/\s+/', $phrase);
+                $length = count($words) >= 12 ? 12 : (count($words) >= 8 ? 8 : count($words));
+                $phrase = implode(' ', array_slice($words, 0, $length));
+                return ucfirst(trim($phrase, " ."));
+            }
+        }
+
+        if (preg_match('/(facing|experiencing|having|struggling with|suffering from)\s+([^.]+)/i', $text, $matches)) {
+            $words = preg_split('/\s+/', $matches[0]);
+            $length = count($words) >= 12 ? 12 : (count($words) >= 8 ? 8 : count($words));
+            $phrase = implode(' ', array_slice($words, 0, $length));
+            return ucfirst(trim($phrase, " ."));
+        }
+
+
+        $words = preg_split('/\s+/', $text);
+        $length = count($words) >= 12 ? 12 : (count($words) >= 8 ? 8 : count($words));
+        $phrase = implode(' ', array_slice($words, 0, $length));
+        return ucfirst(trim($phrase, " ."));
+    }
+
     public function index()
     {
         $today = Carbon::today();
@@ -24,12 +58,18 @@ class AnalyticsController extends Controller
         foreach ($reasonData as $r) {
             if (strtolower($r->reason) === 'other' && !empty($r->other_reason)) {
                 $label = ucfirst(trim($r->other_reason));
+                // If label is too long, use keywords
+                if (strlen($label) > 30) {
+                    $label = ucfirst($this->extractKeywords($label));
+                }
                 $otherReasons[$label] = ($otherReasons[$label] ?? 0) + 1;
             } else {
                 $label = ucfirst(trim($r->reason));
                 $mainReasons[$label] = ($mainReasons[$label] ?? 0) + 1;
             }
         }
+
+
 
         // Sort alphabetically for neater charts
         ksort($mainReasons);
@@ -66,6 +106,12 @@ class AnalyticsController extends Controller
             ->pluck('cnt', 'academic_year')
             ->toArray();
 
+        $perTerm = PromissoryNote::select('term', DB::raw('count(*) as cnt'))
+            ->groupBy('term')
+            ->orderBy('term')
+            ->pluck('cnt', 'term')
+            ->toArray();
+
         // 4) Department / Course / College / Year level / Gender
         $dept = PromissoryNote::select('department', DB::raw('count(*) as cnt'), DB::raw('COALESCE(SUM(amount),0) as total'))
             ->groupBy('department')
@@ -85,12 +131,6 @@ class AnalyticsController extends Controller
             ->groupBy('users.college')
             ->pluck('cnt', 'college')
             ->toArray();
-
-        // $perTerm = PromissoryNote::select('academic_term', DB::raw('count(*) as cnt'))
-        // ->groupBy('academic_term')
-        // ->orderBy('academic_term')
-        // ->pluck('cnt', 'academic_term')
-        // ->toArray();
 
         $gender = PromissoryNote::select('gender', DB::raw('count(*) as cnt'))
             ->groupBy('gender')
@@ -212,13 +252,12 @@ $downpaymentBuckets = PromissoryNote::whereNotNull('down_payment')
             'gender' => $gender,
             'yearLevel' => $year,
             'reason' => $reason,
-
             'partialPaymentBuckets' => $partialPayments,
             'downpaymentBuckets' => $downpaymentBuckets,
             'amountBuckets' => $amountBuckets,
             'mainReasons' => $mainReasons,
             'otherReasons' => $otherReasons,
-            // 'perTerm' => $perTerm,
+            'perTerm' => $perTerm,
             'payments' => [
                 'fullyPaid' => $fullyPaid,
                 'partial' => $partial,

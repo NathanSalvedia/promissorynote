@@ -8,6 +8,8 @@ use App\Models\Downpayment;
 use App\Models\PromissoryNote;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use App\Enums\Role;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,10 +21,12 @@ class DatabaseSeeder extends Seeder
         $faker = Faker::create();
 
         // Create admin user if not exists
-        /*
+          /*
         User::factory()->create([
             'fullname' => 'Admin user',
             'email' => 'adminuser@example.com',
+            'password' => Hash::make('adminpassword'), // <-- IMPORTANT!
+            'role' => Role::ADMIN->value,
             'course' => 'N/A',
             'student_id' => 0,
             'year_level' => 'N/A',
@@ -30,15 +34,15 @@ class DatabaseSeeder extends Seeder
             'gender' => 'N/A',
             'submission_count' => 0,
         ]);
+        */
 
-         */
 
 
 
        User::all()->each(function ($user) use ($faker) {
 
       //AccountSubledger::where('user_id', $user->id)->delete();
-             /*
+
         // Generate initial 4 Set 1 entries if not already present
         $set1Count = AccountSubledger::where('user_id', $user->id)
             ->where('school_year', '2025-2026')
@@ -89,11 +93,11 @@ class DatabaseSeeder extends Seeder
 
             AccountSubledger::insert($entries);
         }
-            */
+
 
         //======================================================//
 
-
+         /*
         $promissoryNote = PromissoryNote::where('user_id', $user->id)->first();
 
         if ($promissoryNote) {
@@ -174,7 +178,7 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
-
+            */
 
    //======================================================//
     /*

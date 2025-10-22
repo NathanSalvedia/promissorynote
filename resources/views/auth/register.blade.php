@@ -3,11 +3,12 @@
 @section('content')
 
 <div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="bg-gray-100 p-10 rounded-xl shadow-lg w-full max-w-lg">
+    <div class="bg-gray-100 p-10 rounded-xl shadow-lg w-full max-w-3xl">
         <h2 class="text-3xl font-bold mb-8 text-gray-800 text-center">Register</h2>
         <form action="{{ route('register') }}" method="POST">
             @csrf
             <input type="hidden" name="role" value="student">
+
             <div class="mb-6">
                 <label for="fullname" class="block text-md font-medium text-black mb-1">Full Name</label>
                 <input type="text" id="fullname" name="fullname" value="{{ old('fullname') }}" class="@error('fullname') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">

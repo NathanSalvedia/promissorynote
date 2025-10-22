@@ -137,7 +137,7 @@
                 </section>
 
                 {{-- Attachments --}}
-                <section class="card-section">
+               <section class="card-section">
                     <span class="font-semibold text-lg mb-4 block text-gray-700">Attachments:</span>
                     @if($note->supportingDocuments && $note->supportingDocuments->count())
                         @php

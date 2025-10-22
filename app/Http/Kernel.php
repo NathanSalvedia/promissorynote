@@ -28,8 +28,8 @@ class Kernel extends HttpKernel
      * router can resolve middleware by short name.
      */
     protected $middlewareAliases = [
-        'admin' => \App\Http\Middleware\AdminMiddleware::class,
-        // ...other route middleware...
+        // ...other middleware...
+        'is_admin' => \App\Http\Middleware\IsAdmin::class,
     ];
 
     /**
@@ -38,10 +38,12 @@ class Kernel extends HttpKernel
      * @var array<string, class-string>
      */
     protected $routeMiddleware = [
-       // 'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        // 'admin' => \App\Http\Middleware\AdminMiddleware::class,
         // ...other route middleware...
 
-     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+
     ];
 
 

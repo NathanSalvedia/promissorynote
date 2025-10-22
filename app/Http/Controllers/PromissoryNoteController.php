@@ -14,32 +14,29 @@ use App\Models\PartialPayment;
 use App\Models\Period;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PromissoryNoteSubmitted;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use App\Models\Downpayment;
+use Illuminate\Support\Facades\Log;
 
 class PromissoryNoteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $user = Auth::user();
 
-        // Get notifications for the user
         $notifications = Notification::where('user_id', $user->id)
             ->orderByDesc('sent_at')
             ->get();
 
-        // Count unread notifications
         $unreadCount = $notifications->where('is_read', false)->count();
 
-        // Add email verification notification if not verified
         if (is_null($user->email_verified_at)) {
             $verificationNotification = (object)[
                 'content' => 'Please verify your email address.',
                 'is_read' => false,
                 'sent_at' => now(),
             ];
-            // Prepend to notifications
             $notifications->prepend($verificationNotification);
             $unreadCount += 1;
         }
@@ -47,17 +44,11 @@ class PromissoryNoteController extends Controller
         return view('student.promissorynote', compact('notifications', 'unreadCount'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('student.promissorynoteform');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $user = Auth::user();
@@ -73,21 +64,30 @@ class PromissoryNoteController extends Controller
                 ->with('error', 'Settle your previous promissory note before submitting a new application.');
         }
 
+        $parentPnId = $request->input('parent_pn_id');
+
         $validated = $request->validate([
             'gender'        => 'required|string|max:10',
             'department'    => 'required|string|max:100',
             'course'        => 'required|string|max:250',
-            'phone'         => 'required|string|max:20',
+            'phone'         => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('promissory_notes', 'phone')->ignore($parentPnId, 'pn_id'),
+            ],
             'year_level'    => 'required|string|max:20',
             'amount'        => 'required|numeric',
             'reason'        => 'required|string',
             'other_reason'  => 'required_if:reason,Other|max:255',
             'academic_year' => 'required|string',
             'semester'      => 'required|string',
+            'term'          => 'required|string',
             'down_payment'  => 'nullable|numeric|min:0',
             'due_date'      => 'required|date|after_or_equal:today',
             'attachments'   => 'nullable',
             'attachments.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'signature_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'parent_pn_id'  => 'nullable|integer',
         ]);
 
@@ -99,7 +99,6 @@ class PromissoryNoteController extends Controller
         } else {
             $validated['other_reason'] = null;
         }
-
 
         $assessmentBalance = AccountSubledger::where('user_id', $user->id)
             ->where('school_year', $request->academic_year)
@@ -119,9 +118,32 @@ class PromissoryNoteController extends Controller
 
         $promissoryNote = PromissoryNote::create($validated);
 
+        // Handle electronic signature (prefer uploaded image)
+        if ($request->hasFile('signature_image')) {
+            $file = $request->file('signature_image');
+            $fileName = 'signature_' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'signatures/' . $fileName;
+            $file->storeAs('signatures', $fileName, 'public');
+            $promissoryNote->signature_path = $filePath;
+            $promissoryNote->save();
+        } elseif ($request->filled('signature')) {
+            $signatureData = $request->input('signature');
+            if (preg_match('/^data:image\/(\w+);base64,/', $signatureData, $type)) {
+                $signatureData = substr($signatureData, strpos($signatureData, ',') + 1);
+                $type = strtolower($type[1]);
+                $signatureData = base64_decode($signatureData);
+                $fileName = 'signature_' . time() . '.' . $type;
+                $filePath = 'signatures/' . $fileName;
+                Storage::disk('public')->put($filePath, $signatureData);
+                $promissoryNote->signature_path = $filePath;
+                $promissoryNote->save();
+            }
+        }
+
         Period::create([
             'pn_id'        => $promissoryNote->pn_id,
             'semester'     => $validated['semester'],
+            'term'         => $validated['term'],
             'academic_year'=> $validated['academic_year'],
         ]);
 
@@ -129,6 +151,13 @@ class PromissoryNoteController extends Controller
             'pn_id'          => $promissoryNote->pn_id,
             'payment_amount' => $validated['amount'],
             'due_date'       => $validated['due_date'] ?? null,
+        ]);
+
+        Downpayment::create([
+            'user_id'       => $user->id,
+            'academic_year' => $validated['academic_year'],
+            'downpayment'   => $validated['down_payment'] ?? 0,
+            'allocated_at'  => now(),
         ]);
 
         if ($promissoryNote->due_date) {
@@ -152,7 +181,7 @@ class PromissoryNoteController extends Controller
             ]);
         }
 
-        if ($request->hasFile('attachments')) {
+      if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
                 if ($file) {
                     $fileName = time() . '_' . $file->getClientOriginalName();
@@ -169,91 +198,67 @@ class PromissoryNoteController extends Controller
             }
         }
 
-        // Send email notification to the user
-       Mail::to($user->email)->send(new PromissoryNoteSubmitted($promissoryNote));
+        Mail::to($user->email)->send(new PromissoryNoteSubmitted($promissoryNote));
 
         return redirect()->route('student.dashboard')
             ->with('success', 'Promissory Note submitted successfully. An email notification has been sent.');
     }
 
-         /**
-          * Display the specified resource.
-          */
-              public function show(string $id)
-          {
-
-
-             //
-          }
-
-
-
-
-        /**
-         * Display a specific promissory note for viewing.
-         */
-        public function view($id)
-        {
-            $note = PromissoryNote::with('supportingDocuments', 'user')->findOrFail($id);
-
-            $set1Entries = AccountSubledger::where('user_id', $note->user_id)
-                ->where('school_year', $note->academic_year)
-                ->where('semester', '1')
-                ->orderBy('date')
-                ->orderBy('subledger_id')
-                ->get();
-
-
-            $assessmentBalance = isset($set1Entries[3]) ? (float)str_replace(',', '', $set1Entries[3]->balance) : 0;
-            $partialPayment = $note->amount ?? 0;
-            $remainingBalance = max(0, $assessmentBalance - $partialPayment);
-
-            return view('student.promissorynote_view', compact(
-                'note',
-                'assessmentBalance',
-                'partialPayment',
-                'remainingBalance'
-            ));
-        }
-
-       /**
-        * Show the form for editing the specified resource.
-        */
-        public function edit(string $id)
-       {
-         //
-       }
-
-       /**
-       * Update the specified resource in storage.
-       */
-       public function update(Request $request, string $id)
-       {
+    public function show(string $id)
+    {
         //
-       }
+    }
 
-       /**
-       * Remove the specified resource from storage.
-       */
-       public function destroy(string $id)
-      {
+    public function view($id)
+    {
+        $note = PromissoryNote::with('supportingDocuments', 'user')->findOrFail($id);
+
+        $set1Entries = AccountSubledger::where('user_id', $note->user_id)
+            ->where('school_year', $note->academic_year)
+            ->where('semester', '1')
+            ->orderBy('date')
+            ->orderBy('subledger_id')
+            ->get();
+
+        $assessmentBalance = isset($set1Entries[3]) ? (float)str_replace(',', '', $set1Entries[3]->balance) : 0;
+        $partialPayment = $note->amount ?? 0;
+        $remainingBalance = max(0, $assessmentBalance - $partialPayment);
+
+        return view('student.promissorynote_view', compact(
+            'note',
+            'assessmentBalance',
+            'partialPayment',
+            'remainingBalance'
+        ));
+    }
+
+    public function edit(string $id)
+    {
         //
-      }
+    }
 
+    public function update(Request $request, string $id)
+    {
+        //
+    }
 
-       public function checkStatus()
-      {
-         $user = Auth::user();
-         $note = PromissoryNote::where('user_id', $user->id)
-        ->whereIn('status', ['pending', 'approved'])
-        ->where('is_settled', false)
-        ->first();
+    public function destroy(string $id)
+    {
+        //
+    }
 
-       return response()->json(['hasUnsettled' => $note ? true : false]);
-      }
+    public function checkStatus()
+    {
+        $user = Auth::user();
+        $note = PromissoryNote::where('user_id', $user->id)
+            ->whereIn('status', ['pending', 'approved'])
+            ->where('is_settled', false)
+            ->first();
 
+        return response()->json(['hasUnsettled' => $note ? true : false]);
+    }
 
-       public function recordPayment($pn_id)
+    public function recordPayment($pn_id)
     {
         $note = PromissoryNote::findOrFail($pn_id);
         $note->is_settled = true;
@@ -270,8 +275,15 @@ class PromissoryNoteController extends Controller
             return redirect()->route('student.dashboard')->with('error', 'Only rejected notes can be resubmitted.');
         }
 
+        $alreadyResubmitted = PromissoryNote::where('parent_pn_id', $note->pn_id)->exists();
+        if ($alreadyResubmitted) {
+            return redirect()->route('student.dashboard')->with('error', 'This note has already been resubmitted.');
+        }
+
         return view('student.promissorynote_resubmit', compact('note'));
     }
+
+
 }
 
 

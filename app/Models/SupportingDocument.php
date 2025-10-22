@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SupportingDocument extends Model
 {
+    protected $primaryKey = 'document_id';
+
     protected $fillable = [
         'pn_id',
         'file_name',

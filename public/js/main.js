@@ -171,9 +171,13 @@ function reviewApplication() {
 
     const entries = [];
     const attachments = [];
+    let signatureValue = null;
+
     for (let [key, value] of formData.entries()) {
         if (key !== "_token" && value) {
-            if (value instanceof File && value.name) {
+            if (key === "signature" && value.startsWith('data:image')) {
+                signatureValue = value; // Do NOT push to entries!
+            } else if (value instanceof File && value.name) {
                 attachments.push({ key, value, isFile: true });
             } else {
                 entries.push({ key, value, isFile: false });
@@ -214,6 +218,16 @@ function reviewApplication() {
         `;
     }
 
+    // Render electronic signature as image (not as text)
+    if (signatureValue) {
+        htmlContent += `
+            <div class="col-span-2 mt-4">
+                <span class="font-semibold text-gray-700 block mb-2">ELECTRONIC SIGNATURE:</span>
+                <img src="${signatureValue}" alt="Electronic Signature" class="max-w-[300px] border rounded shadow">
+            </div>
+        `;
+    }
+
     htmlContent += `</div></div></div>`;
 
     Swal.fire({
@@ -239,14 +253,6 @@ function reviewApplication() {
         }
     });
 }
-
-function toggleAll(source) {
-    const checkboxes = document.getElementsByName('selected[]');
-    for (let i = 0, n = checkboxes.length; i < n; i++) {
-        checkboxes[i].checked = source.checked;
-    }
-}
-
 
 
 document.addEventListener('DOMContentLoaded', function() {

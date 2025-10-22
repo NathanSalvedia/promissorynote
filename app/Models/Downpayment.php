@@ -10,7 +10,7 @@ class Downpayment extends Model
 
     protected $fillable = [
         'user_id',
-        'school_year',
+        'academic_year',
         'downpayment',
         'allocated_at',
     ];

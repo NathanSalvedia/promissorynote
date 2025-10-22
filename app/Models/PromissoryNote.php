@@ -12,7 +12,7 @@ class PromissoryNote extends Model
     protected $primaryKey = 'pn_id';
     protected $fillable = [
         'user_id', 'gender', 'course', 'department', 'phone', 'year_level', 'amount', 'reason', 'other_reason',
-        'academic_year', 'semester', 'down_payment', 'due_date', 'attachments', 'status', 'is_settled', 'parent_pn_id'
+        'academic_year', 'semester', 'term', 'down_payment', 'due_date', 'attachments', 'status', 'is_settled', 'parent_pn_id', 'signature_path'
     ];
 
 
@@ -36,10 +36,9 @@ class PromissoryNote extends Model
     return $this->hasOne(Approve::class, 'pn_id', );
   }
 
-  public function supportingDocuments()
-  {
-      return $this->hasMany(SupportingDocument::class, 'pn_id', 'pn_id');
-  }
+  public function supportingDocuments() {
+    return $this->hasMany(SupportingDocument::class, 'pn_id', 'pn_id');
+}
 
   public function payments()
   {

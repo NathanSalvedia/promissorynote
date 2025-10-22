@@ -48,7 +48,7 @@ class CreateNewUser implements CreatesNewUsers
                 'fullname' => $data['fullname'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
-                'role'=> $data['role'],
+                'role'=> $data['role'] ?? Role::STUDENT->value,
                 'course' => $data['course'],
                 'student_id' => $data['student_id'],
                 'year_level' => $data['year_level'],
