@@ -228,13 +228,63 @@ class AdminDashboardController extends Controller
 
 
     public function downloadArchivedNote($pn_id)
-  {
-    $note = PromissoryNote::with('user')->findOrFail($pn_id);
-    $pdf = Pdf::loadView('admin.pdf.archived-note', compact('note'));
-    return $pdf->download('PN-'.$note->pn_id.'.pdf');
-  }
+    {
+        $note = PromissoryNote::with('supportingDocuments', 'user')->findOrFail($pn_id);
 
-  public function deny(Request $request, $pn_id, \App\Services\SmsService $smsService)
+        // Get subledger entries for the correct computation (same logic as in show())
+        $set1Entries = AccountSubledger::where('user_id', $note->user_id)
+            ->where('school_year', $note->academic_year)
+            ->where('semester', '1')
+            ->orderBy('date')
+            ->orderBy('subledger_id')
+            ->get();
+
+        $assessmentBalance = isset($set1Entries[3]) ? (float)str_replace(',', '', $set1Entries[3]->balance) : 0;
+        $partialPayment = $note->amount ?? 0;
+        $remainingBalance = max(0, $assessmentBalance - $partialPayment);
+
+        // Prepare images as base64
+        $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
+        $images = [];
+        if ($note->supportingDocuments) {
+            foreach ($note->supportingDocuments as $doc) {
+                $ext = strtolower(pathinfo($doc->file_name, PATHINFO_EXTENSION));
+                if (in_array($ext, $imageExts)) {
+                    $path = storage_path('app/private/' . ltrim($doc->file_path, '/'));
+                    if (file_exists($path)) {
+                        $type = pathinfo($path, PATHINFO_EXTENSION);
+                        $data = file_get_contents($path);
+                        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+                        $images[] = $base64;
+                    }
+                }
+            }
+        }
+
+        // Signature as base64
+        $signatureBase64 = null;
+        if (!empty($note->signature_path)) {
+            $sigPath = storage_path('app/private/' . ltrim($note->signature_path, '/'));
+            if (file_exists($sigPath)) {
+                $type = pathinfo($sigPath, PATHINFO_EXTENSION);
+                $data = file_get_contents($sigPath);
+                $signatureBase64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            }
+        }
+
+        $pdf = \PDF::loadView('admin.pdf.archived-note', [
+            'note' => $note,
+            'assessmentBalance' => $assessmentBalance,
+            'partialPayment' => $partialPayment,
+            'remainingBalance' => $remainingBalance,
+            'images' => $images,
+            'signatureBase64' => $signatureBase64,
+        ]);
+
+        return $pdf->download('promissory_note.pdf');
+    }
+
+  public function deny(Request $request, $pn_id, SmsService $smsService)
   {
       $request->validate([
           'denial_reason' => 'required|string|max:1000',
