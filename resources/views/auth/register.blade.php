@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="min-h-screen flex items-center justify-center bg-gray-100 px-2">
-    <div class="bg-gray-100 p-4 sm:p-10 rounded-xl shadow-lg w-full max-w-lg">
+    <div class="bg-gray-100 p-4 sm:p-10 rounded-xl shadow-lg w-full max-w-4xl"> {{-- Changed max-w-lg to max-w-4xl for wider form --}}
         <h2 class="text-3xl font-bold mb-8 text-gray-800 text-center">Register</h2>
         <form action="{{ route('register') }}" method="POST">
             @csrf
@@ -18,16 +18,28 @@
             </div>
 
             <div class="mb-6">
-                <label for="email" class="block text-md font-medium text-black mb-1">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" class="@error('email') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
-                @error('email')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="email" class="block text-md font-medium text-black mb-1">Email</label>
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" class="@error('email') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
+                        @error('email')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="phone_number" class="block text-md font-medium text-black mb-1">Phone Number</label>
+                        <input type="text" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" class="@error('phone_number') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm" required>
+                        @error('phone_number')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
             </div>
+
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div>
-                    <label for="course" class="@error('course') text-red-600 @enderror block text-md font-medium text-black mb-1">Course</label>
+                    <label for="course" class="@error('course')  @enderror block text-md font-medium text-black mb-1">Course</label>
                     <select id="course"
                         name="course"
                         class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm @error('course') @enderror">

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Notification;
 use App\Models\Payment;
 use App\Models\AccountSubledger;
+use App\Models\User;
+use App\Notifications\PaymentCompleted;
 
 class PaymentTrackingController extends Controller
 {
@@ -21,8 +23,6 @@ class PaymentTrackingController extends Controller
         $overdue = 0;
         $totalCollected = 0;
         $downPayments = [];
-
-
 
         foreach ($notes as $note) {
             $paid = $note->payments->sum('amount') + $note->down_payment;
@@ -40,8 +40,6 @@ class PaymentTrackingController extends Controller
             }
         }
 
-
-
         $adminId = Auth::id();
 
         $notifications = Notification::where('user_id', $adminId)
@@ -52,7 +50,6 @@ class PaymentTrackingController extends Controller
         $unreadCount = Notification::where('user_id', $adminId)
             ->where('is_read', false)
             ->count();
-
 
         $avgDownPayment = count($downPayments) ? array_sum($downPayments) / count($downPayments) : 0;
 
@@ -93,14 +90,19 @@ class PaymentTrackingController extends Controller
             'remarks' => 'Recorded from subledger entry 3, set 2',
         ]);
 
-        // Optionally, mark promissory note as settled
+        // Mark promissory note as settled
         $note->is_settled = true;
         $note->save();
 
+        // Send push notification to admin
+        $admin = User::where('role', 'admin')->first();
+        if ($admin) {
+            $admin->notify(new PaymentCompleted($note->user, $note));
+        }
+
+        // Send SMS notification to user
+        $note->user->notify(new PaymentCompleted($note->user, $note));
+
         return redirect()->back()->with('success', 'Payment recorded successfully.');
     }
-
-
-
-
 }

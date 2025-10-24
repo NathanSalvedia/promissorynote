@@ -21,10 +21,11 @@ class DatabaseSeeder extends Seeder
         $faker = Faker::create();
 
         // Create admin user if not exists
-          /*
+         /*
         User::factory()->create([
             'fullname' => 'Admin user',
             'email' => 'adminuser@example.com',
+            'phone_number' => 'N/A',
             'password' => Hash::make('adminpassword'), // <-- IMPORTANT!
             'role' => Role::ADMIN->value,
             'course' => 'N/A',
@@ -42,7 +43,7 @@ class DatabaseSeeder extends Seeder
        User::all()->each(function ($user) use ($faker) {
 
       //AccountSubledger::where('user_id', $user->id)->delete();
-
+       /*
         // Generate initial 4 Set 1 entries if not already present
         $set1Count = AccountSubledger::where('user_id', $user->id)
             ->where('school_year', '2025-2026')
@@ -93,6 +94,7 @@ class DatabaseSeeder extends Seeder
 
             AccountSubledger::insert($entries);
         }
+        */
 
 
         //======================================================//
@@ -181,7 +183,7 @@ class DatabaseSeeder extends Seeder
             */
 
    //======================================================//
-    /*
+
    $set1Table5Entry = AccountSubledger::where('user_id', $user->id)
        ->where('school_year', '2025-2026')
        ->where('semester', '1')
@@ -240,7 +242,7 @@ class DatabaseSeeder extends Seeder
        }
    }
 
-    */
+
       });
 
     }

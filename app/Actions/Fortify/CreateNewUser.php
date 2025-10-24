@@ -20,41 +20,43 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-            // Normalize
-            $data = $input;
-            if (isset($input['year']) && !isset($input['year_level'])) {
-                $data['year_level'] = $input['year'];
-            }
+        // Normalize
+        $data = $input;
+        if (isset($input['year']) && !isset($input['year_level'])) {
+            $data['year_level'] = $input['year'];
+        }
 
-            Validator::make($data, [
-                'fullname' => ['required', 'string', 'max:255'],
-                'email' => [
-                    'required',
-                    'string',
-                    'email',
-                    'max:255',
-                    Rule::unique(User::class),
-                ],
-                'password' => $this->passwordRules(),
-                'role' => ['required', 'string', Rule::in([Role::ADMIN->value, Role::STUDENT->value])],
-                'course' => ['required', 'string', 'max:255'],
-                'student_id' => ['required', 'integer', 'unique:users,student_id'],
-                'year_level' => ['required', 'integer', 'min:1'],
-                'college' => ['required', 'string', 'max:255'],
-                'gender' => ['required', 'string', Rule::in(['male', 'female', 'other'])],
-            ])->validate();
+        Validator::make($data, [
+            'fullname' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique(User::class),
+            ],
+            'phone_number' => ['required', 'string', 'max:20', 'unique:users,phone_number'], // <-- make unique
+            'password' => $this->passwordRules(),
+            'role' => ['required', 'string', Rule::in([Role::ADMIN->value, Role::STUDENT->value])],
+            'course' => ['required', 'string', 'max:255'],
+            'student_id' => ['required', 'integer', 'unique:users,student_id'],
+            'year_level' => ['required', 'integer', 'min:1'],
+            'college' => ['required', 'string', 'max:255'],
+            'gender' => ['required', 'string', Rule::in(['male', 'female', 'other'])],
+        ])->validate();
 
-            return User::create([
-                'fullname' => $data['fullname'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'role'=> $data['role'] ?? Role::STUDENT->value,
-                'course' => $data['course'],
-                'student_id' => $data['student_id'],
-                'year_level' => $data['year_level'],
-                'college' => $data['college'],
-                'gender' => $data['gender'],
-                'submission_count' => 0,
-            ]);
+        return User::create([
+            'fullname' => $data['fullname'],
+            'email' => $data['email'],
+            'phone_number' => $data['phone_number'],
+            'password' => Hash::make($data['password']),
+            'role'=> $data['role'] ?? Role::STUDENT->value,
+            'course' => $data['course'],
+            'student_id' => $data['student_id'],
+            'year_level' => $data['year_level'],
+            'college' => $data['college'],
+            'gender' => $data['gender'],
+            'submission_count' => 0,
+        ]);
     }
 }

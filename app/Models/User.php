@@ -18,8 +18,9 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var list<string>
      */
     protected $fillable = [
-       'fullname',
+        'fullname',
         'email',
+        'phone_number',
         'password',
         'role',
         'course',
@@ -52,5 +53,13 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
             'role' => Role::class
         ];
+    }
+
+    /**
+     * Route notifications for the Nexmo/Vonage channel.
+     */
+    public function routeNotificationForVonage($notification)
+    {
+        return $this->phone_number;
     }
 }

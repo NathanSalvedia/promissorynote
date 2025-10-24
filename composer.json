@@ -11,9 +11,11 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",
+        "laravel-notification-channels/webpush": "^10.2",
         "laravel/fortify": "^1.28",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "laravel/vonage-notification-channel": "^3.3",
         "teamtnt/tntsearch": "^5.0",
         "vonage/client": "^4.2"
     },
