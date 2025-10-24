@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use App\Models\Downpayment;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\Payment;
 
 class PromissoryNoteController extends Controller
 {
@@ -120,12 +120,13 @@ class PromissoryNoteController extends Controller
         $promissoryNote = PromissoryNote::create($validated);
 
         // Handle electronic signature (prefer uploaded image)
+        // Signature upload (image)
         if ($request->hasFile('signature_image')) {
             $file = $request->file('signature_image');
             $fileName = 'signature_' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = 'signatures/' . $fileName;
 
-            $file->storeAs('signatures', $fileName);
+            $file->storeAs('signatures', $fileName, 'private'); // specify 'private' disk
             $promissoryNote->signature_path = $filePath;
             $promissoryNote->save();
         } elseif ($request->filled('signature')) {
@@ -136,7 +137,7 @@ class PromissoryNoteController extends Controller
                 $signatureData = base64_decode($signatureData);
                 $fileName = 'signature_' . time() . '.' . $type;
                 $filePath = 'signatures/' . $fileName;
-                Storage::put($filePath, $signatureData);
+                Storage::disk('private')->put($filePath, $signatureData); // specify 'private' disk
                 $promissoryNote->signature_path = $filePath;
                 $promissoryNote->save();
             }
@@ -162,6 +163,17 @@ class PromissoryNoteController extends Controller
             'allocated_at'  => now(),
         ]);
 
+
+         Payment::create([
+             'pn_id'        => $promissoryNote->pn_id,
+             'user_id'      => $user->id,
+             'amount'       => $validated['amount'],
+             'payment_date' => now(),
+             'created_at'   => now(),
+             'updated_at'   => now(),
+         ]);
+
+
         if ($promissoryNote->due_date) {
             Notification::create([
                 'user_id'   => $user->id,
@@ -184,11 +196,12 @@ class PromissoryNoteController extends Controller
         }
 
         // Store attachments privately
+        // Attachments
         if ($request->hasFile('attachments')) {
             foreach ($request->file('attachments') as $file) {
                 if ($file) {
                     $fileName = time() . '_' . $file->getClientOriginalName();
-                    $filePath = $file->storeAs('supporting_documents', $fileName); // private by default
+                    $filePath = $file->storeAs('supporting_documents', $fileName, 'private'); // specify 'private' disk
 
                     SupportingDocument::create([
                         'pn_id'         => $promissoryNote->pn_id,
@@ -294,7 +307,8 @@ class PromissoryNoteController extends Controller
         $path = $document->file_path;
 
         if (!$disk->exists($path)) {
-            abort(404);
+            \Log::error('File not found: ' . $path);
+            abort(404, 'File not found: ' . $path);
         }
 
 

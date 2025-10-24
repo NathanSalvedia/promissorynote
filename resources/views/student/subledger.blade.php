@@ -10,7 +10,7 @@
             <a href="{{ route('student.dashboard') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded shadow w-full sm:w-auto text-center">&laquo; Back</a>
         </div>
         <div class="overflow-x-auto">
-            <table class="min-w-[700px] text-xs sm:text-sm border border-gray-300 rounded-lg shadow">
+            <table class="min-w-full  text-md sm:text-sm border border-gray-300 rounded-lg shadow">
                 <thead>
                     <tr class="bg-gray-400 text-white">
                         <th class="px-4 py-2 text-left">School Year</th>

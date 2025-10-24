@@ -209,7 +209,7 @@
                         method="POST" class="archive-form" style="display:inline;">
                       @csrf
                       <button type="submit"
-                              class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-lg"
+                              class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-2 rounded-lg archive-btn"
                               title="Archive">
                           <span class="iconify" data-icon="mdi:archive" data-width="20" data-height="20"></span>
                       </button>

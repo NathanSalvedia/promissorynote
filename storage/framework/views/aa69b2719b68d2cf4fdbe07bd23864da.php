@@ -142,7 +142,6 @@
                 
                 <section class="card-section">
                     <span class="font-semibold text-lg mb-4 block text-gray-700">Attachments:</span>
-
                     <?php
                         $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
                         $images = [];
@@ -162,12 +161,14 @@
                                             alt="Attachment"
                                             class="max-w-full max-h-full object-contain"
                                             style="cursor:pointer"
+                                            onerror="this.onerror=null;this.src='<?php echo e(asset('img/no-image.png')); ?>';"
                                             onclick="window.open('<?php echo e(route('admin.attachments.download', $img->document_id)); ?>', '_blank')"
                                         />
                                     </div>
                                 <?php endif; ?>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
+                    <?php else: ?>
                         <div class="mt-2 text-base text-gray-500">No attachments</div>
                     <?php endif; ?>
                 </section>

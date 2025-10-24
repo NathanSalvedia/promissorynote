@@ -134,9 +134,6 @@
                 {{-- Attachments --}}
                 <section class="card-section">
                     <span class="font-semibold text-lg mb-4 block text-gray-700">Attachments:</span>
-
-
-
                     @php
                         $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
                         $images = [];
@@ -156,12 +153,14 @@
                                             alt="Attachment"
                                             class="max-w-full max-h-full object-contain"
                                             style="cursor:pointer"
+                                            onerror="this.onerror=null;this.src='{{ asset('img/no-image.png') }}';"
                                             onclick="window.open('{{ route('admin.attachments.download', $img->document_id) }}', '_blank')"
                                         />
                                     </div>
                                 @endif
                             @endforeach
                         </div>
+                    @else
                         <div class="mt-2 text-base text-gray-500">No attachments</div>
                     @endif
                 </section>

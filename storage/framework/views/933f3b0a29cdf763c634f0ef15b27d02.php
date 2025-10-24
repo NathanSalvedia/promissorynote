@@ -162,6 +162,7 @@
                                             alt="Attachment"
                                             class="max-w-full max-h-full object-contain"
                                             style="cursor:pointer"
+                                            onerror="this.onerror=null;this.src='<?php echo e(asset('img/no-image.png')); ?>';"
                                             onclick="window.open('<?php echo e(route('student.attachments.download', $img->document_id)); ?>', '_blank')"
                                         />
                                     </div>
@@ -175,8 +176,6 @@
 
                 
                 <?php if(!empty($note->signature_path)): ?>
-                    
-
                     <section class="card-section mt-6">
                         <span class="font-semibold text-lg mb-4 block text-gray-700">Signature:</span>
                         <div class="w-64 h-40 flex items-center justify-center border border-gray-300 rounded bg-gray-50">

@@ -1,7 +1,7 @@
 <?php $__env->startSection('content'); ?>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="bg-gray-100 p-10 rounded-xl shadow-lg w-full max-w-3xl">
+<div class="min-h-screen flex items-center justify-center bg-gray-100 px-2">
+    <div class="bg-gray-100 p-4 sm:p-10 rounded-xl shadow-lg w-full max-w-lg">
         <h2 class="text-3xl font-bold mb-8 text-gray-800 text-center">Register</h2>
         <form action="<?php echo e(route('register')); ?>" method="POST">
             <?php echo csrf_field(); ?>
