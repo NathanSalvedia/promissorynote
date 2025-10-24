@@ -23,13 +23,27 @@
 <body class="bg-gray-100 font-sans">
     @yield('content')
 
-   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
-   <script src="{{ asset('js/main.js') }}"></script>
-   <script src="{{ asset('js/reuse.js') }}"></script>
-  {{-- apexcharts is bundled via Vite (resources/js/app.js) --}}
-  <script src="{{ asset('js/apexcharts.js') }}"></script>
-  <script src="{{  asset('js/analytics.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ asset('js/reuse.js') }}"></script>
+    {{-- apexcharts is bundled via Vite (resources/js/app.js) --}}
+    <script src="{{ asset('js/apexcharts.js') }}"></script>
+    <script src="{{  asset('js/analytics.js') }}"></script>
     @yield('scripts')
 
+    @stack('scripts')
+
+    @if(auth()->check())
+    <script>
+        setInterval(function() {
+            fetch("{{ auth()->user()->is_admin ? route('admin.notifications.bell') : route('student.notifications.bell') }}")
+                .then(response => response.text())
+                .then(html => {
+                    const bell = document.getElementById('notification-bell');
+                    if(bell) bell.innerHTML = html;
+                });
+        }, 10000); // every 10 seconds
+    </script>
+    @endif
 </body>
 </html>

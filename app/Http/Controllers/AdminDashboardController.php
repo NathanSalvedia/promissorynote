@@ -351,4 +351,40 @@ class AdminDashboardController extends Controller
         $notification->save();
         return response()->json(['success' => true]);
     }
+
+    public function dashboardTable(Request $request)
+    {
+        // Apply same filters as in your main dashboard method
+        $notes = $this->getFilteredNotes($request);
+        return view('admin.partials.pending-requests-table', compact('notes'))->render();
+    }
+
+    /**
+     * Get filtered promissory notes based on the request.
+     */
+    private function getFilteredNotes(Request $request)
+    {
+        $query = PromissoryNote::with('user');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->whereHas('user', function($q) use ($search) {
+                $q->where('course', 'like', "%$search%");
+            });
+        }
+
+        if ($request->filled('department')) {
+            $query->where('department', $request->input('department'));
+        }
+
+        return $query->orderByDesc('created_at')->get();
+    }
+
+    public function notificationsBell()
+    {
+        $adminId = Auth::id();
+        $notifications = Notification::where('user_id', $adminId)->orderByDesc('sent_at')->get();
+        $unreadCount = $notifications->where('is_read', false)->count();
+        return view('includes.partials.admin-bell', compact('notifications', 'unreadCount'))->render();
+    }
 }

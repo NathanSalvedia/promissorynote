@@ -23,14 +23,28 @@
 <body class="bg-gray-100 font-sans">
     <?php echo $__env->yieldContent('content'); ?>
 
-   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
-   <script src="<?php echo e(asset('js/main.js')); ?>"></script>
-   <script src="<?php echo e(asset('js/reuse.js')); ?>"></script>
-  
-  <script src="<?php echo e(asset('js/apexcharts.js')); ?>"></script>
-  <script src="<?php echo e(asset('js/analytics.js')); ?>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <script src="<?php echo e(asset('js/main.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/reuse.js')); ?>"></script>
+    
+    <script src="<?php echo e(asset('js/apexcharts.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/analytics.js')); ?>"></script>
     <?php echo $__env->yieldContent('scripts'); ?>
 
+    <?php echo $__env->yieldPushContent('scripts'); ?>
+
+    <?php if(auth()->check()): ?>
+    <script>
+        setInterval(function() {
+            fetch("<?php echo e(auth()->user()->is_admin ? route('admin.notifications.bell') : route('student.notifications.bell')); ?>")
+                .then(response => response.text())
+                .then(html => {
+                    const bell = document.getElementById('notification-bell');
+                    if(bell) bell.innerHTML = html;
+                });
+        }, 10000); // every 10 seconds
+    </script>
+    <?php endif; ?>
 </body>
 </html>
 <?php /**PATH C:\xampp\htdocs\promissorynote-app\resources\views/layouts/layout.blade.php ENDPATH**/ ?>

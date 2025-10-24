@@ -4,7 +4,12 @@
 @extends('layouts.layout')
 
 @section('content')
-    @include('includes.header')
+
+    <header class="fixed top-0 left-0 w-full z-50 shadow">
+        <div id="notification-bell">
+    @include('includes.partials.student-bell') <!-- for student -->
+    </div>
+  </header>
 
     <div class="w-full mt-8">
         <div class="w-full mt-8">

@@ -62,6 +62,20 @@ class DashboardController extends Controller
 
         return view('student.notification-view', compact('notifications'));
     }
+
+    public function promissoryTable(Request $request)
+    {
+        $notes = PromissoryNote::where('user_id', Auth::user()->id)->orderByDesc('created_at')->get();
+        return view('student.partials.promissory-table', compact('notes'))->render();
+    }
+
+    public function notificationsBell()
+    {
+        $userId = Auth::user()->id;
+        $notifications = Notification::where('user_id', $userId)->orderByDesc('sent_at')->get();
+        $unreadCount = $notifications->where('is_read', false)->count();
+        return view('includes.partials.student-bell', compact('notifications', 'unreadCount'))->render();
+    }
 }
 
 

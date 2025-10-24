@@ -37,6 +37,7 @@ Route::get('/auth/login', function () {
 // Student routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/student/dashboard', DashboardController::class)->name('student.dashboard');
+    Route::get('/student/promissory-table', [DashboardController::class, 'promissoryTable'])->name('student.promissory.table');
     Route::get('/student/promissorynote', [PromissoryNoteController::class, 'index'])->name('student.promissorynote');
     Route::post('/student/promissorynote', [PromissoryNoteController::class, 'store'])->name('promissorynotes.store');
     Route::get('/promissorynotes', [PromissoryNoteController::class, 'index'])->name('promissorynotes.index');
@@ -51,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/student/notifications/mark-read', [DashboardController::class, 'markNotificationsRead'])->name('student.notifications.markRead');
     Route::get('/student/attachments/{id}/download', [PromissoryNoteController::class, 'downloadAttachment'])->name('student.attachments.download');
     Route::get('/student/signature/{pn_id}', [PromissoryNoteController::class, 'viewSignature'])->name('student.signature.view');
+    Route::get('/student/notifications-bell', [DashboardController::class, 'notificationsBell'])->name('student.notifications.bell');
 });
 
 // Admin login routes
@@ -60,6 +62,7 @@ Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin
 // Admin routes
 Route::middleware(['auth', IsAdmin::class])->group(function () {
     Route::get('/admin/admindashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/dashboard-table', [AdminDashboardController::class, 'dashboardTable'])->name('admin.dashboard.table');
     Route::get('/admin/notifications', [AdminDashboardController::class, 'notifications'])->name('admin.notifications');
     Route::get('/admin/manage-record', [ManageRecordsController::class, 'index'])->name('admin.manage-record');
     Route::get('/admin/promissorynote-detail/{pn_id}', [AdminDashboardController::class, 'show'])->name('admin.promissorynote-detail');
@@ -91,6 +94,7 @@ Route::middleware(['auth', IsAdmin::class])->group(function () {
     Route::post('/admin/notifications/mark-read-single/{id}', [AdminDashboardController::class, 'markSingleNotificationRead']);
    Route::get('/admin/signature/{pn_id}', [PromissoryNoteController::class, 'adminViewSignature'])->name('admin.signature.view');
    Route::get('/admin/attachments/download/{id}', [PromissoryNoteController::class, 'downloadAttachment'])->name('admin.attachments.download');
+   Route::get('/admin/notifications-bell', [AdminDashboardController::class, 'notificationsBell'])->name('admin.notifications.bell');
 });
 
 
