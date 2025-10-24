@@ -164,16 +164,6 @@ class PromissoryNoteController extends Controller
         ]);
 
 
-         Payment::create([
-             'pn_id'        => $promissoryNote->pn_id,
-             'user_id'      => $user->id,
-             'amount'       => $validated['amount'],
-             'payment_date' => now(),
-             'created_at'   => now(),
-             'updated_at'   => now(),
-         ]);
-
-
         if ($promissoryNote->due_date) {
             Notification::create([
                 'user_id'   => $user->id,
