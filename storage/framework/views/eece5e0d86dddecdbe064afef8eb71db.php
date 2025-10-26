@@ -7,6 +7,8 @@
         <main class="p-6 w-full mt-24">
             <h2 class="text-2xl font-bold mb-8 text-[#660809]">Analytics Dashboard</h2>
 
+
+
             
             <h3 class="text-xl font-semibold mb-4 text-[#660809]">I. Promissory Notes</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
@@ -117,8 +119,5 @@
 window.analyticsData = <?php echo json_encode($analyticsData, JSON_HEX_TAG); ?>;
 </script>
 <?php $__env->stopSection(); ?>
-
-
-
 
 <?php echo $__env->make('layouts.layout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\promissorynote-app\resources\views/admin/analytics.blade.php ENDPATH**/ ?>

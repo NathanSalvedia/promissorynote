@@ -11,6 +11,15 @@ use App\Models\AccountSubledger;
 use App\Models\User;
 use App\Notifications\PaymentCompleted;
 
+// Add Vonage classes
+use Vonage\Client;
+use Vonage\Client\Credentials\Basic;
+use Vonage\SMS\Message\SMS;
+
+// Add Mail classes
+use Illuminate\Support\Facades\Mail;
+use App\Mail\PaymentRecorded;
+
 class PaymentTrackingController extends Controller
 {
     public function index()
@@ -42,14 +51,22 @@ class PaymentTrackingController extends Controller
 
         $adminId = Auth::id();
 
-        $notifications = Notification::where('user_id', $adminId)
-            ->orderBy('sent_at', 'desc')
-            ->take(10)
-            ->get();
+        $notifications = Notification::where(function($q) use ($adminId) {
+            $q->where('user_id', $adminId)
+              ->orWhereNull('user_id')
+              ->orWhere('user_id', 0);
+        })
+        ->orderBy('sent_at', 'desc')
+        ->take(10)
+        ->get();
 
-        $unreadCount = Notification::where('user_id', $adminId)
-            ->where('is_read', false)
-            ->count();
+        $unreadCount = Notification::where(function($q) use ($adminId) {
+            $q->where('user_id', $adminId)
+              ->orWhereNull('user_id')
+              ->orWhere('user_id', 0);
+        })
+        ->where('is_read', false)
+        ->count();
 
         $avgDownPayment = count($downPayments) ? array_sum($downPayments) / count($downPayments) : 0;
 
@@ -94,15 +111,39 @@ class PaymentTrackingController extends Controller
         $note->is_settled = true;
         $note->save();
 
-        // Send push notification to admin
-        $admin = User::where('role', 'admin')->first();
-        if ($admin) {
-            $admin->notify(new PaymentCompleted($note->user, $note));
+        // Send SMS notification to user
+        $user = $note->user;
+        $to = $user->phone_number;
+        $message = "Good day! This is from St. Peter's College. I would like to inform you that your payment for Promissory Note ID PN-{$note->pn_id} has been recorded. Thank you!";
+
+        $basic  = new Basic(env('VONAGE_KEY'), env('VONAGE_SECRET'));
+        $client = new Client($basic);
+
+        try {
+            $sms = new SMS(
+                $to,
+                env('VONAGE_FROM'),
+                $message
+            );
+            $client->sms()->send($sms);
+        } catch (\Exception $e) {
+            \Log::error('Vonage SMS failed: ' . $e->getMessage());
         }
 
-        // Send SMS notification to user
-        $note->user->notify(new PaymentCompleted($note->user, $note));
+        // Send email notification to user
+        if ($user->email) {
+            Mail::to($user->email)->send(new PaymentRecorded($note));
+        }
 
-        return redirect()->back()->with('success', 'Payment recorded successfully.');
+        return redirect()->back()->with('success', 'Payment recorded successfully, SMS and email sent.');
+    }
+
+    public function paymentTrackingTablePartial()
+    {
+        $notes = PromissoryNote::with(['user', 'payments'])
+            ->where('status', 'approved')
+            ->get();
+
+        return view('admin.partials.payment-tracking-table', compact('notes'));
     }
 }

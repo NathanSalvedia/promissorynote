@@ -250,4 +250,36 @@ class ManageRecordsController extends Controller
             'resubmissionCount'
         ));
     }
+
+    public function recordsTablePartial(Request $request)
+    {
+        $promissoryNotes = PromissoryNote::with('user')->where('archived', false)->latest()->get();
+
+        foreach ($promissoryNotes as $note) {
+            $due = $note->due_date ?? null;
+            $today = Carbon::today();
+
+            $note->is_settled = isset($note->is_settled) ? $note->is_settled : false;
+            if ($note->is_settled) {
+                $note->remarks = 'Settled';
+            } else if ($due) {
+                $dueCarbon =Carbon::parse($due);
+                if ($dueCarbon->isSameDay($today)) {
+                    $note->remarks = 'Not settled';
+                } elseif ($dueCarbon->isFuture()) {
+                    $note->remarks = 'Not overdue yet';
+                } else {
+                    $note->remarks = 'Overdue';
+                }
+                $note->due_date_formatted = $dueCarbon->format('Y-m-d');
+            } else {
+                $note->remarks = 'No due date';
+                $note->due_date_formatted = '';
+            }
+        }
+
+        return view('admin.partials.records-table', compact('promissoryNotes'));
+    }
+
+
 }

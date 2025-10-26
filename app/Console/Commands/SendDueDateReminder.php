@@ -10,25 +10,16 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DueDateReminderMail;
 
+// Add Vonage classes
+use Vonage\Client;
+use Vonage\Client\Credentials\Basic;
+use Vonage\SMS\Message\SMS;
+
 class SendDueDateReminder extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'app:send-due-date-reminder';
+    protected $description = 'Send due date reminders via email, notification, and SMS';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $today = Carbon::today();
@@ -39,6 +30,10 @@ class SendDueDateReminder extends Command
             ->get();
 
         $admins = User::where('role', 'admin')->get();
+
+        // Setup Vonage client
+        $basic  = new Basic(env('VONAGE_KEY'), env('VONAGE_SECRET'));
+        $client = new Client($basic);
 
         foreach ($notes as $note) {
             // Notify the student
@@ -51,6 +46,22 @@ class SendDueDateReminder extends Command
             ]);
             // Send email to student
             Mail::to($note->user->email)->send(new DueDateReminderMail($note));
+
+            // Send SMS to student
+            $user = $note->user;
+            if ($user && $user->phone_number) {
+                $smsMessage = "Good day! This is from St. Peter's College. Reminder: Your Promissory Note (PN-{$note->pn_id}) is due tomorrow ({$note->due_date}). Please settle your payment. Thank you!";
+                try {
+                    $sms = new SMS(
+                        $user->phone_number,
+                        env('VONAGE_FROM'),
+                        $smsMessage
+                    );
+                    $client->sms()->send($sms);
+                } catch (\Exception $e) {
+                    \Log::error('Vonage SMS failed: ' . $e->getMessage());
+                }
+            }
 
             // Notify each admin
             foreach ($admins as $admin) {

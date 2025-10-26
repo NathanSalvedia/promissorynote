@@ -121,6 +121,7 @@ class AnalyticsController extends Controller
         $deptAmounts = $dept->pluck('total')->toArray();
 
         $courseCounts = PromissoryNote::select('course', DB::raw('count(*) as cnt'))
+            ->where('course', '!=', 'N/A') // ADD THIS LINE
             ->groupBy('course')
             ->pluck('cnt', 'course')
             ->toArray();
@@ -218,6 +219,7 @@ $downpaymentBuckets = PromissoryNote::whereNotNull('down_payment')
         $courseList = DB::table('users')
             ->select('course', DB::raw('count(*) as cnt'))
             ->whereNotNull('course')
+            ->where('course', '!=', 'N/A') // ADD THIS LINE
             ->groupBy('course')
             ->orderBy('course')
             ->pluck('cnt', 'course')
@@ -270,4 +272,6 @@ $downpaymentBuckets = PromissoryNote::whereNotNull('down_payment')
         return view('admin.analytics', compact('analyticsData', 'notifications',
             'unreadCount'));
     }
+
+
 }

@@ -54,7 +54,7 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                     <div>
                         <label for="phone_number" class="block text-md font-medium text-black mb-1">Phone Number</label>
-                        <input type="text" id="phone_number" name="phone_number" value="<?php echo e(old('phone_number')); ?>" class="<?php $__errorArgs = ['phone_number'];
+                        <input type="text" id="phone_number"  name="phone_number" value="<?php echo e(old('phone_number')); ?>" class="<?php $__errorArgs = ['phone_number'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -213,7 +213,7 @@ unset($__errorArgs, $__bag); ?>
 
                 <div>
                     <label for="gender" class="block text-md font-medium text-black mb-1">Gender</label>
-                    <input type="text" id="gender" name="gender" class="<?php $__errorArgs = ['gender'];
+                    <select id="gender" name="gender" class="<?php $__errorArgs = ['gender'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -221,6 +221,10 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?> block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
+                        <option value="" disabled <?php echo e(old('gender') ? '' : 'selected'); ?>>Select your gender</option>
+                        <option value="Male" <?php echo e(old('gender') == 'Male' ? 'selected' : ''); ?>>Male</option>
+                        <option value="Female" <?php echo e(old('gender') == 'Female' ? 'selected' : ''); ?>>Female</option>
+                    </select>
                     <?php $__errorArgs = ['gender'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :

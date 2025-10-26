@@ -28,7 +28,7 @@
                     </div>
                     <div>
                         <label for="phone_number" class="block text-md font-medium text-black mb-1">Phone Number</label>
-                        <input type="text" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" class="@error('phone_number') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm" required>
+                        <input type="text" id="phone_number"  name="phone_number" value="{{ old('phone_number') }}" class="@error('phone_number') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm" required>
                         @error('phone_number')
                             <span class="text-red-500 text-sm">{{ $message }}</span>
                         @enderror
@@ -110,7 +110,11 @@
 
                 <div>
                     <label for="gender" class="block text-md font-medium text-black mb-1">Gender</label>
-                    <input type="text" id="gender" name="gender" class="@error('gender') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
+                    <select id="gender" name="gender" class="@error('gender') is-invalid @enderror block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-600 focus:border-green-600 sm:text-sm">
+                        <option value="" disabled {{ old('gender') ? '' : 'selected' }}>Select your gender</option>
+                        <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                        <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                    </select>
                     @error('gender')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror

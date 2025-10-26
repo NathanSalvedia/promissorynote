@@ -5,7 +5,9 @@
 @extends('layouts.layout')
 
 @section('content')
-  @include('includes.admin')
+
+            @include('includes.admin')
+
 
   <div x-data="notificationModal()" class="w-full mt-8">
     <div class="w-full mt-8">

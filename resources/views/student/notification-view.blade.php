@@ -5,9 +5,10 @@
 
 @section('content')
 
-    <header class="fixed top-0 left-0 w-full z-50 shadow">
-        <div id="notification-bell">
-    @include('includes.partials.student-bell') <!-- for student -->
+
+        @include('includes.header')
+
+
     </div>
   </header>
 

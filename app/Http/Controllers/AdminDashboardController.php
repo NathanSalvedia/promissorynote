@@ -68,12 +68,21 @@ class AdminDashboardController extends Controller
 
         $adminId = Auth::id();
 
-        $notifications = Notification::where('user_id', $adminId)
+        // Fetch notifications for admin and general admin notifications
+        $notifications = Notification::where(function($q) use ($adminId) {
+                $q->where('user_id', $adminId)
+                  ->orWhereNull('user_id')
+                  ->orWhere('user_id', 0);
+            })
             ->orderBy('sent_at', 'desc')
             ->take(10)
             ->get();
 
-        $unreadCount = Notification::where('user_id', $adminId)
+        $unreadCount = Notification::where(function($q) use ($adminId) {
+                $q->where('user_id', $adminId)
+                  ->orWhereNull('user_id')
+                  ->orWhere('user_id', 0);
+            })
             ->where('is_read', false)
             ->count();
 
@@ -122,7 +131,7 @@ class AdminDashboardController extends Controller
     /**
      * Approve a promissory note → also mark as settled.
      */
-    public function approve($pn_id, \App\Services\SmsService $smsService)
+    public function approve($pn_id, SmsService $smsService)
     {
         $note = PromissoryNote::findOrFail($pn_id);
         $note->status = 'approved';
@@ -143,20 +152,21 @@ class AdminDashboardController extends Controller
         }
 
         // Send SMS notification using phone from promissory note
+        /*
         if ($note->phone) {
             $smsService->send(
                 $note->phone,
                 "Good day! This is from St. Peter's College. I would like to inform you that your promissory form is approved. Kindly proceed to Accounting Window 3 for further assistance and processing. Thank you!"
             );
         }
-
+        */
         return redirect()->route('admin.dashboard')->with('success', 'Promissory Note approved.');
     }
 
     /**
      * Reject a promissory note → keep as unsettled.
      */
-    public function reject(Request $request, $pn_id, \App\Services\SmsService $smsService)
+    public function reject(Request $request, $pn_id, SmsService $smsService)
     {
         $request->validate([
             'denial_reason' => 'required|string|max:1000',
@@ -231,7 +241,7 @@ class AdminDashboardController extends Controller
     {
         $note = PromissoryNote::with('supportingDocuments', 'user')->findOrFail($pn_id);
 
-        // Get subledger entries for the correct computation (same logic as in show())
+
         $set1Entries = AccountSubledger::where('user_id', $note->user_id)
             ->where('school_year', $note->academic_year)
             ->where('semester', '1')
@@ -243,7 +253,7 @@ class AdminDashboardController extends Controller
         $partialPayment = $note->amount ?? 0;
         $remainingBalance = max(0, $assessmentBalance - $partialPayment);
 
-        // Prepare images as base64
+
         $imageExts = ['jpg','jpeg','png','gif','bmp','webp'];
         $images = [];
         if ($note->supportingDocuments) {
@@ -261,7 +271,7 @@ class AdminDashboardController extends Controller
             }
         }
 
-        // Signature as base64
+
         $signatureBase64 = null;
         if (!empty($note->signature_path)) {
             $sigPath = storage_path('app/private/' . ltrim($note->signature_path, '/'));
@@ -314,7 +324,7 @@ class AdminDashboardController extends Controller
       if ($note->phone) {
           $smsService->send(
               $note->phone,
-              "Good day! This is from St. Peter's College. Your promissory form has been rejected. Reason: {$note->denial_reason}"
+             "Good day! This is from St. Peter's College. Your promissory form has been rejected. Reason: {$note->denial_reason}"
           );
       }
 
@@ -328,7 +338,11 @@ class AdminDashboardController extends Controller
     public function notificationsView()
     {
         $adminId = Auth::id();
-        $notifications = Notification::where('user_id', $adminId)
+        $notifications = Notification::where(function($q) use ($adminId) {
+                $q->where('user_id', $adminId)
+                  ->orWhereNull('user_id')
+                  ->orWhere('user_id', 0);
+            })
             ->orderBy('sent_at', 'desc')
             ->get();
 
@@ -338,7 +352,11 @@ class AdminDashboardController extends Controller
     public function markNotificationsRead(Request $request)
     {
         $adminId = Auth::id();
-        Notification::where('user_id', $adminId)
+        Notification::where(function($q) use ($adminId) {
+                $q->where('user_id', $adminId)
+                  ->orWhereNull('user_id')
+                  ->orWhere('user_id', 0);
+            })
             ->where('is_read', false)
             ->update(['is_read' => true]);
         return response()->json(['success' => true]);
@@ -383,7 +401,13 @@ class AdminDashboardController extends Controller
     public function notificationsBell()
     {
         $adminId = Auth::id();
-        $notifications = Notification::where('user_id', $adminId)->orderByDesc('sent_at')->get();
+        $notifications = Notification::where(function($q) use ($adminId) {
+                $q->where('user_id', $adminId)
+                  ->orWhereNull('user_id')
+                  ->orWhere('user_id', 0);
+            })
+            ->orderByDesc('sent_at')
+            ->get();
         $unreadCount = $notifications->where('is_read', false)->count();
         return view('includes.partials.admin-bell', compact('notifications', 'unreadCount'))->render();
     }

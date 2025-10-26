@@ -164,15 +164,6 @@ class PromissoryNoteController extends Controller
         ]);
 
 
-        if ($promissoryNote->due_date) {
-            Notification::create([
-                'user_id'   => $user->id,
-                'pn_id'     => $promissoryNote->pn_id,
-                'content'   => "Reminder: Your promissory note is due on {$promissoryNote->due_date}.",
-                'sent_at'   => now(),
-                'is_read'   => false,
-            ]);
-        }
 
         $admins = User::where('role', Role::ADMIN->value)->get();
         foreach ($admins as $admin) {
@@ -183,7 +174,7 @@ class PromissoryNoteController extends Controller
                 'sent_at'   => now(),
                 'is_read'   => false,
             ]);
-        }
+}
 
         // Store attachments privately
         // Attachments

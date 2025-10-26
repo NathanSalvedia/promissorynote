@@ -58,8 +58,5 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Route notifications for the Nexmo/Vonage channel.
      */
-    public function routeNotificationForVonage($notification)
-    {
-        return $this->phone_number;
-    }
+
 }

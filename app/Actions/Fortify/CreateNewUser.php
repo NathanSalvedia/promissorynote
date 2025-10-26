@@ -42,7 +42,7 @@ class CreateNewUser implements CreatesNewUsers
             'student_id' => ['required', 'integer', 'unique:users,student_id'],
             'year_level' => ['required', 'integer', 'min:1'],
             'college' => ['required', 'string', 'max:255'],
-            'gender' => ['required', 'string', Rule::in(['male', 'female', 'other'])],
+            'gender' => ['required', 'string', Rule::in(['Male', 'Female'])],
         ])->validate();
 
         return User::create([

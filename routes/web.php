@@ -26,9 +26,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/admin/admin-hompage', function () {
-    return view('admin.admin-homepage');
-})->name('admin.home');
 
 Route::get('/auth/login', function () {
     return view('auth.login');
@@ -59,8 +56,14 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/admin/login', [AdminLoginController::class, 'index'])->name('admin.login');
 Route::post('/admin/login', [AdminLoginController::class, 'login'])->name('admin.login');
 
+
+ Route::get('/admin', function () {
+        return view('admin.admin-homepage');
+    })->name('admin.home');
+
 // Admin routes
 Route::middleware(['auth', IsAdmin::class])->group(function () {
+
     Route::get('/admin/admindashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/dashboard-table', [AdminDashboardController::class, 'dashboardTable'])->name('admin.dashboard.table');
     Route::get('/admin/notifications', [AdminDashboardController::class, 'notifications'])->name('admin.notifications');
@@ -69,6 +72,7 @@ Route::middleware(['auth', IsAdmin::class])->group(function () {
     Route::post('/admin/promissory/approve/{pn_id}', [AdminDashboardController::class, 'approve'])->name('admin.promissory.approve');
     Route::post('/admin/promissory/reject/{pn_id}', [AdminDashboardController::class, 'reject'])->name('admin.promissory.reject');
     Route::get('/admin/manage-records', [ManageRecordsController::class, 'manageRecords'])->name('admin.manage-records');
+    Route::get('/admin/promissory-table', [ManageRecordsController::class, 'promissoryTable'])->name('admin.promissory.table');
     Route::get('/admin/manage-users', [ManageUserController::class, 'index'])->name('admin.manage-users');
     Route::get('/admin/payment-tracking', [PaymentTrackingController::class, 'index'])->name('admin.payment-tracking');
     Route::post('/evaluation/{id}/approve-by-admin', [EvaluationController::class, 'approvedByAdmin'])->name('evaluation.approve-by-admin');
@@ -92,9 +96,15 @@ Route::middleware(['auth', IsAdmin::class])->group(function () {
     Route::post('/payment-tracking/{pn_id}/record-payment', [PaymentTrackingController::class, 'recordPayment'])->name('payment-tracking.recordPayment');
     Route::post('/admin/notifications/mark-read', [AdminDashboardController::class, 'markNotificationsRead'])->name('admin.notifications.markRead');
     Route::post('/admin/notifications/mark-read-single/{id}', [AdminDashboardController::class, 'markSingleNotificationRead']);
-   Route::get('/admin/signature/{pn_id}', [PromissoryNoteController::class, 'adminViewSignature'])->name('admin.signature.view');
-   Route::get('/admin/attachments/download/{id}', [PromissoryNoteController::class, 'downloadAttachment'])->name('admin.attachments.download');
-   Route::get('/admin/notifications-bell', [AdminDashboardController::class, 'notificationsBell'])->name('admin.notifications.bell');
+    Route::get('/admin/signature/{pn_id}', [PromissoryNoteController::class, 'adminViewSignature'])->name('admin.signature.view');
+    Route::get('/admin/attachments/download/{id}', [PromissoryNoteController::class, 'downloadAttachment'])->name('admin.attachments.download');
+    Route::get('/admin/notifications-bell', [AdminDashboardController::class, 'notificationsBell'])->name('admin.notifications.bell');
+    Route::get('/admin/records-table-partial', [ManageRecordsController::class, 'recordsTablePartial'])->name('admin.records-table-partial');
+    Route::get('/admin/manage-users-data', [ManageUserController::class, 'userTablePartial']);
+    Route::get('/admin/payment-tracking-table', [PaymentTrackingController::class, 'paymentTrackingTablePartial']);
+    Route::get('/admin/analytics-data', [AnalyticsController::class, 'getAnalyticsData']);
+
+
 });
 
 

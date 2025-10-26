@@ -26,4 +26,10 @@ class ManageUserController extends Controller
 
         return view('admin.manage-user', compact('users', 'notifications', 'unreadCount'));
     }
+
+    public function userTablePartial()
+    {
+        $users = User::latest()->get();
+        return view('admin.partials.user-table', compact('users'));
+    }
 }

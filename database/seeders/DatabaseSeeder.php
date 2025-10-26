@@ -10,6 +10,7 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use App\Enums\Role;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Notification; // Add this at the top if not present
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,7 +27,7 @@ class DatabaseSeeder extends Seeder
             'fullname' => 'Admin user',
             'email' => 'adminuser@example.com',
             'phone_number' => 'N/A',
-            'password' => Hash::make('adminpassword'), // <-- IMPORTANT!
+            'password' => Hash::make('adminpassword'),
             'role' => Role::ADMIN->value,
             'course' => 'N/A',
             'student_id' => 0,
@@ -35,7 +36,7 @@ class DatabaseSeeder extends Seeder
             'gender' => 'N/A',
             'submission_count' => 0,
         ]);
-        */
+            */
 
 
 
@@ -43,7 +44,7 @@ class DatabaseSeeder extends Seeder
        User::all()->each(function ($user) use ($faker) {
 
       //AccountSubledger::where('user_id', $user->id)->delete();
-       /*
+
         // Generate initial 4 Set 1 entries if not already present
         $set1Count = AccountSubledger::where('user_id', $user->id)
             ->where('school_year', '2025-2026')
@@ -94,12 +95,12 @@ class DatabaseSeeder extends Seeder
 
             AccountSubledger::insert($entries);
         }
-        */
+
 
 
         //======================================================//
 
-         /*
+          /*
         $promissoryNote = PromissoryNote::where('user_id', $user->id)->first();
 
         if ($promissoryNote) {
@@ -183,7 +184,7 @@ class DatabaseSeeder extends Seeder
             */
 
    //======================================================//
-
+     /*
    $set1Table5Entry = AccountSubledger::where('user_id', $user->id)
        ->where('school_year', '2025-2026')
        ->where('semester', '1')
@@ -212,6 +213,7 @@ class DatabaseSeeder extends Seeder
        ->first();
 
    if ($set1Table5Entry && $table2Set2DownpaymentEntry && !$set2Entry3Exists) {
+
        $set1Balance = (float)str_replace(',', '', $set1Table5Entry->balance);
        $table2Set2DownpaymentBalance = (float)str_replace(',', '', $table2Set2DownpaymentEntry->balance);
 
@@ -228,6 +230,7 @@ class DatabaseSeeder extends Seeder
            ->where('reference', $reference)
            ->exists();
 
+
        if (!$alreadyExists) {
            AccountSubledger::create([
                'user_id' => $user->id,
@@ -239,10 +242,11 @@ class DatabaseSeeder extends Seeder
                'credit' => number_format($set1Balance, 2, '.', ''),
                'balance' => number_format($resultBalance, 2, '.', ''),
            ]);
+
+
        }
    }
-
-
+      */
       });
 
     }

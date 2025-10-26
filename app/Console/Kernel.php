@@ -9,6 +9,7 @@ class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('send:duedatereminders')->daily();
+        // Run the due date reminder command daily at 8:00 AM
+        $schedule->command('app:send-due-date-reminder')->dailyAt('08:00');
     }
 }

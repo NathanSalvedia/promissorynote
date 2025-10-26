@@ -17,6 +17,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -26,9 +27,7 @@
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
     <script src="{{ asset('js/main.js') }}"></script>
     <script src="{{ asset('js/reuse.js') }}"></script>
-    {{-- apexcharts is bundled via Vite (resources/js/app.js) --}}
-    <script src="{{ asset('js/apexcharts.js') }}"></script>
-    <script src="{{  asset('js/analytics.js') }}"></script>
+    <script src="{{ asset('js/analytics.js') }}"></script>
     @yield('scripts')
 
     @stack('scripts')
