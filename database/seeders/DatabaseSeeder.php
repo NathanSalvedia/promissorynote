@@ -10,7 +10,7 @@ use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 use App\Enums\Role;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Notification; // Add this at the top if not present
+use App\Models\Notification;
 
 class DatabaseSeeder extends Seeder
 {
@@ -43,8 +43,8 @@ class DatabaseSeeder extends Seeder
 
        User::all()->each(function ($user) use ($faker) {
 
-      //AccountSubledger::where('user_id', $user->id)->delete();
-
+     //AccountSubledger::where('user_id', $user->id)->delete();
+              /*
         // Generate initial 4 Set 1 entries if not already present
         $set1Count = AccountSubledger::where('user_id', $user->id)
             ->where('school_year', '2025-2026')
@@ -95,12 +95,12 @@ class DatabaseSeeder extends Seeder
 
             AccountSubledger::insert($entries);
         }
-
+              */
 
 
         //======================================================//
 
-          /*
+         /*
         $promissoryNote = PromissoryNote::where('user_id', $user->id)->first();
 
         if ($promissoryNote) {
@@ -184,7 +184,7 @@ class DatabaseSeeder extends Seeder
             */
 
    //======================================================//
-     /*
+
    $set1Table5Entry = AccountSubledger::where('user_id', $user->id)
        ->where('school_year', '2025-2026')
        ->where('semester', '1')
@@ -212,6 +212,8 @@ class DatabaseSeeder extends Seeder
        ->skip(2)
        ->first();
 
+   $subledgerEntry = null;
+
    if ($set1Table5Entry && $table2Set2DownpaymentEntry && !$set2Entry3Exists) {
 
        $set1Balance = (float)str_replace(',', '', $set1Table5Entry->balance);
@@ -232,7 +234,7 @@ class DatabaseSeeder extends Seeder
 
 
        if (!$alreadyExists) {
-           AccountSubledger::create([
+           $subledgerEntry = AccountSubledger::create([
                'user_id' => $user->id,
                'school_year' => $nextYear,
                'semester' => '2',
@@ -242,11 +244,29 @@ class DatabaseSeeder extends Seeder
                'credit' => number_format($set1Balance, 2, '.', ''),
                'balance' => number_format($resultBalance, 2, '.', ''),
            ]);
-
-
        }
    }
-      */
+
+   // Only send notification if payment entry was created
+   if ($subledgerEntry) {
+       $admin = User::where('role', 'admin')->first();
+       $promissoryNote = PromissoryNote::where('user_id', $user->id)
+           ->orderByDesc('due_date')
+           ->first();
+
+       if ($admin && $promissoryNote) {
+           Notification::create([
+               'user_id' => $admin->id,
+               'pn_id' => $promissoryNote->pn_id,
+               'content' => 'Payment Received for Promissory Note #' . $promissoryNote->pn_id .
+                   ' (' . $user->fullname . ') with amount ₱' . number_format($set1Table5Entry->balance, 2) . '.',
+               'is_read' => false,
+               'sent_at' => now(),
+           ]);
+       }
+}
+
+
       });
 
     }

@@ -27,4 +27,13 @@ class NotificationController extends Controller
 
         return view('student.notification-view', compact('notifications' ));
     }
+    public function adminIndex()
+    {
+        $adminId = Auth::user()->id;
+        $notifications = Notification::where('user_id', $adminId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('admin.notification-view', compact('notifications'));
+    }
 }

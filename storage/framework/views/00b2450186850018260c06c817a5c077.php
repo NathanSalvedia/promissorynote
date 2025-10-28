@@ -5,7 +5,9 @@
 
 
 <?php $__env->startSection('content'); ?>
-  <?php echo $__env->make('includes.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
+            <?php echo $__env->make('includes.admin', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+
 
   <div x-data="notificationModal()" class="w-full mt-8">
     <div class="w-full mt-8">

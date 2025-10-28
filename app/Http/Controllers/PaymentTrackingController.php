@@ -83,23 +83,27 @@ class PaymentTrackingController extends Controller
 
     public function recordPayment(Request $request, $pn_id)
     {
-        // Get the promissory note
         $note = PromissoryNote::findOrFail($pn_id);
 
-        // Get subledger entry: set 2, entry 3
         $subledgerEntry = AccountSubledger::where('user_id', $note->user_id)
             ->where('school_year', $note->academic_year)
             ->where('semester', '2')
             ->orderBy('date')
             ->orderBy('subledger_id')
-            ->skip(2) // entry number 3 (zero-based index)
+            ->skip(2)
             ->first();
 
         if (!$subledgerEntry) {
             return redirect()->back()->with('error', 'Subledger entry not found.');
         }
 
-        // Store payment
+        // Get Set 1 Table 5 entry (latest balance for 2025-2026 SEM 1)
+        $set1Table5Entry = AccountSubledger::where('user_id', $note->user_id)
+            ->where('school_year', '2025-2026')
+            ->where('semester', '1')
+            ->orderByDesc('date')
+            ->first();
+
         Payment::create([
             'pn_id' => $note->pn_id,
             'amount' => $subledgerEntry->balance,
@@ -107,33 +111,24 @@ class PaymentTrackingController extends Controller
             'remarks' => 'Recorded from subledger entry 3, set 2',
         ]);
 
-        // Mark promissory note as settled
         $note->is_settled = true;
         $note->save();
 
-        // Send SMS notification to user
-        $user = $note->user;
-        $to = $user->phone_number;
-        $message = "Good day! This is from St. Peter's College. I would like to inform you that your payment for Promissory Note ID PN-{$note->pn_id} has been recorded. Thank you!";
-
-        $basic  = new Basic(env('VONAGE_KEY'), env('VONAGE_SECRET'));
-        $client = new Client($basic);
-
-        try {
-            $sms = new SMS(
-                $to,
-                env('VONAGE_FROM'),
-                $message
-            );
-            $client->sms()->send($sms);
-        } catch (\Exception $e) {
-            \Log::error('Vonage SMS failed: ' . $e->getMessage());
+        $admin = User::where('role', 'admin')->first();
+        if ($admin) {
+            Notification::create([
+                'user_id' => $admin->id,
+                'pn_id' => $note->pn_id,
+                'content' => 'Payment recorded for Promissory Note #' . $note->pn_id .
+                    ' (' . $note->user->fullname . ') with amount ₱' . number_format($subledgerEntry->balance, 2) . '.',
+                'is_read' => false,
+                'sent_at' => now(),
+            ]);
         }
 
-        // Send email notification to user
-        if ($user->email) {
-            Mail::to($user->email)->send(new PaymentRecorded($note));
-        }
+        // Send email to user using Set 1 Table 5 balance
+        $set1Balance = $set1Table5Entry ? $set1Table5Entry->balance : $subledgerEntry->balance;
+        Mail::to($note->user->email)->send(new PaymentRecorded($note, $set1Balance));
 
         return redirect()->back()->with('success', 'Payment recorded successfully, SMS and email sent.');
     }
