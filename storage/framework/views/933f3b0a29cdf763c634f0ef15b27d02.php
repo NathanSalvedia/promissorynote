@@ -13,17 +13,20 @@
     </header>
 
 
-    <div class="w-full max-w-4xl px-6 mt-28 mb-6 print:hidden">
-        <div class="flex items-center justify-between">
+    <div class="w-full max-w-4xl px-4 mt-20 sm:mt-28 mb-6 print:hidden">
+        <div class="flex flex-row items-center justify-between gap-3">
+
             <a href="<?php echo e(route('student.dashboard')); ?>"
-               class="inline-flex items-center gap-2 bg-[#660809] hover:bg-[#4a0708] text-white px-4 py-2 rounded-lg shadow transition">
+               class="inline-flex items-center justify-center gap-2 bg-[#660809] hover:bg-[#4a0708] text-white px-3 py-2 rounded-lg shadow transition text-sm sm:text-base w-1/2 min-w-0">
                 <iconify-icon icon="mdi:arrow-left"></iconify-icon>
-                Back to Dashboard
+                <span class="truncate">Back to Dashboard</span>
             </a>
+
+
             <button onclick="window.print()"
-                    class="no-print inline-flex items-center gap-2 bg-[#660809] hover:bg-[#4a0708] text-white px-4 py-2 rounded-lg shadow transition">
+                    class="no-print inline-flex items-center justify-center gap-2 bg-[#660809] hover:bg-[#4a0708] text-white px-3 py-2 rounded-lg shadow transition text-sm sm:text-base w-1/2 min-w-0">
                 <iconify-icon icon="mdi:printer"></iconify-icon>
-                Print Form
+                <span class="truncate">Print Form</span>
             </button>
         </div>
     </div>
@@ -36,26 +39,27 @@
             <div class="text-gray-900 text-base leading-normal p-4 sm:p-10 print-page">
 
                 
-                <header class="text-center mb-10">
-                    <div class="flex items-center justify-center gap-6 mb-2">
+                <header class="mb-8 sm:mb-10">
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start sm:justify-center gap-4 sm:gap-6 mb-2 px-4 sm:px-0">
                         <img src="<?php echo e(asset('img/logo.jpg')); ?>"
                              alt="School Logo"
-                             class="w-20 h-20 object-contain rounded-full border border-gray-200">
-                        <div class="text-left">
-                            <p style="font-family: 'Times New Roman', Times, serif; font-weight: bold; font-size: 2rem; color: #660809; margin-bottom: 0;">
+                             class="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-full border border-gray-200">
+
+                        <div class="text-center sm:text-left">
+                            <p class="font-serif font-bold text-xl sm:text-2xl text-[#660809] mb-0">
                                 St. Peter's College
                             </p>
-                            <p style="font-family: 'Times New Roman', Times, serif; font-size: 1rem;">
+                            <p class="font-serif text-sm sm:text-base text-gray-700 leading-tight">
                                 042 Sabayle St, Iligan City, 9200 Philippines<br>
                                 Contact No.: (063)221-6246 or 222-0460<br>
-                                Email Address: <span style="color: #2563eb;">OPsecretary@spc.edu.ph</span>
+                                Email Address: <span class="text-blue-600">OPsecretary@spc.edu.ph</span>
                             </p>
                         </div>
                     </div>
 
-                    <h1 style="font-family: Arial, Helvetica, sans-serif; font-weight: bold; font-size: 1.7rem; margin-top: 2rem; letter-spacing: 1px;">
+                    <h1 class="text-center font-sans font-bold text-lg sm:text-2xl tracking-wide mt-4">
                         PROMISSORY FORM<br>
-                        <span style="font-size: 1.5rem;">DETAILS</span>
+                        <span class="block text-base sm:text-xl">DETAILS</span>
                     </h1>
                 </header>
 

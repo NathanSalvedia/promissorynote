@@ -97,7 +97,6 @@ class PaymentTrackingController extends Controller
             return redirect()->back()->with('error', 'Subledger entry not found.');
         }
 
-        // Get Set 1 Table 5 entry (latest balance for 2025-2026 SEM 1)
         $set1Table5Entry = AccountSubledger::where('user_id', $note->user_id)
             ->where('school_year', '2025-2026')
             ->where('semester', '1')
@@ -126,9 +125,9 @@ class PaymentTrackingController extends Controller
             ]);
         }
 
-        // Send email to user using Set 1 Table 5 balance
-        $set1Balance = $set1Table5Entry ? $set1Table5Entry->balance : $subledgerEntry->balance;
-        Mail::to($note->user->email)->send(new PaymentRecorded($note, $set1Balance));
+
+        $set1Table5Balance = $set1Table5Entry ? $set1Table5Entry->balance : $subledgerEntry->balance;
+        Mail::to($note->user->email)->send(new PaymentRecorded($note, $set1Table5Balance));
 
         return redirect()->back()->with('success', 'Payment recorded successfully, SMS and email sent.');
     }

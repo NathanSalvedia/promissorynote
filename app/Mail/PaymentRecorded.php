@@ -12,23 +12,20 @@ class PaymentRecorded extends Mailable
     use Queueable, SerializesModels;
 
     public $note;
-    public $amount;
+    public $set1Table5Balance;
 
-    public function __construct(PromissoryNote $note, $amount)
+    public function __construct(PromissoryNote $note, $set1Table5Balance)
     {
         $this->note = $note;
-        $this->amount = $amount;
+        $this->set1Table5Balance = $set1Table5Balance;
     }
 
     public function build()
     {
-        $note = $this->note;
-        $set1Table5Entry = $note->set1Table5Entry;
-
         return $this->subject('Payment Recorded')
             ->view('emails.payment-recorded', [
-                'note' => $note,
-                'set1Table5Balance' => $set1Table5Entry->balance
+                'note' => $this->note,
+                'set1Table5Balance' => $this->set1Table5Balance
             ]);
     }
 }

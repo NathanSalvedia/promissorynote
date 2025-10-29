@@ -26,18 +26,21 @@
                 
             </nav>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 justify-end">
                 
                 <button id="theme-toggle" class="text-[#660809] dark:text-[#660809] hover:text-black dark:hover:text-black text-lg">
                     <iconify-icon icon="mdi:weather-night" id="theme-icon"></iconify-icon>
                 </button>
 
                 
+                
+
+                
                 <a href="<?php echo e(route('auth.login')); ?>"
                    id="login-btn"
                    class="bg-[#660809] text-white px-3 py-1.5 rounded-md shadow hover:bg-black flex items-center gap-1 text-[12px] relative z-30 transition duration-300">
                     <iconify-icon icon="mdi:login" class="text-sm"></iconify-icon>
-                    Login
+                    <span class="ml-1">Login</span>
                 </a>
             </div>
         </div>
@@ -241,6 +244,18 @@ body.dark #slideshow .slide {
     #slide-text h1 { font-size: 1.8rem; }
     #slide-text h2 { font-size: 1.2rem; }
     #slide-text p { font-size: 1rem; }
+
+    #dots {
+        position: absolute;
+        left: 59%;
+        bottom: 24px; /* pwede nimo usbon para mas taas/ubos */
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        z-index: 20;
+    }
 }
 </style>
 

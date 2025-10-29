@@ -191,7 +191,7 @@ function reviewApplication() {
 
     let htmlContent = `
         <div class="text-left max-h-[400px] overflow-y-auto p-2">
-            <div class="flex gap-6 text-[14px] leading-6">
+            <div class="flex flex-col sm:flex-row gap-6 text-[14px] leading-6">
                 <div class="flex-1">
     `;
     col1.forEach(entry => {
@@ -202,12 +202,12 @@ function reviewApplication() {
         htmlContent += renderEntry(entry);
     });
 
-    // Render attachments in two columns
+    // Render attachments in two columns (responsive)
     if (attachments.length > 0) {
         htmlContent += `
             <div class="col-span-2 mt-4">
                 <span class="font-semibold text-gray-700 block mb-2">ATTACHMENTS:</span>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         `;
         attachments.forEach(att => {
             htmlContent += renderEntry(att);

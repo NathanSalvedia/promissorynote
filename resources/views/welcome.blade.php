@@ -16,7 +16,7 @@
     {{-- ✅ Maroon strip --}}
     <div class="bg-[#660809] text-white py-1"></div>
 
-    {{-- ✅ Navbar --}}
+    {{-- ✅ Navbar (responsive: grid with right aligned controls) --}}
     <div class="bg-white shadow dark:bg-gray-300 dark:text-white transition duration-300">
         <div class="max-w-10xl mx-auto grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 px-5 py-1.5">
             <div class="flex items-center gap-2 md:gap-3">
@@ -27,18 +27,21 @@
                 {{-- Add nav links here if needed --}}
             </nav>
 
-            <div class="flex items-center gap-3">
-                {{-- 🌗 Theme toggle --}}
+            <div class="flex items-center gap-3 justify-end">
+                {{-- theme toggle --}}
                 <button id="theme-toggle" class="text-[#660809] dark:text-[#660809] hover:text-black dark:hover:text-black text-lg">
                     <iconify-icon icon="mdi:weather-night" id="theme-icon"></iconify-icon>
                 </button>
 
-                {{-- ✅ Login button --}}
+                {{-- notification placeholder (if you use notifications include here) --}}
+                {{-- <div id="notification-bell-desktop">@include(...)</div> --}}
+
+                {{-- Login button (visible and aligned right on mobile & desktop) --}}
                 <a href="{{ route('auth.login') }}"
                    id="login-btn"
                    class="bg-[#660809] text-white px-3 py-1.5 rounded-md shadow hover:bg-black flex items-center gap-1 text-[12px] relative z-30 transition duration-300">
                     <iconify-icon icon="mdi:login" class="text-sm"></iconify-icon>
-                    Login
+                    <span class="ml-1">Login</span>
                 </a>
             </div>
         </div>
@@ -242,6 +245,18 @@ body.dark #slideshow .slide {
     #slide-text h1 { font-size: 1.8rem; }
     #slide-text h2 { font-size: 1.2rem; }
     #slide-text p { font-size: 1rem; }
+
+    #dots {
+        position: absolute;
+        left: 59%;
+        bottom: 24px; /* pwede nimo usbon para mas taas/ubos */
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        z-index: 20;
+    }
 }
 </style>
 

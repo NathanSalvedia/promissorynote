@@ -5,6 +5,9 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Http\View\Composers\HeaderComposer;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+         if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+        URL::forceScheme('https');
+    }
         View::composer('includes.header', HeaderComposer::class);
     }
 }

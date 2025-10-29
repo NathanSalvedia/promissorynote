@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
        User::all()->each(function ($user) use ($faker) {
 
      //AccountSubledger::where('user_id', $user->id)->delete();
-              /*
+
         // Generate initial 4 Set 1 entries if not already present
         $set1Count = AccountSubledger::where('user_id', $user->id)
             ->where('school_year', '2025-2026')
@@ -95,7 +95,7 @@ class DatabaseSeeder extends Seeder
 
             AccountSubledger::insert($entries);
         }
-              */
+
 
 
         //======================================================//
@@ -184,7 +184,7 @@ class DatabaseSeeder extends Seeder
             */
 
    //======================================================//
-
+      /*
    $set1Table5Entry = AccountSubledger::where('user_id', $user->id)
        ->where('school_year', '2025-2026')
        ->where('semester', '1')
@@ -266,7 +266,7 @@ class DatabaseSeeder extends Seeder
        }
 }
 
-
+     */
       });
 
     }

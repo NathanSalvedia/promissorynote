@@ -10,7 +10,18 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $userId = Auth::user()->id;
+        $userId = Auth::id();
+        $notifications = Notification::where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // show student notifications (fixed)
+        return view('student.notification-view', compact('notifications'));
+    }
+
+    public function view()
+    {
+        $userId = Auth::id();
         $notifications = Notification::where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -18,18 +29,9 @@ class NotificationController extends Controller
         return view('student.notification-view', compact('notifications'));
     }
 
-    public function view()
-    {
-        $userId = Auth::user()->id;
-        $notifications = Notification::where('user_id', $userId)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return view('student.notification-view', compact('notifications' ));
-    }
     public function adminIndex()
     {
-        $adminId = Auth::user()->id;
+        $adminId = Auth::id();
         $notifications = Notification::where('user_id', $adminId)
             ->orderBy('created_at', 'desc')
             ->get();
