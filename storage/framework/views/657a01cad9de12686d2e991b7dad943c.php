@@ -247,8 +247,8 @@ body.dark #slideshow .slide {
 
     #dots {
         position: absolute;
-        left: 59%;
-        bottom: 24px; /* pwede nimo usbon para mas taas/ubos */
+        left: 56%;
+        bottom: 24px;
         transform: translateX(-50%);
         display: flex;
         gap: 12px;
